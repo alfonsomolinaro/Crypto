@@ -98,6 +98,8 @@
     announce: "Lezione {n} di {t}: {title}",
     iframeTitle: "Contenuto della lezione: {title}",
     devTitle: "Modalità sviluppo",
+    devClose: "Chiudi il pannello sviluppo (si riapre cliccando DEV)",
+    devToggle: "Modalità sviluppo: mostra o nascondi il pannello",
     devHint: "Tutte le lezioni sbloccate. Stato salvato:",
     devReset: "Azzera progressi",
     devResetDone: "Progressi azzerati",
@@ -157,7 +159,7 @@
     prefs: Object.assign({ volume: 0.8, muted: false, rate: 1 }, saved.prefs || {}),
     menuOpen: false,
     menuPref: saved.menuOpen,                   // preferenza del menu su desktop (non toccata dal mobile)
-    devPanel: window.innerWidth >= 1024,        // pannello sviluppo aperto all'avvio solo su desktop
+    devPanel: saved.devPanel === true,          // pannello sviluppo: chiuso all'avvio, si apre con il badge DEV
     screen: "cover"
   };
   var noSaveWarned = false;
@@ -165,7 +167,7 @@
   function save() {
     var ok = store.save({
       v: 1, status: S.status, location: L[S.idx].id, time: Math.round(S.time),
-      prefs: S.prefs, menuOpen: S.menuPref
+      prefs: S.prefs, menuOpen: S.menuPref, devPanel: S.devPanel
     });
     if (!ok) warnNoSave();
     renderDev();
@@ -931,7 +933,9 @@
     $("pdfDialog").addEventListener("click", function (e) { if (e.target === $("pdfDialog")) closePdf(); });
     $("pdfDialog").addEventListener("close", function () { $("pdfFrame").src = "about:blank"; });
     $("expandBtn").addEventListener("click", expandStage);
-    $("devBadge").addEventListener("click", function () { S.devPanel = !S.devPanel; renderDevPanel(); });
+    $("devBadge").addEventListener("click", function () { S.devPanel = !S.devPanel; renderDevPanel(); save(); });
+    $("devBadge").setAttribute("title", t("devToggle"));
+    $("devClose").addEventListener("click", function () { S.devPanel = false; renderDevPanel(); save(); $("devBadge").focus(); });
 
     $("fsBtn").addEventListener("click", toggleFullscreen);
     document.addEventListener("fullscreenchange", updateFsLabels);
