@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Corso</title>
+<link rel="stylesheet" href="player/tokens.css">
+<link rel="stylesheet" href="player/player.css">
+</head>
+<body>
+
+<!-- Icone (inline: un file SVG esterno non funziona aprendo il corso da file://) -->
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
+<symbol id="menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 12h16M4 18h16"/></symbol>
+<symbol id="chiudi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+<symbol id="indietro" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></symbol>
+<symbol id="avanti" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></symbol>
+<symbol id="play" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.5-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/></symbol>
+<symbol id="pausa" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></symbol>
+<symbol id="volume" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7"/><path d="M19 6a8.5 8.5 0 0 1 0 12"/></symbol>
+<symbol id="muto" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M17 9.5l5 5M22 9.5l-5 5"/></symbol>
+<symbol id="indietro-10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12a8 8 0 1 0 2.3-5.6"/><path d="M4 4v4h4"/><text x="12" y="15.2" font-size="7.5" font-family="Inter,sans-serif" font-weight="700" text-anchor="middle" fill="currentColor" stroke="none">10</text></symbol>
+<symbol id="avanti-10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12a8 8 0 1 1-2.3-5.6"/><path d="M20 4v4h-4"/><text x="12" y="15.2" font-size="7.5" font-family="Inter,sans-serif" font-weight="700" text-anchor="middle" fill="currentColor" stroke="none">10</text></symbol>
+<symbol id="riascolta" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12a8 8 0 1 0 2.3-5.6"/><path d="M4 4v4h4"/></symbol>
+<symbol id="schermo-intero" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></symbol>
+<symbol id="risorse" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></symbol>
+<symbol id="esci" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h4a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-4"/><path d="M9 17l-5-5 5-5"/><path d="M4 12h11"/></symbol>
+<symbol id="download" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11"/><path d="M7 10l5 5 5-5"/><path d="M5 20h14"/></symbol>
+<symbol id="file" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4"/></symbol>
+<symbol id="altro-orizzontale" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="19" cy="12" r="1.8"/></symbol>
+<symbol id="altro-verticale" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="12" cy="19" r="1.8"/></symbol>
+<symbol id="bloccata" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></symbol>
+<symbol id="completata" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
+<symbol id="avviso" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4l9 16H3z"/><path d="M12 10v4"/><path d="M12 17h.01"/></symbol>
+<symbol id="errore" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9 9l6 6M15 9l-6 6"/></symbol>
+<symbol id="tipo-video" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="13" height="12" rx="2"/><path d="M16 10l5-3v10l-5-3"/></symbol>
+<symbol id="tipo-interattiva" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3l14 8-6 2-3 6z"/></symbol>
+<symbol id="tipo-quiz" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.5v.7"/><path d="M12 17h.01"/></symbol>
+<symbol id="tipo-conclusione" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 21V4"/><path d="M5 4h12l-2.5 4L17 12H5"/></symbol>
+<symbol id="attestato" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8 4h8v4a4 4 0 0 1-8 0z"/><path d="M8 6H5a3 3 0 0 0 3 4M16 6h3a3 3 0 0 1-3 4"/><path d="M12 12v4M9 20h6M10 16h4v4h-4z"/></symbol>
+<symbol id="ruota-telefono" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2" width="10" height="17" rx="2" transform="rotate(-30 12 10.5)"/><path d="M3 15a8 8 0 0 0 6 6"/><path d="M3 19v-4h4"/></symbol>
+</svg>
+
+<!-- ============================ COPERTINA ============================ -->
+<section id="cover" class="screen cover" aria-labelledby="coverTitle">
+  <div class="cover-inner">
+    <div class="cover-main">
+      <p class="overline overline-dark" data-t="courseKind"></p>
+      <h1 id="coverTitle" class="cover-title"></h1>
+      <p id="coverDesc" class="cover-desc"></p>
+      <p id="coverMeta" class="cover-meta"></p>
+      <div id="coverProgress" class="cover-progress" hidden>
+        <div class="cover-progress-row"><span data-t="yourProgress"></span><span id="coverPct"></span></div>
+        <div class="bar bar-dark"><span id="coverBar"></span></div>
+      </div>
+      <div class="cover-actions">
+        <button type="button" id="startBtn" class="btn btn-next btn-lg"></button>
+        <button type="button" id="restartBtn" class="btn btn-prev btn-lg" data-t="restart" hidden></button>
+      </div>
+    </div>
+    <div class="cover-program">
+      <p class="overline overline-dim" data-t="program"></p>
+      <ol id="coverList" class="cover-list"></ol>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ PLAYER ============================ -->
+<div id="player" class="player" hidden>
+  <header class="topbar">
+    <button type="button" id="menuBtn" class="ib" aria-controls="menu" aria-expanded="false"><svg class="icon icon-lg" aria-hidden="true"><use href="#menu"/></svg></button>
+    <nav class="crumb" aria-label="Percorso">
+      <span id="hdrCourse" class="crumb-course"></span>
+      <svg class="icon crumb-sep" aria-hidden="true"><use href="#avanti"/></svg>
+      <span id="hdrLesson" class="crumb-lesson" aria-current="page"></span>
+    </nav>
+    <span id="devBadge" class="dev-badge" hidden>DEV</span>
+    <div id="hdrProgress" class="hdr-progress hide-sm" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+      <div class="bar bar-dark"><span id="hdrBar"></span></div>
+      <span id="hdrPct" class="hdr-pct"></span>
+    </div>
+    <svg class="hdr-ring show-sm" width="36" height="36" viewBox="0 0 36 36" role="img" id="hdrRing">
+      <circle cx="18" cy="18" r="14" fill="none" stroke="rgba(255,255,255,.16)" stroke-width="4"/>
+      <circle id="ringArc" cx="18" cy="18" r="14" fill="none" stroke="var(--color-accent-on-dark)" stroke-width="4" stroke-linecap="round" stroke-dasharray="0 87.96" transform="rotate(-90 18 18)"/>
+      <text id="ringTxt" x="18" y="21.5" text-anchor="middle" font-size="9.5" font-weight="700" fill="#fff">0</text>
+    </svg>
+    <button type="button" id="resBtn" class="hbtn hide-sm" aria-controls="resPanel" aria-expanded="false"><svg class="icon" aria-hidden="true"><use href="#risorse"/></svg><span class="lbl-md-hide" data-t="resources"></span><span id="resCount" class="badge"></span></button>
+    <button type="button" id="fsBtn" class="ib hide-sm" data-t-label="fullscreen"><svg class="icon" aria-hidden="true"><use href="#schermo-intero"/></svg></button>
+    <button type="button" id="exitBtn" class="hbtn hide-sm"><svg class="icon" aria-hidden="true"><use href="#esci"/></svg><span class="lbl-md-hide" data-t="exit"></span></button>
+    <button type="button" id="moreBtn" class="ib show-sm" aria-controls="hdrMenu" aria-expanded="false" data-t-label="moreOptions"><svg class="icon" aria-hidden="true"><use href="#altro-verticale"/></svg></button>
+  </header>
+
+  <div class="body">
+    <div id="scrim" class="scrim" hidden></div>
+    <aside id="menu" class="menu" aria-labelledby="menuTitle">
+      <div class="menu-head">
+        <div class="menu-head-text">
+          <h2 id="menuTitle" class="menu-title" data-t="lessons"></h2>
+          <span id="menuCount" class="menu-count"></span>
+        </div>
+        <button type="button" id="menuClose" class="ibd" data-t-label="closeMenu"><svg class="icon" aria-hidden="true"><use href="#chiudi"/></svg></button>
+      </div>
+      <ol id="menuList" class="menu-list"></ol>
+      <div class="menu-foot">
+        <div class="menu-foot-row"><span data-t="progress"></span><span id="menuPct"></span></div>
+        <div class="bar"><span id="menuBar"></span></div>
+        <span id="menuTime" class="menu-time"></span>
+      </div>
+    </aside>
+
+    <main class="content">
+      <div id="stageArea" class="stage-area">
+        <div id="stageBox" class="stage-box" tabindex="-1">
+          <div id="stage" class="stage"></div>
+        </div>
+      </div>
+      <div class="info-panel">
+        <p id="infoOver" class="overline"></p>
+        <h2 id="infoTitle" class="info-title"></h2>
+        <p class="rotate-hint"><span class="rotate-ic"><svg class="icon icon-lg" aria-hidden="true"><use href="#ruota-telefono"/></svg></span><span data-t="rotate"></span></p>
+      </div>
+    </main>
+  </div>
+
+  <footer class="navbar">
+    <div id="seekLine" class="seek-line" hidden>
+      <input type="range" id="mSeekMobile" class="range range-seek" min="0" max="1000" step="1" value="0" data-t-label="position">
+    </div>
+    <div class="navrow">
+      <div class="nav-left">
+        <button type="button" id="prevBtn" class="btn btn-prev"><svg class="icon" aria-hidden="true"><use href="#indietro"/></svg><span class="lbl-sm-hide" data-t="prev"></span></button>
+      </div>
+      <div id="mediabar" class="mediabar" role="group" data-t-label="controls" hidden>
+        <button type="button" id="mReplay" class="ib hide-sm" data-t-label="replay"><svg class="icon" aria-hidden="true"><use href="#riascolta"/></svg></button>
+        <button type="button" id="mBack" class="ib hide-sm" data-t-label="back10"><svg class="icon icon-lg" aria-hidden="true"><use href="#indietro-10"/></svg></button>
+        <button type="button" id="mPlay" class="playbtn"></button>
+        <button type="button" id="mFwd" class="ib hide-sm" data-t-label="fwd10"><svg class="icon icon-lg" aria-hidden="true"><use href="#avanti-10"/></svg></button>
+        <span id="mTime" class="mtime">0:00 / 0:00</span>
+        <input type="range" id="mSeek" class="range range-seek hide-sm" min="0" max="1000" step="1" value="0" data-t-label="position">
+        <button type="button" id="mMute" class="ib hide-sm"></button>
+        <input type="range" id="mVol" class="range range-vol hide-md" min="0" max="100" step="1" value="80" data-t-label="volume">
+        <button type="button" id="mRate" class="ratebtn hide-sm">1×</button>
+        <button type="button" id="mMore" class="ib show-sm" data-t-label="moreControls" aria-controls="mediaSheet"><svg class="icon" aria-hidden="true"><use href="#altro-orizzontale"/></svg></button>
+      </div>
+      <div class="nav-right">
+        <button type="button" id="nextBtn" class="btn btn-next"><span class="lbl" data-t="next"></span><svg class="icon" aria-hidden="true"><use href="#avanti"/></svg></button>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<!-- ============================ FINALE ============================ -->
+<section id="final" class="screen final" aria-labelledby="finalTitle" hidden>
+  <div id="confetti" class="confetti" aria-hidden="true"></div>
+  <div class="final-card">
+    <span class="final-badge"><svg class="icon" aria-hidden="true"><use href="#attestato"/></svg></span>
+    <p class="overline" data-t="finalOver"></p>
+    <h1 id="finalTitle" class="final-title" tabindex="-1" data-t="finalTitle"></h1>
+    <p id="finalText" class="final-text"></p>
+    <div class="final-stats">
+      <div><b id="fStatPct"></b><span data-t="statProgress"></span></div>
+      <div><b id="fStatLessons"></b><span data-t="statLessons"></span></div>
+      <div><b id="fStatTime"></b><span data-t="statTime"></span></div>
+    </div>
+    <div class="final-actions">
+      <a id="certBtn" class="btn btn-solid" download hidden><svg class="icon" aria-hidden="true"><use href="#download"/></svg><span data-t="certificate"></span></a>
+      <button type="button" id="reviewBtn" class="btn btn-outline" data-t="review"></button>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ PANNELLI ============================ -->
+<div id="resPanel" class="popover res-panel" role="dialog" aria-labelledby="resTitle" hidden>
+  <div class="popover-head"><h2 id="resTitle" data-t="resourcesTitle"></h2><button type="button" id="resClose" class="ibd" data-t-label="close"><svg class="icon" aria-hidden="true"><use href="#chiudi"/></svg></button></div>
+  <ul id="resList" class="res-list"></ul>
+</div>
+
+<div id="hdrMenu" class="popover hdr-menu" hidden>
+  <button type="button" id="hmRes" class="hm-item"><svg class="icon" aria-hidden="true"><use href="#risorse"/></svg><span data-t="resources"></span><span id="hmResCount" class="badge badge-light"></span></button>
+  <button type="button" id="hmFs" class="hm-item"><svg class="icon" aria-hidden="true"><use href="#schermo-intero"/></svg><span data-t="fullscreen"></span></button>
+  <button type="button" id="hmExit" class="hm-item"><svg class="icon" aria-hidden="true"><use href="#esci"/></svg><span data-t="exitCourse"></span></button>
+</div>
+
+<dialog id="mediaSheet" class="sheet" aria-labelledby="sheetTitle">
+  <span class="sheet-grip" aria-hidden="true"></span>
+  <div class="sheet-head"><h2 id="sheetTitle" data-t="controls"></h2><span id="sheetTime" class="mtime-light"></span></div>
+  <div class="sheet-grid">
+    <button type="button" id="sBack" class="sheet-btn"><svg class="icon icon-lg" aria-hidden="true"><use href="#indietro-10"/></svg><span data-t="back10short"></span></button>
+    <button type="button" id="sReplay" class="sheet-btn"><svg class="icon icon-lg" aria-hidden="true"><use href="#riascolta"/></svg><span data-t="replayShort"></span></button>
+    <button type="button" id="sFwd" class="sheet-btn"><svg class="icon icon-lg" aria-hidden="true"><use href="#avanti-10"/></svg><span data-t="fwd10short"></span></button>
+  </div>
+  <div class="sheet-vol">
+    <button type="button" id="sMute" class="ibd"></button>
+    <input type="range" id="sVol" class="range range-light" min="0" max="100" step="1" value="80" data-t-label="volume">
+  </div>
+  <div class="sheet-rates">
+    <span class="sheet-label" data-t="speed"></span>
+    <div id="sRates" class="rate-chips" role="group"></div>
+  </div>
+</dialog>
+
+<dialog id="exitDialog" class="dialog" aria-labelledby="exitTitle">
+  <h2 id="exitTitle" data-t="exitTitle"></h2>
+  <p id="exitText"></p>
+  <div class="dialog-actions">
+    <button type="button" id="exitCancel" class="btn btn-outline" data-t="cancel"></button>
+    <button type="button" id="exitConfirm" class="btn btn-solid" data-t="exit"></button>
+  </div>
+</dialog>
+
+<div id="devPanel" class="dev-panel" hidden>
+  <div class="dev-head"><b data-t="devTitle"></b><span>?dev=1</span></div>
+  <p data-t="devHint"></p>
+  <ul id="devList" class="dev-list"></ul>
+  <button type="button" id="devReset" class="btn dev-reset" data-t="devReset"></button>
+</div>
+
+<div id="toasts" class="toasts" role="status" aria-live="polite"></div>
+<div id="announcer" class="sr-only" aria-live="polite"></div>
+
+<script src="course.js"></script>
+<script src="player/storage.js"></script>
+<script src="player/player.js"></script>
+</body>
+</html>

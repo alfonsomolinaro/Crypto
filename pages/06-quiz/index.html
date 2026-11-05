@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<title>Quiz finale</title>
+<link rel="stylesheet" href="../pagina.css">
+</head>
+<body>
+  <p class="overline">Lezione 6 · Quiz · segnaposto</p>
+  <h1>Quiz finale</h1>
+  <p>[Qui andranno le domande del quiz. Per ora puoi simulare l'esito per provare il Player.]</p>
+  <div class="area" id="area">
+    <span class="todo">[Area del quiz]</span>
+    <div class="row todo">
+      <button type="button" id="passBtn">Simula: superato</button>
+      <button type="button" class="secondary" id="failBtn">Simula: non superato</button>
+    </div>
+    <span class="done">✓ Quiz superato</span>
+  </div>
+  <script src="../../player/player-bridge.js"></script>
+  <script>
+    document.getElementById("passBtn").addEventListener("click", function () {
+      player.setStatus("passed");
+      document.getElementById("area").classList.add("is-done");
+    });
+    document.getElementById("failBtn").addEventListener("click", function () {
+      player.setStatus("failed");
+    });
+    document.addEventListener("player:init", function (e) {
+      if (e.detail.lesson.status === "done") document.getElementById("area").classList.add("is-done");
+    });
+  </script>
+</body>
+</html>

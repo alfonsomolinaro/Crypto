@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<title>Crittografia simmetrica</title>
+<link rel="stylesheet" href="../pagina.css">
+</head>
+<body>
+  <p class="overline">Lezione 3 · Contenuto interattivo · segnaposto</p>
+  <h1>Crittografia simmetrica</h1>
+  <p>[Qui andrà il contenuto della lezione. Questa pagina di prova serve a verificare il collegamento con il Player.]</p>
+  <div class="area" id="area">
+    <span class="todo">[Area dell'interazione]</span>
+    <button type="button" class="todo" id="doneBtn">Segna come completata</button>
+    <span class="done">✓ Lezione completata</span>
+  </div>
+  <script src="../../player/player-bridge.js"></script>
+  <script>
+    document.getElementById("doneBtn").addEventListener("click", function () {
+      player.complete();
+      document.getElementById("area").classList.add("is-done");
+    });
+    document.addEventListener("player:init", function (e) {
+      if (e.detail.lesson.status === "done") document.getElementById("area").classList.add("is-done");
+    });
+  </script>
+</body>
+</html>

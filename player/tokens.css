@@ -1,0 +1,128 @@
+/* =========================================================================
+   Player e-learning — Design token
+   Fonte: tela "Player e-learning" (Design system, Componenti e stati).
+   Ogni corso può sovrascrivere questi valori da course.js (theme).
+   Nessun valore va scritto direttamente nei componenti: usare sempre i token.
+   ========================================================================= */
+
+/* Font incluso in locale (funziona anche da file://). Scaricare Inter
+   (SIL Open Font License) in player/fonts/ in formato woff2. */
+@font-face {
+  font-family: "Inter";
+  src: url("fonts/Inter-Variable.woff2") format("woff2");
+  font-weight: 400 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  /* ---------- Colori · brand ---------- */
+  --color-primary:        #21324B; /* cornice: header, barra inferiore, testi forti */
+  --color-primary-700:    #172437; /* hover/premuto sulla cornice */
+  --color-primary-900:    #0F1826; /* fondo video, overlay */
+  --color-primary-100:    #E6EAF0; /* hover su superfici chiare, chip */
+
+  --color-accent:         #A97835; /* SOLO grafica: barre, spunte, anelli (3,9:1 su bianco) */
+  --color-accent-text:    #8A5F22; /* testo/link oro su chiaro (5,6:1 su bianco) */
+  --color-accent-on-dark: #D4A55E; /* Avanti, play, focus sulla cornice (5,8:1 sul primario) */
+  --color-accent-hover:   #DDB373; /* hover di --color-accent-on-dark */
+  --color-accent-100:     #F5ECDD; /* lezione corrente nel menu, badge chiari */
+
+  /* ---------- Colori · neutri ---------- */
+  --color-bg:             #F4F5F7; /* fondo generale */
+  --color-surface:        #FFFFFF; /* stage, menu, pannelli, dialog */
+  --color-surface-muted:  #EEF0F3; /* tracce delle barre, segnaposto */
+  --color-letterbox:      #E4E7EC; /* bande attorno allo stage 16:9 */
+  --color-border:         #DDE1E8;
+  --color-text:           #1B2433; /* 15,6:1 su bianco */
+  --color-text-muted:     #5B6577; /* 5,9:1 su bianco */
+  --color-disabled:       #9AA3B2; /* sempre accompagnato da un'icona */
+  --color-on-dark:        #FFFFFF;
+  --color-on-dark-muted:  rgba(255, 255, 255, .78);
+  --color-on-dark-subtle: rgba(255, 255, 255, .16); /* tracce su cornice */
+  --color-on-dark-line:   rgba(255, 255, 255, .35); /* contorno pulsante Indietro */
+  --color-scrim:          rgba(15, 24, 38, .55);    /* sfondo dietro menu overlay e dialog */
+
+  /* ---------- Colori · semantici ---------- */
+  --color-success:        #2E7D5B; /* 5,0:1 */
+  --color-success-100:    #E3F1EA;
+  --color-warning:        #9A5B00; /* 5,4:1 · quiz non superato, salvataggio non disponibile */
+  --color-warning-100:    #FBF1E2;
+  --color-error:          #B3261E; /* 6,5:1 · media mancante, lezione non caricata, badge DEV */
+  --color-error-100:      #FBE9E7;
+
+  /* ---------- Tipografia ---------- */
+  --font-family:          "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-mono:            ui-monospace, Menlo, Consolas, monospace;
+
+  --text-display:         700 40px/1.2 var(--font-family);  /* copertina desktop: 56px */
+  --text-h1:              700 28px/1.28 var(--font-family);
+  --text-h2:              600 20px/1.4 var(--font-family);
+  --text-body:            400 16px/1.5 var(--font-family);
+  --text-ui:              600 15px/1.33 var(--font-family);  /* pulsanti */
+  --text-small:           400 13px/1.4 var(--font-family);
+  --text-caption:         400 12px/1.35 var(--font-family);
+  --text-overline:        600 12px/1.35 var(--font-family);
+  --tracking-overline:    .08em;                             /* + text-transform: uppercase */
+
+  /* ---------- Spaziature ---------- */
+  --space-1:  4px;
+  --space-2:  8px;
+  --space-3:  12px;
+  --space-4:  16px;
+  --space-5:  24px;
+  --space-6:  32px;
+  --space-7:  48px;
+
+  /* ---------- Raggi ---------- */
+  --radius-sm:   6px;
+  --radius-md:   10px;   /* pulsanti, voci di menu */
+  --radius-lg:   16px;   /* dialog, card, pannelli */
+  --radius-xl:   20px;   /* card finale */
+  --radius-pill: 999px;
+  --radius-stage: 4px;
+
+  /* ---------- Ombre ---------- */
+  --shadow-sm: 0 1px 2px rgba(23, 36, 55, .08), 0 1px 3px rgba(23, 36, 55, .06);
+  --shadow-lg: 0 8px 24px rgba(23, 36, 55, .16);
+  --shadow-xl: 0 24px 64px rgba(0, 0, 0, .30);
+
+  /* ---------- Focus ---------- */
+  --focus-ring:        3px solid var(--color-accent-on-dark);
+  --focus-ring-offset: 2px;
+
+  /* ---------- Dimensioni dei componenti ---------- */
+  --header-h:          64px;   /* mobile: 56px; orizzontale: 48px */
+  --navbar-h:          80px;   /* mobile: 64px + 12px della linea di avanzamento; orizzontale: 56px */
+  --sidebar-w:         320px;  /* mobile: 330px in overlay */
+  --touch-min:         44px;
+  --stage-w:           1280px; /* dimensione di progetto dei contenuti */
+  --stage-h:           720px;
+  --stage-padding:     24px;   /* margine minimo tra stage e bordi dell'area */
+
+  /* ---------- Movimento ---------- */
+  --ease-standard:     cubic-bezier(.2, .8, .2, 1);
+  --duration-fast:     150ms;  /* hover, focus */
+  --duration-base:     250ms;  /* toast, pannelli, dialog */
+  --duration-menu:     280ms;  /* apertura/chiusura menu */
+  --duration-progress: 400ms;  /* riempimento barre */
+  --duration-pulse:    1.8s;   /* pulse del pulsante Avanti (loop) */
+  --toast-timeout:     3500ms;
+
+  /* ---------- Breakpoint (riferimento, usati nelle media query) ----------
+     mobile   < 768px   menu overlay, barra compatta, header compatto
+     tablet   768–1023  layout desktop, menu overlay
+     desktop  ≥ 1024    menu push
+     wide     ≥ 1440    menu fissabile aperto (pin)
+     ---------------------------------------------------------------------- */
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-fast: 0ms;
+    --duration-base: 0ms;
+    --duration-menu: 0ms;
+    --duration-progress: 0ms;
+  }
+  /* Il pulse di Avanti diventa un alone statico; niente coriandoli. */
+}

@@ -9,3 +9,6 @@ desktop.ini
 
 # Claude Code (impostazioni locali)
 .claude/settings.local.json
+
+# Impostazioni locali di Claude Code
+.claude/
