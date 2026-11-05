@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Prova della pagina di lezione</title>
+<link rel="stylesheet" href="player/tokens.css">
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: var(--font-family); background: var(--color-primary); color: #fff; min-height: 100vh; display: flex; flex-direction: column; }
+  header { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; padding: 14px 20px; border-bottom: 1px solid rgba(255,255,255,.12); }
+  header h1 { margin: 0 12px 0 0; font-size: 18px; }
+  label { font-size: 14px; color: rgba(255,255,255,.8); }
+  input { width: 260px; height: 40px; padding: 0 12px; border-radius: 8px; border: 0; font: 15px var(--font-family); }
+  button { height: 40px; padding: 0 16px; border: 0; border-radius: 8px; font: 600 15px var(--font-family); background: var(--color-accent-on-dark); color: var(--color-primary); cursor: pointer; }
+  main { flex: 1; display: flex; align-items: center; justify-content: center; padding: 20px; background: var(--color-letterbox); min-height: 0; }
+  #box { position: relative; overflow: hidden; background: #fff; box-shadow: var(--shadow-sm); }
+  #box iframe { position: absolute; left: 0; top: 0; width: 1280px; height: 720px; border: 0; transform-origin: 0 0; }
+  #stato { display: flex; flex-wrap: wrap; gap: 10px; padding: 14px 20px; font-size: 15px; }
+  .pill { padding: 8px 14px; border-radius: 999px; background: rgba(255,255,255,.1); }
+  .ok { background: var(--color-success-100); color: var(--color-success); font-weight: 600; }
+  .ko { background: var(--color-error-100); color: var(--color-error); font-weight: 600; }
+  .warn { background: var(--color-warning-100); color: var(--color-warning); font-weight: 600; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Prova della pagina di lezione</h1>
+  <label for="cartella">Nome della tua cartella in <code>pages/</code>:</label>
+  <input id="cartella" value="_modello" autocomplete="off">
+  <button type="button" id="carica">Carica</button>
+</header>
+<main><div id="box"><iframe id="frame" title="Pagina in prova"></iframe></div></main>
+<div id="stato" aria-live="polite">
+  <span class="pill" id="sCollegamento">Collegamento al Player: in attesa…</span>
+  <span class="pill" id="sCompletamento">Completamento: non ancora</span>
+</div>
+<script>
+  // Simula il Player: mostra la pagina a dimensione scalata e controlla che comunichi il completamento.
+  var frame = document.getElementById("frame"), box = document.getElementById("box");
+  var timer = null;
+  function set(id, testo, cls) { var el = document.getElementById(id); el.textContent = testo; el.className = "pill " + (cls || ""); }
+  function scala() {
+    var area = document.querySelector("main"), w = area.clientWidth - 40, h = area.clientHeight - 40;
+    var s = Math.min(w / 1280, h / 720, 1);
+    box.style.width = Math.floor(1280 * s) + "px"; box.style.height = Math.floor(720 * s) + "px";
+    frame.style.transform = "scale(" + s + ")";
+  }
+  function carica() {
+    var nome = document.getElementById("cartella").value.trim().replace(/^\/+|\/+$/g, "");
+    set("sCollegamento", "Collegamento al Player: in attesa…");
+    set("sCompletamento", "Completamento: non ancora");
+    frame.src = "pages/" + nome + "/index.html";
+    clearTimeout(timer);
+    timer = setTimeout(function () {
+      set("sCollegamento", "✗ La pagina NON è collegata: manca la riga player-bridge.js, oppure il nome della cartella è sbagliato", "ko");
+    }, 6000);
+  }
+  window.addEventListener("message", function (e) {
+    if (e.source !== frame.contentWindow || !e.data || typeof e.data.type !== "string") return;
+    var d = e.data;
+    if (d.type === "player:ready") {
+      clearTimeout(timer);
+      set("sCollegamento", "✓ Pagina collegata al Player", "ok");
+      frame.contentWindow.postMessage({ type: "player:init", lesson: { id: "prova", title: "Prova", status: "visited" } }, "*");
+    } else if (d.type === "player:complete" || (d.type === "player:status" && d.value === "passed")) {
+      set("sCompletamento", "✓ Lezione completata: nel corso lo studente potrà andare avanti", "ok");
+    } else if (d.type === "player:status" && d.value === "failed") {
+      set("sCompletamento", "⚠ Quiz non superato (la lezione resta da rifare)", "warn");
+    } else if (d.type === "player:error") {
+      set("sCompletamento", "✗ La pagina ha segnalato un errore: " + (d.message || ""), "ko");
+    }
+  });
+  document.getElementById("carica").addEventListener("click", carica);
+  document.getElementById("cartella").addEventListener("keydown", function (e) { if (e.key === "Enter") carica(); });
+  window.addEventListener("resize", scala);
+  scala(); carica();
+</script>
+</body>
+</html>

@@ -38,6 +38,9 @@ La cartella `player/` resta identica per tutti i corsi.
 | `pages/` | Pagine delle lezioni (ora pagine di prova) |
 | `media/`, `resources/` | Video, audio e file scaricabili |
 | `docs/manuale-player.md` | **Manuale d'uso del Player**: per chi segue il corso e per chi lo crea |
+| `kit-autori.zip` · `kit-autori/` | **Kit per autori esterni**: guida, pagina modello, foglio di stile e `prova.html` per verificare il completamento |
+| `docs/guida-autori-esterni.md` | Guida passo passo per creare una pagina di lezione (inclusa nel kit) |
+| `docs/prompt-pagine-lezione.md` | Prompt per far creare le pagine a un assistente AI |
 | `docs/relazione-traccia.md` | Riepilogo del lavoro e traccia della relazione |
 | `design/specifiche.md` | Specifiche per lo sviluppo: struttura, comportamenti, responsive, accessibilità, `course.js`, bridge |
 | `design/tokens.css` | Design token (colori, tipografia, spaziature, animazioni) |
