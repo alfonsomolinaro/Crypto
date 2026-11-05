@@ -1,0 +1,11 @@
+﻿# Sistema operativo
+Thumbs.db
+desktop.ini
+.DS_Store
+
+# Editor
+.vscode/
+*.swp
+
+# Claude Code (impostazioni locali)
+.claude/settings.local.json
