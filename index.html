@@ -74,7 +74,7 @@
       <svg class="icon crumb-sep" aria-hidden="true"><use href="#avanti"/></svg>
       <span id="hdrLesson" class="crumb-lesson" aria-current="page"></span>
     </nav>
-    <span id="devBadge" class="dev-badge" hidden>DEV</span>
+    <button type="button" id="devBadge" class="dev-badge" aria-controls="devPanel" aria-expanded="false" hidden>DEV</button>
     <div id="hdrProgress" class="hdr-progress hide-sm" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
       <div class="bar bar-dark"><span id="hdrBar"></span></div>
       <span id="hdrPct" class="hdr-pct"></span>
@@ -113,11 +113,12 @@
         <div id="stageBox" class="stage-box" tabindex="-1">
           <div id="stage" class="stage"></div>
         </div>
+        <button type="button" id="expandBtn" class="expand-btn show-sm"><svg class="icon" aria-hidden="true"><use href="#schermo-intero"/></svg><span id="expandLbl" data-t="expand"></span></button>
       </div>
       <div class="info-panel">
+        <p class="rotate-hint"><svg class="icon" aria-hidden="true"><use href="#ruota-telefono"/></svg><span data-t="rotate"></span></p>
         <p id="infoOver" class="overline"></p>
         <h2 id="infoTitle" class="info-title"></h2>
-        <p class="rotate-hint"><span class="rotate-ic"><svg class="icon icon-lg" aria-hidden="true"><use href="#ruota-telefono"/></svg></span><span data-t="rotate"></span></p>
       </div>
     </main>
   </div>
@@ -197,6 +198,17 @@
     <span class="sheet-label" data-t="speed"></span>
     <div id="sRates" class="rate-chips" role="group"></div>
   </div>
+</dialog>
+
+<dialog id="pdfDialog" class="pdf-dialog" aria-labelledby="pdfTitle">
+  <div class="pdf-head">
+    <svg class="icon" aria-hidden="true"><use href="#file"/></svg>
+    <h2 id="pdfTitle"></h2>
+    <a id="pdfNewTab" class="pdf-link" target="_blank" rel="noopener" data-t="openNewTab"></a>
+    <a id="pdfDownload" class="ibd" download data-t-label="downloadShort"><svg class="icon" aria-hidden="true"><use href="#download"/></svg></a>
+    <button type="button" id="pdfClose" class="ibd" data-t-label="close"><svg class="icon" aria-hidden="true"><use href="#chiudi"/></svg></button>
+  </div>
+  <iframe id="pdfFrame" class="pdf-frame" title=""></iframe>
 </dialog>
 
 <dialog id="exitDialog" class="dialog" aria-labelledby="exitTitle">

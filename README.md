@@ -15,7 +15,7 @@ Il Player funziona online (GitHub Pages) e offline, aprendo `index.html` con un 
 ## Come aprire il corso
 
 - **Offline:** doppio clic su `index.html`.
-- **Prova delle lezioni bloccate:** aggiungi `?dev=1` all'indirizzo (modalità sviluppo: tutto sbloccato, pannello stati, azzeramento progressi).
+- **Modalità sviluppo:** in `course.js` c'è `dev: true` (tutte le lezioni sbloccate, badge DEV che apre il pannello stati, azzeramento progressi). **Va messo a `false` prima di consegnare il corso.** In alternativa: `index.html?dev=1` per accenderla, `?dev=0` per spegnerla.
 - **Server locale per le prove (facoltativo):** `powershell -ExecutionPolicy Bypass -File tools\serve.ps1` e poi http://localhost:8123
 
 ## Come creare un corso nuovo

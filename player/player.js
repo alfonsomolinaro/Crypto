@@ -77,6 +77,12 @@
     toastAudioSub: "La lezione continua senza narrazione.",
     errVideoTitle: "Il video non è disponibile",
     errVideo: "Non riusciamo a caricare il file di questa lezione. Controlla la connessione o riprova; se il problema continua, segnalalo al docente.",
+    errVideoSkip: "Intanto puoi proseguire con la lezione successiva.",
+    expand: "Ingrandisci",
+    shrink: "Riduci",
+    openPdf: "Apri {name}",
+    openNewTab: "Apri in una nuova scheda",
+    downloadShort: "Scarica",
     errPageTitle: "La lezione non si carica",
     errPage: "La pagina di questa lezione non risponde. Riprova; se il problema continua, segnalalo al docente.",
     retry: "Riprova",
@@ -88,7 +94,7 @@
     statTime: "Tempo nel corso",
     certificate: "Scarica l'attestato",
     review: "Rivedi le lezioni",
-    rotate: "Ruota il telefono per vedere la lezione più grande.",
+    rotate: "Ruota il telefono o tocca «Ingrandisci» per vedere la lezione più grande.",
     announce: "Lezione {n} di {t}: {title}",
     iframeTitle: "Contenuto della lezione: {title}",
     devTitle: "Modalità sviluppo",
@@ -110,7 +116,7 @@
   L.forEach(function (l, i) { if (!l.id) l.id = "lezione-" + (i + 1); if (!l.type) l.type = "html"; });
 
   var NAV = C.navigation === "libera" ? "libera" : "vincolata";
-  var DEV = /[?&]dev=1(&|$)/.test(location.search) || C.dev === true;
+  var DEV = /[?&]dev=0(&|$)/.test(location.search) ? false : (/[?&]dev=1(&|$)/.test(location.search) || C.dev === true);
   var RATES = [0.75, 1, 1.25, 1.5, 2];
   var PAGE_TIMEOUT = 8000;
   var TOAST_MS = 3500;
@@ -151,6 +157,7 @@
     prefs: Object.assign({ volume: 0.8, muted: false, rate: 1 }, saved.prefs || {}),
     menuOpen: false,
     menuPref: saved.menuOpen,                   // preferenza del menu su desktop (non toccata dal mobile)
+    devPanel: window.innerWidth >= 1024,        // pannello sviluppo aperto all'avvio solo su desktop
     screen: "cover"
   };
   var noSaveWarned = false;
@@ -196,7 +203,7 @@
     $("cover").hidden = name !== "cover";
     $("player").hidden = name !== "player";
     $("final").hidden = name !== "final";
-    $("devPanel").hidden = !(DEV && name === "player");
+    renderDevPanel();
     if (name !== "player") { closeTransient(); }
   }
 
@@ -388,6 +395,11 @@
     $("infoTitle").textContent = l.title;
   }
 
+  function renderDevPanel() {
+    var open = DEV && S.screen === "player" && S.devPanel;
+    $("devPanel").hidden = !open;
+    $("devBadge").setAttribute("aria-expanded", String(!!open));
+  }
   function renderDev() {
     if (!DEV) return;
     $("devList").innerHTML = L.map(function (l, i) {
@@ -473,6 +485,8 @@
       var m = addLocal(v);
       big.addEventListener("click", function () { m.play(); });
       v.addEventListener("click", function () { m.toggle(); });
+      // iPhone non consente lo schermo intero della pagina, ma sì quello del video
+      $("expandBtn").classList.toggle("is-off", !(document.fullscreenEnabled || v.webkitEnterFullscreen));
       v.addEventListener("play", function () { wrap.classList.add("is-playing"); });
       v.addEventListener("pause", function () { wrap.classList.remove("is-playing"); });
     } else {
@@ -483,6 +497,7 @@
       stage.appendChild(f);
       frame = f;
       readyTimer = setTimeout(function () { showError("page"); }, PAGE_TIMEOUT);
+      $("expandBtn").classList.toggle("is-off", !document.fullscreenEnabled);
       if (l.audio) {
         var a = new Audio();
         a.preload = "metadata";
@@ -501,6 +516,10 @@
     clearStage();
     var title = kind === "video" ? t("errVideoTitle") : t("errPageTitle");
     var text = kind === "video" ? t("errVideo") : t("errPage");
+    // Un file mancante è un problema del corso, non dello studente: la lezione
+    // viene sbloccata per non bloccare tutto il percorso.
+    var skip = !isDone(S.idx) && S.idx < N - 1;
+    if (skip) { text += " " + t("errVideoSkip"); complete({ quiet: true }); }
     $("stage").innerHTML =
       '<div class="stage-error" role="alert"><div class="stage-error-box">' +
       '<span class="stage-error-ic">' + icon("errore") + "</span>" +
@@ -716,10 +735,11 @@
   function renderResources() {
     var res = resourcesFor(S.idx);
     if (!res.length) { $("resList").innerHTML = '<li class="res-empty">' + esc(t("noResources")) + "</li>"; return; }
-    $("resList").innerHTML = res.map(function (r) {
+    $("resList").innerHTML = res.map(function (r, k) {
       var ext = (String(r.file).split(".").pop() || "").toUpperCase();
-      return '<li class="res-item"><span class="res-ic">' + icon("file") + '</span><span class="res-text"><span class="res-name">' +
-        esc(r.title) + '</span><span class="res-meta">' + esc(ext + (r.size ? " · " + r.size : "")) + "</span></span>" +
+      return '<li class="res-item"><span class="res-ic">' + icon("file") + '</span>' +
+        '<button type="button" class="res-open" data-k="' + k + '" aria-label="' + esc(t("openPdf", { name: r.title })) + '">' +
+        '<span class="res-name">' + esc(r.title) + '</span><span class="res-meta">' + esc(ext + (r.size ? " · " + r.size : "")) + "</span></button>" +
         '<a class="ibd" href="' + esc(r.file) + '" download aria-label="' + esc(t("download", { name: r.title })) + '">' + icon("download") + "</a></li>";
     }).join("");
   }
@@ -774,15 +794,52 @@
     else document.documentElement.requestFullscreen().catch(function () {});
   }
   function updateFsLabels() {
-    var lbl = t(document.fullscreenElement ? "exitFullscreen" : "fullscreen");
-    $("fsBtn").setAttribute("aria-label", lbl);
-    $("hmFs").querySelector("span").textContent = lbl;
+    var fs = !!document.fullscreenElement;
+    var lbl = t(fs ? "exitFullscreen" : "fullscreen");
+    if ($("fsBtn")) $("fsBtn").setAttribute("aria-label", lbl);
+    if ($("hmFs")) $("hmFs").querySelector("span").textContent = lbl;
+    $("expandLbl").textContent = t(fs ? "shrink" : "expand");
+    if (!fs && screen.orientation && screen.orientation.unlock) { try { screen.orientation.unlock(); } catch (e) { /* niente */ } }
+  }
+
+  /** Smartphone: schermo intero e, dove il browser lo consente, orientamento orizzontale. */
+  function expandStage() {
+    if (document.fullscreenElement) { document.exitFullscreen(); return; }
+    if (document.fullscreenEnabled) {
+      document.documentElement.requestFullscreen().then(function () {
+        if (screen.orientation && screen.orientation.lock) screen.orientation.lock("landscape").catch(function () {});
+      }).catch(function () {});
+      return;
+    }
+    var v = $("stage").querySelector("video");
+    if (v && v.webkitEnterFullscreen) v.webkitEnterFullscreen();
+  }
+
+  /* ---------- Visualizzatore PDF ---------- */
+  function isPdf(file) { return /\.pdf($|[?#])/i.test(String(file)); }
+  function openResource(r) {
+    // Su smartphone i browser non mostrano i PDF dentro la pagina: si apre una nuova scheda.
+    if (!isPdf(r.file) || window.matchMedia("(max-width: 767px), (pointer: coarse)").matches) {
+      window.open(r.file, "_blank", "noopener");
+      return;
+    }
+    toggleRes(false);
+    $("pdfTitle").textContent = r.title;
+    $("pdfFrame").title = r.title;
+    $("pdfFrame").src = r.file;
+    $("pdfNewTab").href = r.file;
+    $("pdfDownload").href = r.file;
+    $("pdfDialog").showModal();
+    $("pdfClose").focus();
+  }
+  function closePdf() {
+    $("pdfDialog").close();
   }
 
   /* ---------- Tastiera ---------- */
   function handleKey(key) {
     if (S.screen !== "player") return false;
-    if ($("exitDialog").open || $("mediaSheet").open) return false;
+    if ($("exitDialog").open || $("mediaSheet").open || $("pdfDialog").open) return false;
     switch (key) {
       case "ArrowLeft": prev(); return true;
       case "ArrowRight": next(); return true;
@@ -865,6 +922,16 @@
     $("exitCancel").addEventListener("click", function () { $("exitDialog").close(); });
     $("exitConfirm").addEventListener("click", confirmExit);
     $("exitDialog").addEventListener("click", function (e) { if (e.target === $("exitDialog")) $("exitDialog").close(); });
+
+    $("resList").addEventListener("click", function (e) {
+      var b = e.target.closest(".res-open");
+      if (b) openResource(resourcesFor(S.idx)[+b.getAttribute("data-k")]);
+    });
+    $("pdfClose").addEventListener("click", closePdf);
+    $("pdfDialog").addEventListener("click", function (e) { if (e.target === $("pdfDialog")) closePdf(); });
+    $("pdfDialog").addEventListener("close", function () { $("pdfFrame").src = "about:blank"; });
+    $("expandBtn").addEventListener("click", expandStage);
+    $("devBadge").addEventListener("click", function () { S.devPanel = !S.devPanel; renderDevPanel(); });
 
     $("fsBtn").addEventListener("click", toggleFullscreen);
     document.addEventListener("fullscreenchange", updateFsLabels);

@@ -153,8 +153,8 @@ a { color: var(--color-accent-text); }
 .crumb-sep { width: 16px; height: 16px; opacity: .5; }
 .crumb-lesson { font-size: 15px; color: var(--color-on-dark-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .dev-badge {
-  flex: none; font-size: 12px; font-weight: 700; letter-spacing: .08em;
-  padding: 4px 9px; border-radius: var(--radius-sm); background: var(--color-error); color: #fff;
+  flex: none; font-size: 12px; font-weight: 700; letter-spacing: .08em; line-height: 1;
+  padding: 6px 10px; border: 0; border-radius: var(--radius-sm); background: var(--color-error); color: #fff;
 }
 .hdr-progress { display: flex; align-items: center; gap: 10px; margin-right: 8px; }
 .hdr-progress .bar { width: 140px; height: 6px; }
@@ -277,6 +277,35 @@ a { color: var(--color-accent-text); }
 .stage-error .btn { height: 52px; font-size: 17px; }
 
 .info-panel { display: none; }
+
+/* Pulsante "Ingrandisci" (solo smartphone): schermo intero + orientamento orizzontale */
+.expand-btn {
+  position: absolute; right: 8px; bottom: 8px; z-index: 2;
+  height: 36px; padding: 0 12px; border: 0; border-radius: var(--radius-pill);
+  align-items: center; gap: 6px;
+  background: rgba(15, 24, 38, .78); color: #fff; font-size: 13px; font-weight: 600;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, .25);
+}
+.expand-btn .icon { width: 16px; height: 16px; }
+
+/* Visualizzatore PDF */
+.pdf-dialog {
+  width: min(1100px, calc(100vw - 48px)); height: calc(100vh - 48px); max-height: none;
+  border-radius: var(--radius-lg); box-shadow: var(--shadow-xl); background: var(--color-surface);
+}
+.pdf-dialog[open] { display: flex; flex-direction: column; animation: rise var(--duration-base) var(--ease-standard); }
+.pdf-head {
+  display: flex; align-items: center; gap: 10px; padding: 8px 8px 8px 18px;
+  border-bottom: 1px solid var(--color-border); color: var(--color-primary);
+}
+.pdf-head h2 { flex: 1; min-width: 0; font-size: 16px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pdf-link { font-size: 14px; font-weight: 500; white-space: nowrap; margin-right: 6px; }
+.pdf-frame { flex: 1; width: 100%; border: 0; background: var(--color-letterbox); }
+.res-open {
+  flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px;
+  border: 0; background: transparent; text-align: left; padding: 0; color: inherit;
+}
+.res-open:hover .res-name { text-decoration: underline; }
 
 /* ---------- Barra inferiore ---------- */
 .navbar {
@@ -487,8 +516,8 @@ dialog::backdrop { background: var(--color-scrim); }
   .lbl-md-hide { display: none; }
   .hide-md { display: none !important; }
   .range-seek { width: 220px; }
+  #mReplay { display: none; }
   .cover-inner { padding: 64px 48px; gap: 48px; }
-  .dev-panel { display: none !important; }
 }
 
 /* =========================================================================
@@ -529,6 +558,10 @@ dialog::backdrop { background: var(--color-scrim); }
   .dialog-actions { flex-direction: column-reverse; }
   .dialog-actions .btn { width: 100%; height: 50px; }
   .toasts { left: 12px; right: 12px; width: auto; bottom: calc(var(--navbar-h) + 32px); }
+  .expand-btn.is-off { display: none !important; }
+  .dev-panel { left: 12px; right: 12px; width: auto; top: calc(var(--header-h) + 8px); }
+  .pdf-dialog { width: 100vw; height: 100%; max-width: 100vw; margin: 0; border-radius: 0; }
+  .pdf-link { display: none; }
 
   .cover-inner { display: flex; flex-direction: column; align-items: stretch; padding: 48px 24px 28px; gap: 24px; }
   .cover-main { gap: 16px; }
@@ -552,19 +585,15 @@ dialog::backdrop { background: var(--color-scrim); }
   .stage-area { flex: none; width: 100%; aspect-ratio: 16 / 9; padding: 0; background: var(--color-letterbox); }
   .stage-box { border-radius: 0; box-shadow: none; }
   .info-panel {
-    display: flex; flex-direction: column; gap: 12px; padding: 20px 16px;
+    display: flex; flex-direction: column; gap: 8px; padding: 10px 16px 16px;
     overflow-y: auto; flex: 1; min-height: 0;
   }
-  .info-title { font-size: 22px; line-height: 1.25; font-weight: 700; color: var(--color-primary); }
   .rotate-hint {
-    display: flex; gap: 12px; align-items: center; font-size: 14px; line-height: 1.45;
-    background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 12px; padding: 14px;
+    display: flex; gap: 8px; align-items: center; font-size: 12px; line-height: 1.4;
+    color: var(--color-text-muted); margin-bottom: 8px;
   }
-  .rotate-ic {
-    width: 40px; height: 40px; flex: none; border-radius: 10px;
-    display: flex; align-items: center; justify-content: center;
-    background: var(--color-primary-100); color: var(--color-primary);
-  }
+  .rotate-hint .icon { width: 16px; height: 16px; color: var(--color-primary); }
+  .info-title { font-size: 20px; line-height: 1.25; font-weight: 700; color: var(--color-primary); }
 }
 
 /* Smartphone in orizzontale (poca altezza): cornici minime */

@@ -8,7 +8,10 @@ window.COURSE = {
   title: "Crittografia: le basi",
   description: "[Descrizione breve del corso: cosa imparerai e a chi è rivolto.]",
   navigation: "vincolata",              // "vincolata" (ogni lezione sblocca la successiva) | "libera"
-  // dev: true,                         // modalità sviluppo (in alternativa: index.html?dev=1)
+  // MODALITÀ SVILUPPO: tutte le lezioni sbloccate, badge DEV, pannello stati e "Azzera progressi".
+  // Mettere false prima di consegnare il corso agli studenti.
+  // (In alternativa si può usare l'indirizzo index.html?dev=1, e ?dev=0 per spegnerla.)
+  dev: true,
   // certificate: "resources/attestato.pdf",   // se presente, compare "Scarica l'attestato" alla fine
 
   // Facoltativo: sovrascrive i design token di player/tokens.css
@@ -17,8 +20,11 @@ window.COURSE = {
     // "--color-accent": "#A97835"
   },
 
-  // Risorse scaricabili disponibili in tutto il corso
+  // Fonti e risorse disponibili in tutto il corso (pulsante "Risorse" in alto).
+  // I PDF si aprono dentro il Player su computer, in una nuova scheda su smartphone.
+  // Si possono aggiungere risorse anche a una singola lezione, con la stessa proprietà "resources".
   resources: [
+    { title: "Fonte di esempio", file: "resources/fonte-esempio.pdf", size: "1 KB" }
     // { title: "Slide del corso", file: "resources/slide.pdf", size: "2,4 MB" }
   ],
 
