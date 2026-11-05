@@ -19,21 +19,26 @@ Write-Host "Corso disponibile su http://localhost:$Port/  (Ctrl+C per fermare)"
 try {
   while ($listener.IsListening) {
     $ctx = $listener.GetContext()
-    $path = [Uri]::UnescapeDataString($ctx.Request.Url.AbsolutePath.TrimStart("/"))
-    if ($path -eq "" -or $path.EndsWith("/")) { $path += "index.html" }
-    $file = [System.IO.Path]::GetFullPath((Join-Path $root $path))
-    $res = $ctx.Response
-    if ($file.StartsWith($root) -and (Test-Path $file -PathType Leaf)) {
-      $ext = [System.IO.Path]::GetExtension($file).ToLower()
-      $res.ContentType = if ($types.ContainsKey($ext)) { $types[$ext] } else { "application/octet-stream" }
-      $res.Headers.Add("Cache-Control", "no-store")
-      $bytes = [System.IO.File]::ReadAllBytes($file)
-      $res.ContentLength64 = $bytes.Length
-      $res.OutputStream.Write($bytes, 0, $bytes.Length)
-    } else {
-      $res.StatusCode = 404
+    # Ogni richiesta è isolata: se il browser interrompe un download (es. un video), il server continua.
+    try {
+      $path = [Uri]::UnescapeDataString($ctx.Request.Url.AbsolutePath.TrimStart("/"))
+      if ($path -eq "" -or $path.EndsWith("/")) { $path += "index.html" }
+      $file = [System.IO.Path]::GetFullPath((Join-Path $root $path))
+      $res = $ctx.Response
+      if ($file.StartsWith($root) -and (Test-Path $file -PathType Leaf)) {
+        $ext = [System.IO.Path]::GetExtension($file).ToLower()
+        $res.ContentType = if ($types.ContainsKey($ext)) { $types[$ext] } else { "application/octet-stream" }
+        $res.Headers.Add("Cache-Control", "no-store")
+        $bytes = [System.IO.File]::ReadAllBytes($file)
+        $res.ContentLength64 = $bytes.Length
+        $res.OutputStream.Write($bytes, 0, $bytes.Length)
+      } else {
+        $res.StatusCode = 404
+      }
+      $res.Close()
+    } catch {
+      try { $ctx.Response.Abort() } catch { }
     }
-    $res.Close()
   }
 } finally {
   $listener.Stop()

@@ -2,27 +2,386 @@
 <html lang="it">
 <head>
 <meta charset="utf-8">
-<title>Crittografia asimmetrica</title>
+<title>Crittografia asimmetrica e algoritmo di Shor</title>
 <link rel="stylesheet" href="../pagina.css">
+<style>
+  body { gap: 16px; }
+  h1 { font-size: 38px; }
+  .passo { gap: 18px; }
+
+  /* Icone nelle card */
+  .ic { width: 52px; height: 52px; border-radius: 14px; display: flex; align-items: center; justify-content: center; background: var(--color-primary-100); color: var(--color-primary); }
+  .ic svg { width: 30px; height: 30px; }
+  .ic.oro { background: var(--color-accent-100); color: var(--color-accent-text); }
+  .card .num { display: block; font-size: 15px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--color-accent-text); }
+  .card-head { display: flex; align-items: center; gap: 14px; }
+  .card-head .ic { flex: none; }
+
+  /* Chiavi RSA */
+  .chiave { display: flex; gap: 14px; align-items: center; padding: 16px 18px; border-radius: 14px; border: 1.5px solid var(--color-border); font-size: 19px; }
+  .chiave b { color: var(--color-primary); }
+  .chiave.privata { background: var(--color-accent-100); border-color: transparent; }
+  .mono { font-family: ui-monospace, Consolas, monospace; font-size: 20px; }
+
+  /* Laboratorio RSA */
+  .lab { background: var(--color-bg); border: 1px solid var(--color-border); border-radius: 16px; padding: 22px 24px; display: flex; flex-direction: column; gap: 14px; }
+  .lab label { font-size: 19px; font-weight: 600; color: var(--color-primary); }
+  .lab input[type=range] { width: 100%; height: 32px; accent-color: var(--color-primary); }
+  .riga { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; font-size: 19px; padding: 10px 0; border-bottom: 1px solid var(--color-border); }
+  .riga:last-child { border-bottom: 0; }
+  .riga .valore { font-family: ui-monospace, Consolas, monospace; font-size: 26px; font-weight: 700; color: var(--color-primary); }
+  .riga .valore.oro { color: var(--color-accent-text); }
+
+  /* Gioco della fattorizzazione */
+  .fattori { display: flex; align-items: center; gap: 12px; font-size: 26px; font-weight: 700; color: var(--color-primary); }
+  .fattori input { width: 90px; height: 56px; font: 700 24px var(--font-family); text-align: center; border: 1.5px solid var(--color-border); border-radius: 10px; color: var(--color-primary); }
+  .fattori input:focus-visible { outline: 3px solid var(--color-accent-text); outline-offset: 2px; }
+  table { width: 100%; border-collapse: collapse; font-size: 19px; }
+  th, td { text-align: left; padding: 12px 10px; border-bottom: 1px solid var(--color-border); vertical-align: top; }
+  th { font-size: 17px; text-transform: uppercase; letter-spacing: .06em; color: var(--color-text-muted); font-weight: 600; }
+  td.forte { font-weight: 600; color: var(--color-primary); }
+
+  /* Simulazione di Shor */
+  .scelta-n { display: flex; gap: 10px; align-items: center; font-size: 19px; }
+  .scelta-n button { height: 48px; padding: 0 18px; font-size: 18px; }
+  .scelta-n button[aria-pressed="true"] { background: var(--color-primary); color: #fff; box-shadow: none; }
+  .sequenza { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 6px; }
+  .cella { border-radius: 10px; background: #fff; border: 1.5px solid var(--color-border); padding: 6px 2px; text-align: center; }
+  .cella small { display: block; font-size: 17px; color: var(--color-text-muted); }
+  .cella b { font-size: 22px; color: var(--color-primary); }
+  .cella.periodo { background: var(--color-accent-100); border-color: var(--color-accent); }
+  .cella.vuota b { color: var(--color-border); }
+  .azioni { display: flex; gap: 10px; flex-wrap: wrap; }
+  .azioni button { height: 48px; font-size: 17px; padding: 0 18px; }
+  .esito { font-size: 20px; line-height: 1.5; min-height: 90px; }
+  .esito b { color: var(--color-primary); }
+  ol.fasi { margin: 0; padding-left: 26px; display: flex; flex-direction: column; gap: 10px; font-size: 19px; line-height: 1.45; color: var(--color-text); }
+  ol.fasi li::marker { color: var(--color-accent-text); font-weight: 700; }
+
+  /* Quiz */
+  .domanda { display: flex; flex-direction: column; gap: 8px; }
+  .domanda p { font-size: 20px; font-weight: 600; color: var(--color-primary); max-width: none; }
+  .opzioni { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+  .opzioni button { height: auto; min-height: 56px; padding: 10px 14px; text-align: left; line-height: 1.3; font-size: 17px; font-weight: 500;
+    background: #fff; color: var(--color-text); box-shadow: inset 0 0 0 1.5px var(--color-border); }
+  .opzioni button:hover { background: var(--color-bg); }
+  .opzioni button.giusta { background: var(--color-success-100); color: var(--color-success); box-shadow: inset 0 0 0 2px var(--color-success); font-weight: 600; }
+  .opzioni button.sbagliata { background: var(--color-error-100); color: var(--color-error); box-shadow: inset 0 0 0 2px var(--color-error); }
+
+  /* Indicatore dei passi */
+  .punti { display: flex; gap: 8px; }
+  .punti span { width: 10px; height: 10px; border-radius: 50%; background: var(--color-border); }
+  .punti span.attivo { background: var(--color-accent); }
+  .passi-nav { justify-content: flex-start; }
+  .passi-nav .spazio { flex: 1; }
+</style>
 </head>
 <body>
-  <p class="overline">Lezione 4 · Contenuto interattivo · segnaposto</p>
-  <h1>Crittografia asimmetrica</h1>
-  <p>[Qui andrà il contenuto della lezione. Questa pagina di prova serve a verificare il collegamento con il Player.]</p>
-  <div class="area" id="area">
-    <span class="todo">[Area dell'interazione]</span>
-    <button type="button" class="todo" id="doneBtn">Segna come completata</button>
-    <span class="done">✓ Lezione completata</span>
+  <p class="overline">Lezione 4 · Contenuto interattivo · demo</p>
+  <h1>Crittografia asimmetrica e algoritmo di Shor</h1>
+
+  <!-- ================= PASSO 1 · L'idea ================= -->
+  <section class="passo" aria-label="Passo 1 di 6: l'idea">
+    <p class="testo">Nella crittografia <strong>asimmetrica</strong> ognuno ha <strong>due chiavi</strong>: una <strong>pubblica</strong>, da dare a chiunque, e una <strong>privata</strong>, da tenere segreta. È come un lucchetto aperto: chiunque può chiuderlo, solo il proprietario sa riaprirlo.</p>
+    <div class="griglia-3">
+      <div class="card">
+        <div class="card-head"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 7.5-2"/></svg></span>
+        <span><span class="num">1 · Bob</span><h3>Crea le due chiavi</h3></span></div>
+        <p>Pubblica la chiave pubblica (il lucchetto aperto) e conserva la privata.</p>
+      </div>
+      <div class="card">
+        <div class="card-head"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></span>
+        <span><span class="num">2 · Alice</span><h3>Cifra il messaggio</h3></span></div>
+        <p>Usa la chiave <strong>pubblica</strong> di Bob: da quel momento nemmeno lei può più leggerlo.</p>
+      </div>
+      <div class="card">
+        <div class="card-head"><span class="ic oro"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M17 6l3 3M15 8l2 2"/></svg></span>
+        <span><span class="num">3 · Bob</span><h3>Decifra il messaggio</h3></span></div>
+        <p>Solo la sua chiave <strong>privata</strong> può aprirlo. Chi lo intercetta vede solo numeri.</p>
+      </div>
+    </div>
+    <div class="box-info"><span><strong>La differenza.</strong> Nella crittografia simmetrica serve una sola chiave condivisa, da scambiarsi in segreto. Qui non serve: la chiave pubblica può viaggiare in chiaro.</span></div>
+  </section>
+
+  <!-- ================= PASSO 2 · RSA in piccolo ================= -->
+  <section class="passo" aria-label="Passo 2 di 6: RSA in piccolo" hidden>
+    <div class="griglia-2">
+      <div style="display: flex; flex-direction: column; gap: 14px;">
+        <p class="testo">L'algoritmo più famoso è <strong>RSA</strong>. Ecco una versione «giocattolo» con numeri piccolissimi: Bob sceglie due numeri primi, <span class="mono">p = 5</span> e <span class="mono">q = 11</span>, e li moltiplica.</p>
+        <div class="chiave"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 7.5-2"/></svg></span><span><b>Chiave pubblica</b> (per tutti):<br><span class="mono">n = 55, e = 3</span></span></div>
+        <div class="chiave privata"><span class="ic oro"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M17 6l3 3M15 8l2 2"/></svg></span><span><b>Chiave privata</b> (solo Bob):<br><span class="mono">d = 27</span>, calcolata grazie a 5 e 11</span></div>
+      </div>
+      <div class="lab">
+        <label for="msg">Prova tu: scegli il messaggio (un numero)</label>
+        <input type="range" id="msg" min="2" max="54" value="12" aria-describedby="rsaRisultati">
+        <div id="rsaRisultati" aria-live="polite">
+          <div class="riga"><span>Messaggio di Alice <span class="mono">m</span></span><span class="valore" id="vM">12</span></div>
+          <div class="riga"><span>Cifrato: <span class="mono">m³ mod 55</span></span><span class="valore oro" id="vC">23</span></div>
+          <div class="riga"><span>Bob decifra: <span class="mono">c²⁷ mod 55</span></span><span class="valore" id="vD">12</span></div>
+        </div>
+        <p class="piccolo">«mod 55» significa «il resto della divisione per 55». Senza conoscere <span class="mono">d = 27</span>, dal numero cifrato non si torna al messaggio.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= PASSO 3 · Perché è sicura ================= -->
+  <section class="passo" aria-label="Passo 3 di 6: perché è sicura" hidden>
+    <div class="griglia-2">
+      <div style="display: flex; flex-direction: column; gap: 16px;">
+        <p class="testo">Chi conosce i due primi <span class="mono">p</span> e <span class="mono">q</span> può calcolare la chiave privata. Quindi la sicurezza di RSA dipende da una sola domanda: <strong>quanto è difficile scomporre <span class="mono">n</span> nei suoi fattori primi?</strong></p>
+        <div class="lab">
+          <label for="fp">Prova: quali due numeri primi danno 91?</label>
+          <div class="fattori">
+            <input id="fp" inputmode="numeric" maxlength="3" aria-label="Primo fattore"> <span aria-hidden="true">×</span>
+            <input id="fq" inputmode="numeric" maxlength="3" aria-label="Secondo fattore"> <span aria-hidden="true">= 91</span>
+            <button type="button" id="verificaFattori">Verifica</button>
+          </div>
+          <div class="feedback" id="fbFattori" aria-live="polite"></div>
+        </div>
+      </div>
+      <table>
+        <caption class="sr-only">Difficoltà della fattorizzazione al crescere di n</caption>
+        <thead><tr><th scope="col">Numero n</th><th scope="col">Cifre</th><th scope="col">Computer classico</th></tr></thead>
+        <tbody>
+          <tr><td class="forte">91</td><td>2</td><td>istantaneo, anche a mente</td></tr>
+          <tr><td class="forte">3.233</td><td>4</td><td>pochi tentativi (61 × 53)</td></tr>
+          <tr><td class="forte">RSA-2048</td><td>617</td><td>fuori portata: con gli algoritmi noti servirebbero tempi enormemente più lunghi dell'età dell'universo</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ================= PASSO 4 · L'algoritmo di Shor ================= -->
+  <section class="passo" aria-label="Passo 4 di 6: l'algoritmo di Shor" hidden>
+    <div style="display: grid; grid-template-columns: 380px minmax(0, 1fr); gap: 28px; align-items: start;">
+      <div style="display: flex; flex-direction: column; gap: 12px;">
+        <p class="testo" style="font-size: 20px;">Nel 1994 Peter <strong>Shor</strong> ha mostrato che un computer quantistico potrebbe fattorizzare in modo efficiente. Il trucco: trasformare la fattorizzazione nella ricerca di un <strong>periodo</strong>.</p>
+        <ol class="fasi">
+          <li>Scegli un numero <span class="mono">a</span> e calcola <span class="mono">aˣ mod N</span>.</li>
+          <li>La sequenza si ripete: trova ogni quanti passi (il periodo <span class="mono">r</span>). <strong>È qui che serve il computer quantistico.</strong></li>
+          <li>Con <span class="mono">r</span>, un semplice calcolo (MCD) dà i fattori.</li>
+        </ol>
+      </div>
+      <div class="lab" style="gap: 12px;">
+        <div class="scelta-n" role="group" aria-label="Numero da fattorizzare">
+          <span>Numero da scomporre:</span>
+          <button type="button" class="btn-secondario" data-n="15" aria-pressed="true">N = 15 (a = 7)</button>
+          <button type="button" class="btn-secondario" data-n="21" aria-pressed="false">N = 21 (a = 2)</button>
+        </div>
+        <div class="sequenza" id="sequenza" aria-label="Valori di a elevato x, modulo N"></div>
+        <div class="azioni">
+          <button type="button" id="bSeq">1 · Calcola la sequenza</button>
+          <button type="button" id="bPer" class="btn-secondario" disabled>2 · Trova il periodo</button>
+          <button type="button" id="bFat" class="btn-secondario" disabled>3 · Ricava i fattori</button>
+        </div>
+        <div class="esito" id="esitoShor" aria-live="polite">Premi «Calcola la sequenza» per iniziare.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= PASSO 5 · Oggi e domani ================= -->
+  <section class="passo" aria-label="Passo 5 di 6: oggi e domani" hidden>
+    <div class="griglia-3">
+      <div class="card">
+        <span class="num">La minaccia</span>
+        <h3>Shor rompe RSA</h3>
+        <p>Su un computer quantistico abbastanza grande, l'algoritmo di Shor scompone anche i numeri di RSA-2048. Lo stesso vale per la crittografia a curve ellittiche.</p>
+      </div>
+      <div class="card">
+        <span class="num">Lo stato attuale</span>
+        <h3>Non ancora possibile</h3>
+        <p>Servirebbero centinaia di migliaia di qubit affidabili; le macchine di oggi ne hanno molti meno e con troppi errori. Con Shor si sono scomposti solo numeri piccoli, come 15 e 21.</p>
+      </div>
+      <div class="card">
+        <span class="num">La risposta</span>
+        <h3>Crittografia post-quantistica</h3>
+        <p>Nel 2024 il NIST ha pubblicato i primi standard resistenti ai computer quantistici (ML-KEM, ML-DSA, SLH-DSA), basati su problemi che Shor non risolve.</p>
+      </div>
+    </div>
+    <div class="box-info"><span><strong>«Raccogli ora, decifra dopo».</strong> Dati cifrati oggi possono essere conservati e decifrati quando i computer quantistici saranno pronti: per questo la migrazione è già iniziata.</span></div>
+  </section>
+
+  <!-- ================= PASSO 6 · Verifica ================= -->
+  <section class="passo" aria-label="Passo 6 di 6: verifica" hidden>
+    <p class="testo">Rispondi correttamente alle tre domande per completare la lezione.</p>
+    <div class="domanda" data-q="1">
+      <p>1. Alice cifra con la chiave pubblica di Bob. Quale chiave serve per decifrare?</p>
+      <div class="opzioni">
+        <button type="button">La chiave pubblica di Bob</button>
+        <button type="button" data-ok>La chiave privata di Bob</button>
+        <button type="button">La chiave privata di Alice</button>
+      </div>
+    </div>
+    <div class="domanda" data-q="2">
+      <p>2. Su quale problema si basa la sicurezza di RSA?</p>
+      <div class="opzioni">
+        <button type="button">Sulla lunghezza del messaggio</button>
+        <button type="button">Sul segreto dell'algoritmo</button>
+        <button type="button" data-ok>Sulla difficoltà di fattorizzare numeri enormi</button>
+      </div>
+    </div>
+    <div class="domanda" data-q="3">
+      <p>3. Nell'algoritmo di Shor, cosa calcola in modo efficiente il computer quantistico?</p>
+      <div class="opzioni">
+        <button type="button" data-ok>Il periodo della sequenza aˣ mod N</button>
+        <button type="button">Tutte le chiavi private possibili</button>
+        <button type="button">Il messaggio in chiaro, direttamente</button>
+      </div>
+    </div>
+    <div class="feedback" id="fbQuiz" aria-live="polite"></div>
+  </section>
+
+  <div class="passi-nav">
+    <button type="button" class="btn-secondario" id="indietro">Indietro</button>
+    <button type="button" id="continua">Continua</button>
+    <span id="contatore">Passo 1 di 6</span>
+    <span class="spazio"></span>
+    <span class="punti" id="punti" aria-hidden="true"></span>
   </div>
+
   <script src="../../player/player-bridge.js"></script>
   <script>
-    document.getElementById("doneBtn").addEventListener("click", function () {
-      player.complete();
-      document.getElementById("area").classList.add("is-done");
+    /* ---------- Passi ---------- */
+    var passi = Array.prototype.slice.call(document.querySelectorAll(".passo"));
+    var attuale = 0;
+    var punti = document.getElementById("punti");
+    punti.innerHTML = passi.map(function () { return "<span></span>"; }).join("");
+    function mostraPasso(n) {
+      attuale = n;
+      passi.forEach(function (p, i) { p.hidden = i !== n; });
+      document.getElementById("indietro").hidden = n === 0;
+      document.getElementById("continua").hidden = n === passi.length - 1;
+      document.getElementById("contatore").textContent = "Passo " + (n + 1) + " di " + passi.length;
+      Array.prototype.forEach.call(punti.children, function (s, i) { s.className = i <= n ? "attivo" : ""; });
+    }
+    document.getElementById("continua").addEventListener("click", function () { mostraPasso(attuale + 1); });
+    document.getElementById("indietro").addEventListener("click", function () { mostraPasso(attuale - 1); });
+
+    /* ---------- Aritmetica (BigInt per non perdere precisione) ---------- */
+    function modpow(b, e, m) {
+      b = BigInt(b); e = BigInt(e); m = BigInt(m);
+      var r = 1n; b %= m;
+      while (e > 0n) { if (e & 1n) r = r * b % m; b = b * b % m; e >>= 1n; }
+      return Number(r);
+    }
+    function mcd(a, b) { a = Math.abs(a); b = Math.abs(b); while (b) { var t = b; b = a % b; a = t; } return a; }
+
+    /* ---------- Passo 2: RSA giocattolo (n = 55, e = 3, d = 27) ---------- */
+    var slider = document.getElementById("msg");
+    function aggiornaRSA() {
+      var m = +slider.value, c = modpow(m, 3, 55), d = modpow(c, 27, 55);
+      document.getElementById("vM").textContent = m;
+      document.getElementById("vC").textContent = c;
+      document.getElementById("vD").textContent = d;
+    }
+    slider.addEventListener("input", aggiornaRSA);
+    aggiornaRSA();
+
+    /* ---------- Passo 3: fattorizzare 91 ---------- */
+    document.getElementById("verificaFattori").addEventListener("click", function () {
+      var p = parseInt(document.getElementById("fp").value, 10), q = parseInt(document.getElementById("fq").value, 10);
+      var fb = document.getElementById("fbFattori");
+      if (p * q === 91 && p > 1 && q > 1) {
+        fb.className = "feedback ok";
+        fb.textContent = "✓ Esatto: 7 × 13 = 91. Facile con numeri piccoli, impossibile con 617 cifre.";
+      } else {
+        fb.className = "feedback ko";
+        fb.textContent = "✗ Non ancora. Suggerimento: uno dei due fattori è 7.";
+      }
     });
+
+    /* ---------- Passo 4: simulazione di Shor ---------- */
+    var CASI = { 15: 7, 21: 2 };
+    var N = 15, fase = 0, periodo = 0;
+    var seq = document.getElementById("sequenza"), esito = document.getElementById("esitoShor");
+    var bSeq = document.getElementById("bSeq"), bPer = document.getElementById("bPer"), bFat = document.getElementById("bFat");
+    function disegnaSequenza(mostra) {
+      var a = CASI[N], html = "";
+      for (var x = 0; x < 12; x++) {
+        var v = modpow(a, x, N);
+        var cls = "cella" + (mostra ? "" : " vuota") + (mostra && periodo && x > 0 && x <= periodo ? " periodo" : "");
+        html += '<div class="' + cls + '"><small>x=' + x + "</small><b>" + (mostra ? v : "?") + "</b></div>";
+      }
+      seq.innerHTML = html;
+    }
+    function reimposta() {
+      fase = 0; periodo = 0;
+      bPer.disabled = true; bFat.disabled = true;
+      esito.textContent = "Premi «Calcola la sequenza» per iniziare.";
+      disegnaSequenza(false);
+    }
+    document.querySelectorAll(".scelta-n button").forEach(function (b) {
+      b.addEventListener("click", function () {
+        N = +b.getAttribute("data-n");
+        document.querySelectorAll(".scelta-n button").forEach(function (o) { o.setAttribute("aria-pressed", String(o === b)); });
+        reimposta();
+      });
+    });
+    bSeq.addEventListener("click", function () {
+      fase = 1; periodo = 0; disegnaSequenza(true);
+      bPer.disabled = false; bFat.disabled = true;
+      esito.innerHTML = "Ecco <b>" + CASI[N] + "ˣ mod " + N + "</b> per x da 0 a 11. Noti che i valori si ripetono? Un computer classico deve provarli uno per uno: con numeri enormi è impossibile.";
+    });
+    bPer.addEventListener("click", function () {
+      var a = CASI[N];
+      for (var r = 1; r < N; r++) { if (modpow(a, r, N) === 1) { periodo = r; break; } }
+      fase = 2; disegnaSequenza(true); bFat.disabled = false;
+      esito.innerHTML = "Il periodo è <b>r = " + periodo + "</b>: ogni " + periodo + " passi la sequenza ricomincia. Un computer quantistico trova r con la <b>trasformata di Fourier quantistica</b>, in modo efficiente anche per numeri enormi.";
+    });
+    bFat.addEventListener("click", function () {
+      var a = CASI[N], y = modpow(a, periodo / 2, N), f1 = mcd(y - 1, N), f2 = mcd(y + 1, N);
+      fase = 3;
+      esito.innerHTML = "Con r = " + periodo + ": " + a + "<sup>" + (periodo / 2) + "</sup> mod " + N + " = <b>" + y + "</b>. " +
+        "Poi MCD(" + (y - 1) + ", " + N + ") = <b>" + f1 + "</b> e MCD(" + (y + 1) + ", " + N + ") = <b>" + f2 + "</b>. " +
+        "Fattori trovati: <b>" + N + " = " + f1 + " × " + f2 + "</b>.";
+    });
+    reimposta();
+
+    /* ---------- Passo 6: quiz (la lezione si completa con 3 risposte giuste) ---------- */
+    var giuste = {};
+    var fbQuiz = document.getElementById("fbQuiz");
+    function controllaQuiz() {
+      var n = Object.keys(giuste).length;
+      if (n === 3) {
+        fbQuiz.className = "feedback ok";
+        fbQuiz.textContent = "✓ Tutte corrette! Hai completato la lezione: ora puoi andare avanti.";
+        player.complete();
+      } else {
+        fbQuiz.className = "feedback";
+        fbQuiz.textContent = "";
+      }
+    }
+    document.querySelectorAll(".domanda").forEach(function (d) {
+      d.addEventListener("click", function (e) {
+        var b = e.target.closest("button");
+        if (!b || giuste[d.getAttribute("data-q")]) return;
+        d.querySelectorAll("button").forEach(function (o) { o.classList.remove("sbagliata"); });
+        if (b.hasAttribute("data-ok")) {
+          b.classList.add("giusta");
+          b.textContent = "✓ " + b.textContent;
+          giuste[d.getAttribute("data-q")] = true;
+          controllaQuiz();
+        } else {
+          b.classList.add("sbagliata");
+          fbQuiz.className = "feedback ko";
+          fbQuiz.textContent = "✗ La risposta «" + b.textContent + "» non è corretta: riprova.";
+        }
+      });
+    });
+
+    /* Se la lezione era già completata, mostra il quiz risolto */
     document.addEventListener("player:init", function (e) {
-      if (e.detail.lesson.status === "done") document.getElementById("area").classList.add("is-done");
+      if (e.detail.lesson.status !== "done") return;
+      document.querySelectorAll(".domanda").forEach(function (d) {
+        var b = d.querySelector("[data-ok]");
+        if (!b.classList.contains("giusta")) { b.classList.add("giusta"); b.textContent = "✓ " + b.textContent; }
+        giuste[d.getAttribute("data-q")] = true;
+      });
+      fbQuiz.className = "feedback ok";
+      fbQuiz.textContent = "✓ Lezione già completata.";
     });
+
+    mostraPasso(0);
   </script>
 </body>
 </html>
