@@ -12,6 +12,8 @@ Il Player funziona online (GitHub Pages) e offline, aprendo `index.html` con un 
 - [ ] Contenuti delle lezioni (ora ci sono pagine di prova)
 - [ ] Pacchetto SCORM 1.2
 
+📘 **[Manuale d'uso del Player](docs/manuale-player.md)**: come si usa il corso e come si crea o modifica.
+
 ## Come aprire il corso
 
 - **Offline:** doppio clic su `index.html`.
@@ -35,6 +37,7 @@ La cartella `player/` resta identica per tutti i corsi.
 | `player/` | Il Player: stili, token, logica, salvataggio, bridge |
 | `pages/` | Pagine delle lezioni (ora pagine di prova) |
 | `media/`, `resources/` | Video, audio e file scaricabili |
+| `docs/manuale-player.md` | **Manuale d'uso del Player**: per chi segue il corso e per chi lo crea |
 | `docs/relazione-traccia.md` | Riepilogo del lavoro e traccia della relazione |
 | `design/specifiche.md` | Specifiche per lo sviluppo: struttura, comportamenti, responsive, accessibilità, `course.js`, bridge |
 | `design/tokens.css` | Design token (colori, tipografia, spaziature, animazioni) |
