@@ -339,10 +339,35 @@ Serve per provare il corso mentre lo costruisci.
 - **Attivazione:** `dev: true` in `course.js`, oppure aggiungi `?dev=1` all'indirizzo. Con `?dev=0` la spegni anche se è attiva nel file.
 - **Cosa cambia:**
   - tutte le lezioni sono sbloccate e Avanti è sempre attivo;
-  - compare il badge rosso **DEV**: cliccandolo apri e chiudi il **pannello sviluppo**, con lo stato salvato di ogni lezione e il pulsante **Azzera progressi**;
+  - in alto compare il badge rosso **DEV**. Il **pannello sviluppo** parte chiuso: si apre cliccando **DEV** e si chiude con la **✕** (o cliccando di nuovo DEV). Il Player ricorda la scelta;
+  - il pannello mostra lo stato salvato di ogni lezione (`visited`, `done`, `failed`) e il pulsante **Azzera progressi**;
   - nella console del browser (F12) compaiono i messaggi scambiati tra pagina e Player.
+- **Attenzione:** in modalità sviluppo Avanti è sempre attivo anche se la lezione non è finita (per esempio un video guardato solo per pochi secondi). Il tracciamento però funziona come per lo studente: nel pannello la lezione diventa `done` solo quando è davvero completata.
 
-> ⚠️ **Prima di consegnare il corso o pubblicarlo, metti `dev: false`.** Altrimenti gli studenti vedono tutto sbloccato.
+### Passare dalla modalità sviluppo a quella studente (e viceversa)
+
+**Metodo 1 — permanente, dal file `course.js`** (da usare prima di consegnare o pubblicare)
+1. Apri la cartella del corso e fai tasto destro su **`course.js`** › *Apri con* › **Visual Studio Code** (o Blocco note).
+2. Cerca la riga (in alto nel file):
+   ```js
+   dev: true,
+   ```
+3. Cambia `true` in `false` (lascia la virgola finale):
+   ```js
+   dev: false,
+   ```
+4. Salva (Ctrl+S) e ricarica il corso nel browser (F5).
+5. Per tornare in modalità sviluppo, rimetti `dev: true`.
+
+**Metodo 2 — temporaneo, dall'indirizzo** (per una prova veloce, senza modificare file)
+1. Apri il corso nel browser.
+2. Nella barra degli indirizzi, alla fine, aggiungi `?dev=0` (modalità studente) oppure `?dev=1` (modalità sviluppo). Esempio:
+   `file:///C:/Users/…/crypto/index.html?dev=0`
+3. Premi Invio. Vale solo finché usi quell'indirizzo.
+
+**Per ripartire da zero** durante le prove: in modalità sviluppo usa **Azzera progressi** nel pannello DEV; in modalità studente usa **Ricomincia da capo** in copertina.
+
+> ⚠️ **Prima di consegnare il corso o pubblicarlo, metti `dev: false`** (metodo 1). Altrimenti gli studenti vedono tutto sbloccato.
 
 ## B8. Provare il corso
 
