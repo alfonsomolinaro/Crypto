@@ -32,6 +32,61 @@
   .riga .valore { font-family: ui-monospace, Consolas, monospace; font-size: 26px; font-weight: 700; color: var(--color-primary); }
   .riga .valore.oro { color: var(--color-accent-text); }
 
+  /* Passo 2: RSA in tre fasi */
+  .rsa-fase { display: flex; flex-direction: column; gap: 12px; }
+  .rsa-fase[hidden] { display: none; }
+  .rsa-intro { font-size: 20px; color: var(--color-text); max-width: none; }
+  .trucco { font-size: 19px; color: var(--color-text); max-width: none; background: var(--color-accent-100); border-radius: 10px; padding: 8px 14px; }
+  .trucco strong { color: var(--color-accent-text); }
+  .easy { display: flex; flex-direction: column; gap: 10px; }
+  .easy-riga { display: grid; grid-template-columns: 120px minmax(0, 1fr); gap: 12px; align-items: center; font-size: 20px; line-height: 1.3; padding: 8px 14px; background: #fff; border: 1px solid var(--color-border); border-radius: 12px; }
+  .easy-riga .tag { justify-self: start; }
+  .formula-griglia { display: grid; grid-template-columns: 30px minmax(0, 1fr) auto; gap: 8px 12px; align-items: center; font-size: 18px; line-height: 1.35; }
+  .fg-n { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 700; background: var(--color-primary-100); color: var(--color-primary); }
+  .fg-f { font-size: 18px; font-weight: 700; color: var(--color-primary); white-space: nowrap; }
+  .formula-ops { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .formula-ops > div { background: #fff; border: 1px solid var(--color-border); border-radius: 12px; padding: 10px 12px; font-size: 18px; line-height: 1.7; }
+  .formula-ops .tag { margin-right: 4px; }
+  .formula-ops .op { color: var(--color-text); }
+  .tag { display: inline-block; font-size: 15px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; padding: 3px 10px; border-radius: 999px; background: var(--color-primary-100); color: var(--color-primary); vertical-align: 2px; white-space: nowrap; }
+  .tag.oro { background: var(--color-accent-100); color: var(--color-accent-text); }
+  .rsa-chiavi { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .rsa-chiavi .chiave { padding: 10px 14px; }
+  .rsa-chiavi .ic { width: 40px; height: 40px; }
+  .rsa-chiavi .chiave { background: #fff; }
+  .rsa-chiavi .chiave.privata { background: var(--color-accent-100); }
+  .rsa-chiavi .piccolo { font-size: 18px; }
+  .conto { display: grid; grid-template-columns: 34px minmax(0, 1fr); gap: 4px 12px; align-items: center; font-size: 19px; color: var(--color-text); }
+  .conto-n { width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 700; background: var(--color-primary-100); color: var(--color-primary); }
+  .conto-v { grid-column: 2; font-size: 24px; font-weight: 700; color: var(--color-primary); }
+  .numerone { font-size: 19px; line-height: 1.4; word-break: break-all; background: #fff; border: 1px dashed var(--color-border); border-radius: 10px; padding: 10px 14px; color: var(--color-primary); }
+  .risultato { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 18px; border-radius: 12px; background: var(--color-accent-100); font-size: 19px; font-weight: 600; color: var(--color-primary); }
+  .risultato b { font: 700 40px/1 ui-monospace, Consolas, monospace; }
+  .risultato.scuro { background: var(--color-primary); color: #fff; }
+  .lab.rsa { min-height: 0; padding: 18px 22px; gap: 12px; }
+  .rsa-griglia { grid-template-columns: 290px minmax(0, 1fr); gap: 20px; }
+  .rsa-griglia ol.fasi-shor li { font-size: 18px; padding-top: 10px; padding-bottom: 10px; }
+
+  /* (stili precedenti del percorso, non più usati) */
+  .slider-riga { display: flex; align-items: center; gap: 18px; font-size: 20px; font-weight: 600; color: var(--color-primary); }
+  .slider-riga input { flex: 1; max-width: 520px; height: 32px; accent-color: var(--color-primary); }
+  .slider-riga output { min-width: 56px; text-align: center; font-size: 24px; font-weight: 700; background: var(--color-primary-100); border-radius: 10px; padding: 4px 10px; }
+  .flusso { display: grid; grid-template-columns: 1fr 190px 1fr 190px 1fr; align-items: center; gap: 8px; }
+  .tappa { background: var(--color-bg); border: 1px solid var(--color-border); border-radius: 16px; padding: 16px 12px; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 4px; }
+  .tappa.cifrata { background: var(--color-primary); border-color: var(--color-primary); }
+  .tappa-chi { font-size: 15px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--color-accent-text); }
+  .tappa.cifrata .tappa-chi { color: var(--color-accent-on-dark); }
+  .tappa-num { font: 700 56px/1.1 ui-monospace, Consolas, monospace; color: var(--color-primary); }
+  .tappa.cifrata .tappa-num { color: #fff; }
+  .tappa-desc { font-size: 18px; color: var(--color-text-muted); line-height: 1.3; }
+  .tappa.cifrata .tappa-desc { color: rgba(255,255,255,.8); }
+  .freccia { display: flex; flex-direction: column; align-items: center; gap: 4px; text-align: center; color: var(--color-primary); }
+  .freccia .arrow { width: 70px; height: 18px; color: var(--color-accent); }
+  .chiave-tag { display: flex; flex-direction: column; align-items: center; font-size: 17px; line-height: 1.25; }
+  .chiave-tag svg { width: 28px; height: 28px; margin-bottom: 2px; }
+  .chiave-tag.oro svg { color: var(--color-accent-text); }
+  .formula { font-size: 17px; color: var(--color-text-muted); }
+
   /* Gioco della fattorizzazione */
   .fattori { display: flex; align-items: center; gap: 12px; font-size: 26px; font-weight: 700; color: var(--color-primary); }
   .fattori input { width: 90px; height: 56px; font: 700 24px var(--font-family); text-align: center; border: 1.5px solid var(--color-border); border-radius: 10px; color: var(--color-primary); }
@@ -45,7 +100,17 @@
   .scelta-n { display: flex; gap: 10px; align-items: center; font-size: 19px; }
   .scelta-n button { height: 48px; padding: 0 18px; font-size: 18px; }
   .scelta-n button[aria-pressed="true"] { background: var(--color-primary); color: #fff; box-shadow: none; }
-  .sequenza { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 6px; }
+  .shor { display: grid; grid-template-columns: 460px minmax(0, 1fr); gap: 24px; align-items: start; }
+  ol.fasi-shor { margin: 0; padding: 0; list-style: none; counter-reset: f; display: flex; flex-direction: column; gap: 10px; }
+  ol.fasi-shor li { counter-increment: f; position: relative; padding: 12px 14px 12px 56px; border-radius: 12px; font-size: 19px; line-height: 1.4; color: var(--color-text-muted); }
+  ol.fasi-shor li::before { content: counter(f); position: absolute; left: 14px; top: 12px; width: 30px; height: 30px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 17px; background: var(--color-surface-muted); color: var(--color-text-muted); }
+  ol.fasi-shor li b { color: var(--color-primary); }
+  ol.fasi-shor li.attiva { background: var(--color-accent-100); color: var(--color-text); }
+  ol.fasi-shor li.attiva::before { background: var(--color-accent); color: #fff; }
+  .cella.periodo-bis { background: var(--color-primary-100); border-color: var(--color-primary); }
+  .cella.meta { box-shadow: 0 0 0 3px var(--color-accent-text); }
+  .sequenza { display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); gap: 8px; }
   .cella { border-radius: 10px; background: #fff; border: 1.5px solid var(--color-border); padding: 6px 2px; text-align: center; }
   .cella small { display: block; font-size: 17px; color: var(--color-text-muted); }
   .cella b { font-size: 22px; color: var(--color-primary); }
@@ -105,21 +170,53 @@
 
   <!-- ================= PASSO 2 · RSA in piccolo ================= -->
   <section class="passo" aria-label="Passo 2 di 6: RSA in piccolo" hidden>
-    <div class="griglia-2">
-      <div style="display: flex; flex-direction: column; gap: 14px;">
-        <p class="testo">L'algoritmo più famoso è <strong>RSA</strong>. Ecco una versione «giocattolo» con numeri piccolissimi: Bob sceglie due numeri primi, <span class="mono">p = 5</span> e <span class="mono">q = 11</span>, e li moltiplica.</p>
-        <div class="chiave"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 7.5-2"/></svg></span><span><b>Chiave pubblica</b> (per tutti):<br><span class="mono">n = 55, e = 3</span></span></div>
-        <div class="chiave privata"><span class="ic oro"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M17 6l3 3M15 8l2 2"/></svg></span><span><b>Chiave privata</b> (solo Bob):<br><span class="mono">d = 27</span>, calcolata grazie a 5 e 11</span></div>
-      </div>
-      <div class="lab">
-        <label for="msg">Prova tu: scegli il messaggio (un numero)</label>
-        <input type="range" id="msg" min="2" max="54" value="12" aria-describedby="rsaRisultati">
-        <div id="rsaRisultati" aria-live="polite">
-          <div class="riga"><span>Messaggio di Alice <span class="mono">m</span></span><span class="valore" id="vM">12</span></div>
-          <div class="riga"><span>Cifrato: <span class="mono">m³ mod 55</span></span><span class="valore oro" id="vC">23</span></div>
-          <div class="riga"><span>Bob decifra: <span class="mono">c²⁷ mod 55</span></span><span class="valore" id="vD">12</span></div>
+    <div class="shor rsa-griglia">
+      <ol class="fasi-shor" id="fasiRsa">
+        <li data-f="1"><b>Come funziona RSA</b>, l'algoritmo più usato. Il messaggio è un numero.</li>
+        <li data-f="2"><b>Esempio: le chiavi di Bob</b>, con numeri piccolissimi.</li>
+        <li data-f="3"><b>Alice chiude il messaggio</b> con il lucchetto pubblico.</li>
+        <li data-f="4"><b>Bob lo riapre</b> con la sua chiave privata.</li>
+      </ol>
+      <div class="lab rsa" aria-live="polite">
+        <!-- Fase 1: la formula -->
+        <div class="rsa-fase" data-f="1">
+          <div class="easy">
+            <div class="easy-riga"><span class="tag">lucchetto</span><span>due numeri pubblici: <b class="mono">n</b> ed <b class="mono">e</b></span></div>
+            <div class="easy-riga"><span class="tag oro">chiave</span><span>un numero segreto: <b class="mono">d</b></span></div>
+            <div class="easy-riga"><span class="tag">chiudere</span><span>messaggio<sup class="mono">e</sup>, poi il <b>resto</b> ÷ <b class="mono">n</b></span></div>
+            <div class="easy-riga"><span class="tag oro">aprire</span><span>numero chiuso<sup class="mono">d</sup>, poi il <b>resto</b> ÷ <b class="mono">n</b></span></div>
+          </div>
+          <p class="trucco"><strong>Il trucco:</strong> <b class="mono">n</b> = due primi segreti moltiplicati. Solo chi li conosce calcola <b class="mono">d</b>.</p>
         </div>
-        <p class="piccolo">«mod 55» significa «il resto della divisione per 55». Senza conoscere <span class="mono">d = 27</span>, dal numero cifrato non si torna al messaggio.</p>
+        <!-- Fase 2: l'esempio -->
+        <div class="rsa-fase" data-f="2" hidden>
+          <p class="rsa-intro">Bob sceglie due numeri primi <strong>segreti: p = 5 e q = 11</strong>. Poi ricava tre numeri:</p>
+          <div class="conto"><span class="conto-n">n</span><span><b>55</b> = 5 × 11 <span class="tag">lucchetto pubblico</span></span></div>
+          <div class="conto"><span class="conto-n">e</span><span><b>3</b>: non ha divisori in comune con (5−1) × (11−1) = <b>40</b> <span class="tag">lucchetto pubblico</span></span></div>
+          <div class="conto"><span class="conto-n">d</span><span><b>27</b>, perché 3 × 27 = 81 = 2 × 40 + <b>1</b>. Senza 5 e 11 non si conosce il 40 e il 27 non si trova. <span class="tag oro">chiave privata</span></span></div>
+        </div>
+        <!-- Fase 3: Alice cifra -->
+        <div class="rsa-fase" data-f="3" hidden>
+          <div class="slider-riga">
+            <label for="msg">Messaggio di Alice:</label>
+            <input type="range" id="msg" min="2" max="54" value="12">
+            <output id="vMslider" for="msg">12</output>
+          </div>
+          <div class="conto"><span class="conto-n">1</span><span>Eleva alla <b>e = 3</b>: moltiplica il messaggio per sé stesso 3 volte</span><span class="mono conto-v" id="c2a">12 × 12 × 12 = 1.728</span></div>
+          <div class="conto"><span class="conto-n">2</span><span>Divide per <b>n = 55</b> e tiene solo il resto</span><span class="mono conto-v" id="c2b">1.728 ÷ 55 = 31, resto 23</span></div>
+          <div class="risultato scuro"><span>Messaggio chiuso che viaggia in rete:</span><b id="vC">23</b></div>
+        </div>
+        <!-- Fase 4: Bob decifra -->
+        <div class="rsa-fase" data-f="4" hidden>
+          <div class="conto"><span class="conto-n">1</span><span>Eleva alla <b>d = 27</b>: moltiplica <b id="c3c">23</b> per sé stesso 27 volte</span></div>
+          <div class="numerone mono" id="c3big"></div>
+          <div class="conto"><span class="conto-n">2</span><span>Divide per <b>n = 55</b> e tiene solo il resto</span></div>
+          <div class="risultato"><span>Bob legge il messaggio di Alice:</span><b id="vD">12</b></div>
+        </div>
+        <div class="azioni">
+          <button type="button" id="bRsa">Mostra la fase 1</button>
+          <button type="button" id="bRsaReset" class="btn-secondario" hidden>Ricomincia</button>
+        </div>
       </div>
     </div>
   </section>
@@ -153,28 +250,20 @@
 
   <!-- ================= PASSO 4 · L'algoritmo di Shor ================= -->
   <section class="passo" aria-label="Passo 4 di 6: l'algoritmo di Shor" hidden>
-    <div style="display: grid; grid-template-columns: 380px minmax(0, 1fr); gap: 28px; align-items: start;">
-      <div style="display: flex; flex-direction: column; gap: 12px;">
-        <p class="testo" style="font-size: 20px;">Nel 1994 Peter <strong>Shor</strong> ha mostrato che un computer quantistico potrebbe fattorizzare in modo efficiente. Il trucco: trasformare la fattorizzazione nella ricerca di un <strong>periodo</strong>.</p>
-        <ol class="fasi">
-          <li>Scegli un numero <span class="mono">a</span> e calcola <span class="mono">aˣ mod N</span>.</li>
-          <li>La sequenza si ripete: trova ogni quanti passi (il periodo <span class="mono">r</span>). <strong>È qui che serve il computer quantistico.</strong></li>
-          <li>Con <span class="mono">r</span>, un semplice calcolo (MCD) dà i fattori.</li>
-        </ol>
-      </div>
-      <div class="lab" style="gap: 12px;">
-        <div class="scelta-n" role="group" aria-label="Numero da fattorizzare">
-          <span>Numero da scomporre:</span>
-          <button type="button" class="btn-secondario" data-n="15" aria-pressed="true">N = 15 (a = 7)</button>
-          <button type="button" class="btn-secondario" data-n="21" aria-pressed="false">N = 21 (a = 2)</button>
-        </div>
-        <div class="sequenza" id="sequenza" aria-label="Valori di a elevato x, modulo N"></div>
+    <p class="testo">Nel 1994 Peter <strong>Shor</strong> ha scoperto come un computer quantistico potrebbe trovare i due fattori segreti. Vediamolo con il numero più piccolo possibile: <strong>15</strong>.</p>
+    <div class="shor">
+      <ol class="fasi-shor" id="fasiShor">
+        <li data-f="1"><b>Un ritornello di numeri.</b> Si prende un numero (7), si calcolano le sue potenze e si tiene il resto della divisione per 15.</li>
+        <li data-f="2"><b>Ogni quanto si ripete?</b> Trovare questo «ritmo» è ciò che il computer quantistico fa velocissimo.</li>
+        <li data-f="3"><b>I fattori saltano fuori.</b> Dal ritmo, con un calcolo semplice, escono i due numeri segreti.</li>
+      </ol>
+      <div class="lab" style="gap: 14px;">
+        <div class="sequenza" id="sequenza" aria-label="Potenze di 7, resto della divisione per 15"></div>
+        <div class="esito" id="esitoShor" aria-live="polite">Premi il pulsante per vedere il primo passo.</div>
         <div class="azioni">
-          <button type="button" id="bSeq">1 · Calcola la sequenza</button>
-          <button type="button" id="bPer" class="btn-secondario" disabled>2 · Trova il periodo</button>
-          <button type="button" id="bFat" class="btn-secondario" disabled>3 · Ricava i fattori</button>
+          <button type="button" id="bShor">Mostra il passo 1</button>
+          <button type="button" id="bShorReset" class="btn-secondario" hidden>Ricomincia</button>
         </div>
-        <div class="esito" id="esitoShor" aria-live="polite">Premi «Calcola la sequenza» per iniziare.</div>
       </div>
     </div>
   </section>
@@ -223,7 +312,7 @@
     <div class="domanda" data-q="3">
       <p>3. Nell'algoritmo di Shor, cosa calcola in modo efficiente il computer quantistico?</p>
       <div class="opzioni">
-        <button type="button" data-ok>Il periodo della sequenza aˣ mod N</button>
+        <button type="button" data-ok>Ogni quanto si ripete una sequenza di numeri</button>
         <button type="button">Tutte le chiavi private possibili</button>
         <button type="button">Il messaggio in chiaro, direttamente</button>
       </div>
@@ -266,16 +355,36 @@
     }
     function mcd(a, b) { a = Math.abs(a); b = Math.abs(b); while (b) { var t = b; b = a % b; a = t; } return a; }
 
-    /* ---------- Passo 2: RSA giocattolo (n = 55, e = 3, d = 27) ---------- */
+    /* ---------- Passo 2: RSA giocattolo (n = 55, e = 3, d = 27), in tre fasi ---------- */
     var slider = document.getElementById("msg");
+    function it(n) { return n.toLocaleString("it-IT"); }
     function aggiornaRSA() {
-      var m = +slider.value, c = modpow(m, 3, 55), d = modpow(c, 27, 55);
-      document.getElementById("vM").textContent = m;
+      var m = +slider.value, cubo = m * m * m, c = cubo % 55, d = modpow(c, 27, 55);
+      document.getElementById("vMslider").textContent = m;
+      document.getElementById("c2a").textContent = m + " × " + m + " × " + m + " = " + it(cubo);
+      document.getElementById("c2b").textContent = it(cubo) + " ÷ 55 = " + it(Math.floor(cubo / 55)) + ", resto " + c;
       document.getElementById("vC").textContent = c;
+      document.getElementById("c3c").textContent = c;
+      var grande = BigInt(c) ** 27n;
+      document.getElementById("c3big").textContent = c + "²⁷ = " + grande.toLocaleString("it-IT") + "  (" + grande.toString().length + " cifre)";
       document.getElementById("vD").textContent = d;
     }
     slider.addEventListener("input", aggiornaRSA);
     aggiornaRSA();
+
+    var faseRsa = 1;
+    var bRsa = document.getElementById("bRsa"), bRsaReset = document.getElementById("bRsaReset");
+    var ETICHETTE_RSA = { 1: "Avanti: vediamo un esempio", 2: "Avanti: Alice chiude il messaggio", 3: "Avanti: Bob lo riapre" };
+    function mostraRsa() {
+      document.querySelectorAll(".rsa-fase").forEach(function (f) { f.hidden = +f.getAttribute("data-f") !== faseRsa; });
+      document.querySelectorAll("#fasiRsa li").forEach(function (li) { li.classList.toggle("attiva", +li.getAttribute("data-f") === faseRsa); });
+      bRsa.hidden = faseRsa === 4;
+      bRsa.textContent = ETICHETTE_RSA[faseRsa] || "";
+      bRsaReset.hidden = faseRsa === 1;
+    }
+    bRsa.addEventListener("click", function () { if (faseRsa < 4) { faseRsa++; mostraRsa(); } });
+    bRsaReset.addEventListener("click", function () { faseRsa = 1; mostraRsa(); bRsa.focus(); });
+    mostraRsa();
 
     /* ---------- Passo 3: fattorizzare 91 ---------- */
     document.getElementById("verificaFattori").addEventListener("click", function () {
@@ -290,52 +399,41 @@
       }
     });
 
-    /* ---------- Passo 4: simulazione di Shor ---------- */
-    var CASI = { 15: 7, 21: 2 };
-    var N = 15, fase = 0, periodo = 0;
+    /* ---------- Passo 4: Shor semplificato (N = 15, a = 7) ---------- */
+    var N = 15, A = 7, fase = 0;
     var seq = document.getElementById("sequenza"), esito = document.getElementById("esitoShor");
-    var bSeq = document.getElementById("bSeq"), bPer = document.getElementById("bPer"), bFat = document.getElementById("bFat");
-    function disegnaSequenza(mostra) {
-      var a = CASI[N], html = "";
-      for (var x = 0; x < 12; x++) {
-        var v = modpow(a, x, N);
-        var cls = "cella" + (mostra ? "" : " vuota") + (mostra && periodo && x > 0 && x <= periodo ? " periodo" : "");
-        html += '<div class="' + cls + '"><small>x=' + x + "</small><b>" + (mostra ? v : "?") + "</b></div>";
+    var bShor = document.getElementById("bShor"), bShorReset = document.getElementById("bShorReset");
+    // Potenze di 7 con resto per 15: 1, 7, 4, 13, 1, 7, 4, 13 … → si ripete ogni 4 (periodo)
+    var PERIODO = 4;
+    var TESTI = [
+      "Premi il pulsante per vedere il primo passo.",
+      "Ecco le potenze di 7 (1, 7, 49, 343…), tenendo solo il resto della divisione per 15: <b>1, 7, 4, 13, 1, 7, 4, 13…</b> Si ripetono!",
+      "Il ritornello <b>1 · 7 · 4 · 13</b> si ripete <b>ogni 4 numeri</b>. Per un computer normale, con numeri enormi, trovare questo ritmo è lento quanto scomporre il numero; il computer quantistico lo trova in un attimo.",
+      "A metà del ritornello c'è il <b>4</b>. I suoi due vicini, <b>3</b> e <b>5</b>, sono proprio i numeri segreti: <b>15 = 3 × 5</b>. Con numeri enormi è la stessa cosa, solo con un calcolo un po' più lungo."
+    ];
+    var PULSANTI = ["Mostra il passo 1", "Mostra il passo 2", "Mostra il passo 3", ""];
+    function disegnaShor() {
+      var html = "";
+      for (var x = 0; x < 8; x++) {
+        var v = modpow(A, x, N);
+        var cls = "cella";
+        if (fase === 0) cls += " vuota";
+        if (fase >= 2) cls += Math.floor(x / PERIODO) % 2 === 0 ? " periodo" : " periodo-bis";
+        if (fase === 3 && x === 2) cls += " meta";
+        html += '<div class="' + cls + '"><small>7<sup>' + x + "</sup></small><b>" + (fase ? v : "?") + "</b></div>";
       }
       seq.innerHTML = html;
-    }
-    function reimposta() {
-      fase = 0; periodo = 0;
-      bPer.disabled = true; bFat.disabled = true;
-      esito.textContent = "Premi «Calcola la sequenza» per iniziare.";
-      disegnaSequenza(false);
-    }
-    document.querySelectorAll(".scelta-n button").forEach(function (b) {
-      b.addEventListener("click", function () {
-        N = +b.getAttribute("data-n");
-        document.querySelectorAll(".scelta-n button").forEach(function (o) { o.setAttribute("aria-pressed", String(o === b)); });
-        reimposta();
+      esito.innerHTML = TESTI[fase];
+      bShor.hidden = fase === 3;
+      bShor.textContent = PULSANTI[fase];
+      bShorReset.hidden = fase === 0;
+      document.querySelectorAll("#fasiShor li").forEach(function (li) {
+        li.classList.toggle("attiva", +li.getAttribute("data-f") === fase);
       });
-    });
-    bSeq.addEventListener("click", function () {
-      fase = 1; periodo = 0; disegnaSequenza(true);
-      bPer.disabled = false; bFat.disabled = true;
-      esito.innerHTML = "Ecco <b>" + CASI[N] + "ˣ mod " + N + "</b> per x da 0 a 11. Noti che i valori si ripetono? Un computer classico deve provarli uno per uno: con numeri enormi è impossibile.";
-    });
-    bPer.addEventListener("click", function () {
-      var a = CASI[N];
-      for (var r = 1; r < N; r++) { if (modpow(a, r, N) === 1) { periodo = r; break; } }
-      fase = 2; disegnaSequenza(true); bFat.disabled = false;
-      esito.innerHTML = "Il periodo è <b>r = " + periodo + "</b>: ogni " + periodo + " passi la sequenza ricomincia. Un computer quantistico trova r con la <b>trasformata di Fourier quantistica</b>, in modo efficiente anche per numeri enormi.";
-    });
-    bFat.addEventListener("click", function () {
-      var a = CASI[N], y = modpow(a, periodo / 2, N), f1 = mcd(y - 1, N), f2 = mcd(y + 1, N);
-      fase = 3;
-      esito.innerHTML = "Con r = " + periodo + ": " + a + "<sup>" + (periodo / 2) + "</sup> mod " + N + " = <b>" + y + "</b>. " +
-        "Poi MCD(" + (y - 1) + ", " + N + ") = <b>" + f1 + "</b> e MCD(" + (y + 1) + ", " + N + ") = <b>" + f2 + "</b>. " +
-        "Fattori trovati: <b>" + N + " = " + f1 + " × " + f2 + "</b>.";
-    });
-    reimposta();
+    }
+    bShor.addEventListener("click", function () { if (fase < 3) { fase++; disegnaShor(); } });
+    bShorReset.addEventListener("click", function () { fase = 0; disegnaShor(); bShor.focus(); });
+    disegnaShor();
 
     /* ---------- Passo 6: quiz (la lezione si completa con 3 risposte giuste) ---------- */
     var giuste = {};
