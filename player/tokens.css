@@ -5,11 +5,11 @@
    Nessun valore va scritto direttamente nei componenti: usare sempre i token.
    ========================================================================= */
 
-/* Font incluso in locale (funziona anche da file://). Scaricare Inter
-   (SIL Open Font License) in player/fonts/ in formato woff2. */
+/* Font incluso in locale (funziona anche da file://).
+   Inter, SIL Open Font License: player/fonts/InterVariable.ttf */
 @font-face {
   font-family: "Inter";
-  src: url("fonts/Inter-Variable.woff2") format("woff2");
+  src: url("fonts/InterVariable.ttf") format("truetype");
   font-weight: 400 700;
   font-style: normal;
   font-display: swap;
