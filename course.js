@@ -47,6 +47,15 @@ window.COURSE = {
       complete: { on: "page" }          // completata con le 3 risposte giuste del quiz finale
     },
     {
+      // Percorso Crypto Agility · modulo 2 di 4 (in prova)
+      id: "ca-chiave-pubblica-quantum",
+      title: "Crypto agility 2 · La chiave pubblica e il computer quantistico",
+      type: "html",
+      src: "pages/ca-02-chiave-pubblica-quantum/index.html",
+      duration: "10 min",
+      complete: { on: "page" }          // completata con le 3 risposte giuste del quiz finale
+    },
+    {
       id: "cifrari-classici",
       title: "Cifrari classici",
       type: "html",                     // pagina HTML caricata nello stage 16:9

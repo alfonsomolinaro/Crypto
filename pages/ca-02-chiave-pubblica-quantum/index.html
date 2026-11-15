@@ -1,0 +1,527 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<title>La chiave pubblica e il computer quantistico</title>
+<link rel="stylesheet" href="../pagina.css">
+<style>
+  [hidden] { display: none !important; }   /* i riquadri nascosti restano nascosti anche se hanno display: flex */
+  body { gap: 16px; }
+  h1 { font-size: 38px; }
+  .passo { gap: 18px; }
+  .mono { font-family: ui-monospace, Consolas, monospace; }
+  .fonte { font-size: 18px; color: var(--color-text-muted); max-width: none; }
+
+  /* Icone e card (stesso stile del modulo 1) */
+  .ic { width: 52px; height: 52px; border-radius: 14px; display: flex; align-items: center; justify-content: center; background: var(--color-primary-100); color: var(--color-primary); flex: none; }
+  .ic svg { width: 30px; height: 30px; }
+  .ic.oro { background: var(--color-accent-100); color: var(--color-accent-text); }
+  .card .num { display: block; font-size: 15px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--color-accent-text); }
+  .card-head { display: flex; align-items: center; gap: 14px; }
+  .tag { display: inline-block; font-size: 15px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; padding: 3px 10px; border-radius: 999px; background: var(--color-primary-100); color: var(--color-primary); white-space: nowrap; }
+  .tag.oro { background: var(--color-accent-100); color: var(--color-accent-text); }
+  .tag.ok { background: var(--color-success-100); color: var(--color-success); }
+  .tag.ko { background: var(--color-error-100); color: var(--color-error); }
+
+  .lab { background: var(--color-bg); border: 1px solid var(--color-border); border-radius: 16px; padding: 20px 24px; display: flex; flex-direction: column; gap: 12px; }
+  .lab label, .lab .etichetta { font-size: 19px; font-weight: 600; color: var(--color-primary); }
+  .azioni { display: flex; gap: 10px; flex-wrap: wrap; }
+  .azioni button { height: 48px; font-size: 17px; padding: 0 18px; }
+  button:disabled { opacity: .45; cursor: not-allowed; }
+  .risultato { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 18px; border-radius: 12px; background: var(--color-accent-100); font-size: 19px; font-weight: 600; color: var(--color-primary); }
+  .risultato b { font: 700 30px/1 ui-monospace, Consolas, monospace; }
+  .risultato.scuro { background: var(--color-primary); color: #fff; }
+  .risultato.ok { background: var(--color-success-100); color: var(--color-success); }
+  .risultato.ko { background: var(--color-error-100); color: var(--color-error); }
+
+  /* Passo 2: la scena con Alice, la rete e Bob */
+  .scena { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+  .attore { background: #fff; border: 1.5px solid var(--color-border); border-radius: 16px; padding: 14px 16px; display: flex; flex-direction: column; gap: 8px; min-height: 150px; transition: border-color .2s; }
+  .attore.attivo { border-color: var(--color-accent); box-shadow: 0 0 0 2px var(--color-accent-100); }
+  .attore .stato { font-size: 18px; line-height: 1.4; color: var(--color-text); }
+  .oggetti { display: flex; gap: 6px; flex-wrap: wrap; }
+
+  /* Passo 3: una situazione alla volta */
+  .situazione { display: flex; flex-direction: column; gap: 14px; }
+  .situazione .contatore-sit { font-size: 15px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--color-accent-text); }
+  .situazione .testo-sit { font-size: 24px; line-height: 1.35; font-weight: 600; color: var(--color-primary); max-width: none; }
+  .scelte-3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+  .scelte-3 button { height: auto; min-height: 60px; padding: 10px 14px; font-size: 18px; line-height: 1.25;
+    background: #fff; color: var(--color-primary); box-shadow: inset 0 0 0 1.5px var(--color-border); }
+  .scelte-3 button:hover { background: var(--color-bg); }
+  .scelte-3 button.giusta { background: var(--color-success-100); color: var(--color-success); box-shadow: inset 0 0 0 2px var(--color-success); }
+  .scelte-3 button.sbagliata { background: var(--color-error-100); color: var(--color-error); box-shadow: inset 0 0 0 2px var(--color-error); }
+  .feedback { font-size: 19px; }
+
+  /* Passo 4: interruttore */
+  .interruttore { display: flex; align-items: center; gap: 16px; font-size: 20px; font-weight: 600; color: var(--color-primary); }
+  .interruttore button { width: 96px; height: 52px; padding: 0; border-radius: 999px; background: var(--color-border); position: relative; }
+  .interruttore button::after { content: ""; position: absolute; top: 6px; left: 6px; width: 40px; height: 40px; border-radius: 50%; background: #fff; transition: left .2s; }
+  .interruttore button[aria-pressed="true"] { background: var(--color-error); }
+  .interruttore button[aria-pressed="true"]::after { left: 50px; }
+  table { width: 100%; border-collapse: collapse; font-size: 19px; }
+  th, td { text-align: left; padding: 7px 10px; border-bottom: 1px solid var(--color-border); vertical-align: middle; }
+  th { font-size: 16px; text-transform: uppercase; letter-spacing: .06em; color: var(--color-text-muted); font-weight: 600; }
+  td.forte { font-weight: 600; color: var(--color-primary); }
+
+  /* Passo 5: mappa dell'organizzazione */
+  .mappa { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+  .mappa button { height: auto; min-height: 60px; padding: 10px 16px; display: flex; align-items: center; gap: 12px; text-align: left; font-size: 19px;
+    background: #fff; color: var(--color-primary); box-shadow: inset 0 0 0 1.5px var(--color-border); }
+  .mappa button svg { width: 26px; height: 26px; flex: none; }
+  .mappa button:hover { background: var(--color-bg); }
+  .mappa button.vista { box-shadow: inset 0 0 0 2px var(--color-accent); background: var(--color-accent-100); color: var(--color-accent-text); }
+  .mappa button[aria-pressed="true"] { background: var(--color-primary); color: #fff; box-shadow: none; }
+  .dettaglio { min-height: 110px; }
+
+  /* Passo 6: barre */
+  .misura { display: grid; grid-template-columns: 210px minmax(0, 1fr) 190px; gap: 14px; align-items: center; font-size: 18px; }
+  .m-nome { font-weight: 600; color: var(--color-primary); }
+  .barra { height: 26px; border-radius: 999px; background: #fff; border: 1px solid var(--color-border); overflow: hidden; }
+  .barra span { display: block; height: 100%; border-radius: 999px; background: var(--color-primary); transition: width .3s; }
+  .barra.oro span { background: var(--color-accent); }
+  .m-val { font: 700 20px ui-monospace, Consolas, monospace; color: var(--color-primary); }
+  .slider-riga { display: flex; align-items: center; gap: 18px; font-size: 19px; font-weight: 600; color: var(--color-primary); }
+  .slider-riga input { flex: 1; height: 32px; accent-color: var(--color-primary); }
+  .slider-riga output { min-width: 70px; text-align: center; font-size: 22px; font-weight: 700; background: var(--color-primary-100); border-radius: 10px; padding: 4px 10px; }
+
+  /* Passo 7: aggiornabile o da sostituire */
+  .disp { padding: 16px 20px; gap: 8px; }
+  .disp p { font-size: 18px; line-height: 1.4; }
+  .disp .azioni button { height: 44px; font-size: 17px; background: #fff; color: var(--color-primary); box-shadow: inset 0 0 0 1.5px var(--color-border); }
+  .disp .azioni button.giusta { background: var(--color-success-100); color: var(--color-success); box-shadow: inset 0 0 0 2px var(--color-success); }
+  .disp .azioni button.sbagliata { background: var(--color-error-100); color: var(--color-error); box-shadow: inset 0 0 0 2px var(--color-error); }
+  .disp .spiega { display: none; font-size: 18px; color: var(--color-text); }
+  .disp.risolto .spiega { display: block; }
+  .disp.risolto .azioni { display: none; }
+  .disp .spiega { color: var(--color-success); }
+  .domanda { gap: 6px; }
+  .opzioni button { min-height: 52px; }
+
+  /* Quiz */
+  .domanda { display: flex; flex-direction: column; gap: 8px; }
+  .domanda p { font-size: 20px; font-weight: 600; color: var(--color-primary); max-width: none; }
+  .opzioni { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+  .opzioni button { height: auto; min-height: 56px; padding: 10px 14px; text-align: left; line-height: 1.3; font-size: 17px; font-weight: 500;
+    background: #fff; color: var(--color-text); box-shadow: inset 0 0 0 1.5px var(--color-border); }
+  .opzioni button:hover { background: var(--color-bg); }
+  .opzioni button.giusta { background: var(--color-success-100); color: var(--color-success); box-shadow: inset 0 0 0 2px var(--color-success); font-weight: 600; }
+  .opzioni button.sbagliata { background: var(--color-error-100); color: var(--color-error); box-shadow: inset 0 0 0 2px var(--color-error); }
+  #sezQuiz { gap: 10px; }
+
+  /* Indicatore dei passi */
+  .punti { display: flex; gap: 8px; }
+  .punti span { width: 10px; height: 10px; border-radius: 50%; background: var(--color-border); }
+  .punti span.attivo { background: var(--color-accent); }
+  .passi-nav .spazio { flex: 1; }
+</style>
+</head>
+<body>
+  <p class="overline">Crypto agility · Modulo 2 di 4</p>
+  <h1>La chiave pubblica e il computer quantistico</h1>
+
+  <!-- ================= PASSO 1 · Introduzione ================= -->
+  <section class="passo" aria-label="Introduzione">
+    <p class="testo" style="max-width: none;">Con la crittografia simmetrica Alice e Bob devono avere <strong>la stessa chiave segreta</strong>. Ma come se la scambiano, se sono lontani e qualcuno può spiare la rete?</p>
+    <div class="griglia-3">
+      <div class="card">
+        <div class="card-head"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.6V14M12 17h.01"/></svg></span>
+        <span><span class="num">Il problema</span><h3>Consegnare la chiave</h3></span></div>
+        <p>Se la chiave segreta viaggia in rete, chi la intercetta può leggere tutto.</p>
+      </div>
+      <div class="card">
+        <div class="card-head"><span class="ic oro"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 7.5-2"/></svg></span>
+        <span><span class="num">La soluzione</span><h3>La chiave pubblica</h3></span></div>
+        <p>Due chiavi diverse: una si può dare a tutti, l'altra resta segreta. Nessun segreto deve viaggiare.</p>
+      </div>
+      <div class="card">
+        <div class="card-head"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l9 16H3z"/><path d="M12 10v4M12 17h.01"/></svg></span>
+        <span><span class="num">La minaccia</span><h3>Il computer quantistico</h3></span></div>
+        <p>Il NIST avverte che i computer quantistici del futuro potranno rompere proprio questa soluzione.</p>
+      </div>
+    </div>
+    <p class="fonte">Riferimento: NIST CSWP 39-upd1, <em>Considerations for Achieving Crypto Agility</em> (2025). Il documento è in «Risorse».</p>
+  </section>
+
+  <!-- ================= PASSO 2 · Due chiavi invece di una ================= -->
+  <section class="passo" aria-label="Due chiavi invece di una" hidden>
+    <p class="testo" style="max-width: none;">Nella crittografia <strong>asimmetrica</strong> (o a chiave pubblica) Bob ha <strong>due chiavi</strong>. La <strong>chiave pubblica</strong> è come un lucchetto aperto: la dà a tutti e chiunque può usarla per chiudere. La <strong>chiave privata</strong> resta solo a Bob ed è l'unica che riapre. <strong>Segui i quattro passaggi.</strong></p>
+    <div class="scena">
+      <div class="attore" id="aAlice">
+        <div class="card-head"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></span><h3>Alice</h3></div>
+        <p class="stato" id="sAlice"></p>
+      </div>
+      <div class="attore" id="aEva">
+        <div class="card-head"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></span><h3>Eva, spia la rete</h3></div>
+        <p class="stato" id="sEva"></p>
+      </div>
+      <div class="attore" id="aBob">
+        <div class="card-head"><span class="ic oro"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></span><h3>Bob</h3></div>
+        <p class="stato" id="sBob"></p>
+      </div>
+    </div>
+    <div class="azioni" id="azioniScena">
+      <button type="button" data-s="1">1 · Bob pubblica il lucchetto</button>
+      <button type="button" data-s="2" disabled>2 · Alice chiude il messaggio</button>
+      <button type="button" data-s="3" disabled>3 · Eva prova ad aprire</button>
+      <button type="button" data-s="4" disabled>4 · Bob apre</button>
+    </div>
+    <div class="risultato" id="esitoScena" aria-live="polite">Premi il passaggio 1.</div>
+  </section>
+
+  <!-- ================= PASSO 3 · Tre lavori diversi ================= -->
+  <section class="passo" aria-label="Tre lavori diversi" hidden>
+    <p class="testo" style="max-width: none;">La crittografia fa tre lavori. <strong>Cifrare i dati</strong> è compito della simmetrica, veloce. <strong>Accordarsi su una chiave</strong> e <strong>firmare</strong> sono compiti della chiave pubblica. Per ogni situazione, scegli il lavoro giusto.</p>
+    <div class="lab situazione" aria-live="polite">
+      <span class="contatore-sit" id="contSit"></span>
+      <p class="testo-sit" id="testoSit"></p>
+      <div class="scelte-3" id="scelteSit">
+        <button type="button" data-l="dati">Cifrare i dati</button>
+        <button type="button" data-l="chiave">Accordarsi su una chiave</button>
+        <button type="button" data-l="firma">Firmare</button>
+      </div>
+      <div class="feedback" id="fbSit"></div>
+      <div class="azioni"><button type="button" id="prossimaSit" hidden>Prossima situazione</button></div>
+    </div>
+  </section>
+
+  <!-- ================= PASSO 4 · La minaccia ================= -->
+  <section class="passo" aria-label="La minaccia quantistica" hidden>
+    <p class="testo" id="introCrqc" style="max-width: none;">Il NIST parla di un <strong>computer quantistico crittograficamente rilevante</strong> (CRQC): una macchina del futuro abbastanza potente da rompere la crittografia a chiave pubblica di oggi. <strong>Accendilo</strong> e guarda cosa succede.</p>
+    <div class="box-info" id="boxCrqc" hidden><span><strong>Tutti a rischio.</strong> Per il NIST la minaccia riguarda la crittografia a chiave pubblica: serve una migrazione urgente verso algoritmi resistenti ai computer quantistici.</span></div>
+    <div class="lab">
+      <div class="interruttore">
+        <button type="button" id="crqc" aria-pressed="false" aria-label="Computer quantistico rilevante"></button>
+        <span id="crqcTesto">Computer quantistico rilevante: spento</span>
+      </div>
+      <table>
+        <thead><tr><th scope="col">Algoritmo a chiave pubblica</th><th scope="col">A cosa serve</th><th scope="col">Stato</th></tr></thead>
+        <tbody id="tabAlg">
+          <tr><td class="forte">RSA</td><td>firme e scambio di chiavi</td><td></td></tr>
+          <tr><td class="forte">ECDSA (curve ellittiche)</td><td>firme</td><td></td></tr>
+          <tr><td class="forte">ECDH (curve ellittiche)</td><td>scambio di chiavi</td><td></td></tr>
+          <tr><td class="forte">Diffie-Hellman</td><td>scambio di chiavi</td><td></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ================= PASSO 5 · La transizione più grande ================= -->
+  <section class="passo" aria-label="La transizione più grande" hidden>
+    <p class="testo" style="max-width: none;">Da DES ad AES si cambiava <strong>un solo algoritmo</strong>. Questa volta va sostituita <strong>tutta la crittografia a chiave pubblica</strong>. Dov'è in un'organizzazione? <strong>Clicca ogni elemento.</strong></p>
+    <div class="mappa" id="mappa">
+      <button type="button" data-m="0"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg>Sito web</button>
+      <button type="button" data-m="1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg>VPN aziendale</button>
+      <button type="button" data-m="2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>Email firmata</button>
+      <button type="button" data-m="3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="3" width="16" height="13" rx="2"/><path d="M9 16l-1 5 4-2 4 2-1-5"/></svg>Certificati digitali</button>
+      <button type="button" data-m="4"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v9M6.3 6.3a8 8 0 1 0 11.4 0"/></svg>Avvio sicuro</button>
+      <button type="button" data-m="5"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="2"/><path d="M9 2v4M15 2v4M9 18v4M15 18v4M2 9h4M2 15h4M18 9h4M18 15h4"/></svg>Firmware dei dispositivi</button>
+    </div>
+    <div class="card dettaglio" id="dettaglioMappa" aria-live="polite">
+      <h3>Scegli un elemento</h3>
+      <p>Gli elementi visitati si colorano d'oro.</p>
+    </div>
+    <div class="risultato scuro" id="tuttiMappa" hidden><span>Usano tutti la chiave pubblica: vanno aggiornati tutti.</span><b>6 su 6</b></div>
+  </section>
+
+  <!-- ================= PASSO 6 · I nuovi algoritmi ================= -->
+  <section class="passo" aria-label="I nuovi algoritmi" hidden>
+    <p class="testo" style="max-width: none;">Il NIST ha standardizzato nuovi algoritmi resistenti ai computer quantistici: <strong>ML-KEM</strong> per accordarsi sulle chiavi e <strong>ML-DSA</strong> per le firme. Sono più sicuri, ma <strong>più pesanti</strong>.</p>
+    <div class="lab">
+      <div class="slider-riga">
+        <label for="nfirme">Quante firme inviare in rete</label>
+        <input type="range" id="nfirme" min="1" max="10" value="1">
+        <output id="vfirme" for="nfirme">1</output>
+      </div>
+      <div class="misura"><span class="m-nome">RSA a 3072 bit</span><span class="barra"><span id="barRsa"></span></span><span class="m-val" id="valRsa"></span></div>
+      <div class="misura"><span class="m-nome">ML-DSA</span><span class="barra oro"><span id="barMl"></span></span><span class="m-val" id="valMl"></span></div>
+      <div class="risultato" id="rapporto"></div>
+    </div>
+    <p class="fonte">Fonte: NIST CSWP 39-upd1. Entrambe le firme offrono una sicurezza paragonabile (circa 128 bit). La firma RSA a 3072 bit occupa 384 byte; quella ML-DSA 2.420 byte, il dato riportato dal NIST.</p>
+  </section>
+
+  <!-- ================= PASSO 7 · Si può aggiornare? ================= -->
+  <section class="passo" aria-label="Si può aggiornare?" hidden>
+    <p class="testo" id="introDisp" style="max-width: none;">Non tutto si cambia con un aggiornamento. Per ogni oggetto scegli: <strong>si aggiorna</strong> o <strong>va sostituito</strong>?</p>
+    <div class="box-info" id="boxDisp" hidden><span><strong>Il consiglio del NIST:</strong> progettare i dispositivi pensando fin da subito alle transizioni future costa meno che sostituirli dopo.</span></div>
+    <div class="griglia-2" id="dispositivi">
+      <div class="card disp" data-ok="agg">
+        <h3>Libreria crittografica sul server</h3>
+        <div class="azioni"><button type="button" data-r="agg">Si aggiorna</button><button type="button" data-r="sost">Va sostituito</button></div>
+        <p class="spiega">Nel software è più facile aggiungere nuovi algoritmi: basta aggiornare la libreria.</p>
+      </div>
+      <div class="card disp" data-ok="sost">
+        <h3>Chip dedicato (SIM, smart card, TPM)</h3>
+        <div class="azioni"><button type="button" data-r="agg">Si aggiorna</button><button type="button" data-r="sost">Va sostituito</button></div>
+        <p class="spiega">Supporta pochi algoritmi fissi: di solito per cambiarli si sostituisce il chip o il dispositivo.</p>
+      </div>
+      <div class="card disp" data-ok="sost">
+        <h3>Chiave pubblica nell'avvio sicuro</h3>
+        <div class="azioni"><button type="button" data-r="agg">Si aggiorna</button><button type="button" data-r="sost">Va sostituito</button></div>
+        <p class="spiega">Non si può aggiornare: va scelta fin dall'inizio perché resti sicura per tutta la vita del dispositivo.</p>
+      </div>
+      <div class="card disp" data-ok="agg">
+        <h3>Circuito riprogrammabile (FPGA)</h3>
+        <div class="azioni"><button type="button" data-r="agg">Si aggiorna</button><button type="button" data-r="sost">Va sostituito</button></div>
+        <p class="spiega">È l'eccezione tra i chip: si può riconfigurare anche dopo l'installazione.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= PASSO 8 · Verifica ================= -->
+  <section class="passo" id="sezQuiz" aria-label="Verifica" hidden>
+    <p class="testo">Rispondi correttamente alle tre domande per completare il modulo.</p>
+    <div class="domanda" data-q="1">
+      <p>1. Alice chiude il messaggio con la chiave pubblica di Bob. Cosa serve per riaprirlo?</p>
+      <div class="opzioni">
+        <button type="button">La stessa chiave pubblica</button>
+        <button type="button" data-ok>La chiave privata di Bob</button>
+        <button type="button">Una chiave segreta di Alice</button>
+      </div>
+    </div>
+    <div class="domanda" data-q="2">
+      <p>2. Secondo il NIST, cosa minaccia un computer quantistico rilevante?</p>
+      <div class="opzioni">
+        <button type="button" data-ok>La crittografia a chiave pubblica</button>
+        <button type="button">Solo le password degli utenti</button>
+        <button type="button">Solo i vecchi algoritmi come DES</button>
+      </div>
+    </div>
+    <div class="domanda" data-q="3">
+      <p>3. Perché questa transizione è più grande delle precedenti?</p>
+      <div class="opzioni">
+        <button type="button">Perché AES va sostituito</button>
+        <button type="button" data-ok>Perché va sostituita tutta la chiave pubblica, non un solo algoritmo</button>
+        <button type="button">Perché i nuovi algoritmi sono più leggeri</button>
+      </div>
+    </div>
+    <div class="feedback" id="fbQuiz" aria-live="polite"></div>
+  </section>
+
+  <div class="passi-nav">
+    <button type="button" class="btn-secondario" id="indietro">Indietro</button>
+    <button type="button" id="continua">Continua</button>
+    <span id="contatore">Passo 1 di 8</span>
+    <span class="spazio"></span>
+    <span class="punti" id="punti" aria-hidden="true"></span>
+  </div>
+
+  <script src="../../player/player-bridge.js"></script>
+  <script>
+    /* ---------- Passi ---------- */
+    var passi = Array.prototype.slice.call(document.querySelectorAll(".passo"));
+    var attuale = 0;
+    var punti = document.getElementById("punti");
+    punti.innerHTML = passi.map(function () { return "<span></span>"; }).join("");
+    function mostraPasso(n) {
+      attuale = n;
+      passi.forEach(function (p, i) { p.hidden = i !== n; });
+      document.getElementById("indietro").hidden = n === 0;
+      document.getElementById("continua").hidden = n === passi.length - 1;
+      document.getElementById("contatore").textContent = "Passo " + (n + 1) + " di " + passi.length;
+      Array.prototype.forEach.call(punti.children, function (s, i) { s.className = i <= n ? "attivo" : ""; });
+    }
+    document.getElementById("continua").addEventListener("click", function () { mostraPasso(attuale + 1); });
+    document.getElementById("indietro").addEventListener("click", function () { mostraPasso(attuale - 1); });
+    function it(n) { return n.toLocaleString("it-IT"); }
+
+    /* ---------- Passo 2: la scena ---------- */
+    var STATI = [
+      { alice: "Vuole mandare a Bob il messaggio «Ci vediamo alle 18».", eva: "Osserva tutto ciò che passa in rete.", bob: "Ha creato due chiavi: un lucchetto pubblico e una chiave privata.",
+        esito: "Premi il passaggio 1.", attivo: "aBob", cls: "risultato" },
+      { alice: "Ha ricevuto il lucchetto aperto di Bob.", eva: "Ha copiato anche lei il lucchetto: è pubblico, non è un problema.", bob: "Ha inviato a tutti il lucchetto. La chiave privata resta con lui.",
+        esito: "Il lucchetto viaggia in rete senza rischi: serve solo a chiudere.", attivo: "aAlice", cls: "risultato" },
+      { alice: "Ha chiuso il messaggio con il lucchetto di Bob. Ora nemmeno lei può riaprirlo.", eva: "Vede passare una scatola chiusa.", bob: "Aspetta il messaggio.",
+        esito: "Il messaggio chiuso viaggia in rete.", attivo: "aEva", cls: "risultato" },
+      { alice: "Ha chiuso il messaggio con il lucchetto di Bob. Ora nemmeno lei può riaprirlo.", eva: "✗ Prova con il lucchetto pubblico: non apre nulla.", bob: "Aspetta il messaggio.",
+        esito: "✗ Eva non riesce: il lucchetto pubblico chiude, ma non apre.", attivo: "aEva", cls: "risultato ko" },
+      { alice: "Il suo messaggio è arrivato.", eva: "✗ Ha visto tutto, ma non ha letto nulla.", bob: "✓ Apre con la chiave privata e legge «Ci vediamo alle 18».",
+        esito: "✓ Nessuna chiave segreta ha viaggiato in rete: il problema dello scambio è risolto.", attivo: "aBob", cls: "risultato ok" }
+    ];
+    var faseScena = 0;
+    function disegnaScena() {
+      var s = STATI[faseScena];
+      document.getElementById("sAlice").textContent = s.alice;
+      document.getElementById("sEva").textContent = s.eva;
+      document.getElementById("sBob").textContent = s.bob;
+      ["aAlice", "aEva", "aBob"].forEach(function (id) { document.getElementById(id).classList.toggle("attivo", id === s.attivo); });
+      var e = document.getElementById("esitoScena");
+      e.className = s.cls; e.textContent = s.esito;
+      document.querySelectorAll("#azioniScena button").forEach(function (b) {
+        b.disabled = +b.getAttribute("data-s") !== faseScena + 1;
+      });
+    }
+    document.getElementById("azioniScena").addEventListener("click", function (e) {
+      var b = e.target.closest("button");
+      if (!b || b.disabled) return;
+      faseScena = +b.getAttribute("data-s");
+      disegnaScena();
+      var prossimo = document.querySelector('#azioniScena button[data-s="' + (faseScena + 1) + '"]');
+      if (prossimo) prossimo.focus();
+    });
+    disegnaScena();
+
+    /* ---------- Passo 3: tre lavori ---------- */
+    var SITUAZIONI = [
+      { t: "Il disco del portatile viene cifrato.", l: "dati", s: "Grandi quantità di dati: lavoro della simmetrica (per esempio AES)." },
+      { t: "Il browser e il sito della banca stabiliscono una chiave segreta comune.", l: "chiave", s: "Accordarsi su una chiave senza incontrarsi: lavoro della chiave pubblica." },
+      { t: "Firmi digitalmente un contratto.", l: "firma", s: "La firma si fa con la chiave privata e chiunque la verifica con quella pubblica." },
+      { t: "Il telefono controlla che un aggiornamento arrivi davvero dal produttore.", l: "firma", s: "Il produttore firma l'aggiornamento; il telefono verifica la firma." },
+      { t: "Una VPN apre un collegamento sicuro con l'ufficio.", l: "chiave", s: "All'inizio le due parti si accordano sulla chiave con la chiave pubblica." },
+      { t: "Dopo l'accordo sulla chiave, un video viene inviato protetto.", l: "dati", s: "Una volta concordata la chiave, i dati viaggiano con la simmetrica, più veloce." }
+    ];
+    var NOMI_LAVORO = { dati: "Cifrare i dati", chiave: "Accordarsi su una chiave", firma: "Firmare" };
+    var sit = 0, risolta = false;
+    function mostraSit() {
+      risolta = false;
+      document.getElementById("contSit").textContent = "Situazione " + (sit + 1) + " di " + SITUAZIONI.length;
+      document.getElementById("testoSit").textContent = SITUAZIONI[sit].t;
+      document.querySelectorAll("#scelteSit button").forEach(function (b) { b.className = ""; });
+      var fb = document.getElementById("fbSit"); fb.className = "feedback"; fb.textContent = "";
+      document.getElementById("prossimaSit").hidden = true;
+    }
+    document.getElementById("scelteSit").addEventListener("click", function (e) {
+      var b = e.target.closest("button");
+      if (!b || risolta) return;
+      var giusta = SITUAZIONI[sit].l, fb = document.getElementById("fbSit");
+      document.querySelectorAll("#scelteSit button").forEach(function (x) { x.classList.remove("sbagliata"); });
+      if (b.getAttribute("data-l") === giusta) {
+        b.classList.add("giusta"); risolta = true;
+        fb.className = "feedback ok"; fb.textContent = "✓ " + SITUAZIONI[sit].s;
+        var p = document.getElementById("prossimaSit");
+        p.hidden = false;
+        p.textContent = sit < SITUAZIONI.length - 1 ? "Prossima situazione" : "Ricomincia";
+      } else {
+        b.classList.add("sbagliata");
+        fb.className = "feedback ko"; fb.textContent = "✗ Non è «" + NOMI_LAVORO[b.getAttribute("data-l")] + "». Riprova.";
+      }
+    });
+    document.getElementById("prossimaSit").addEventListener("click", function () {
+      sit = (sit + 1) % SITUAZIONI.length; mostraSit();
+    });
+    mostraSit();
+
+    /* ---------- Passo 4: interruttore CRQC ---------- */
+    var crqc = document.getElementById("crqc");
+    function disegnaCrqc() {
+      var on = crqc.getAttribute("aria-pressed") === "true";
+      document.getElementById("crqcTesto").textContent = "Computer quantistico rilevante: " + (on ? "acceso" : "spento");
+      document.querySelectorAll("#tabAlg tr").forEach(function (tr) {
+        tr.cells[2].innerHTML = on ? '<span class="tag ko">✗ a rischio</span>' : '<span class="tag ok">✓ sicuro oggi</span>';
+      });
+      document.getElementById("boxCrqc").hidden = !on;
+      document.getElementById("introCrqc").hidden = on;
+    }
+    crqc.addEventListener("click", function () {
+      crqc.setAttribute("aria-pressed", String(crqc.getAttribute("aria-pressed") !== "true"));
+      disegnaCrqc();
+    });
+    disegnaCrqc();
+
+    /* ---------- Passo 5: mappa ---------- */
+    var MAPPA = [
+      { t: "Sito web (HTTPS)", d: "Il browser e il sito si accordano su una chiave e il sito dimostra la sua identità con un certificato firmato: due usi della chiave pubblica." },
+      { t: "VPN aziendale", d: "Per aprire il collegamento le due parti si accordano sulla chiave segreta usando la chiave pubblica." },
+      { t: "Email firmata", d: "La firma digitale garantisce chi ha scritto il messaggio; la chiave pubblica serve anche a proteggere la chiave che lo cifra." },
+      { t: "Certificati digitali", d: "Ogni certificato è firmato da un'autorità. Le firme delle autorità durano spesso decenni e moltissimi sistemi si fidano di loro: cambiarle è difficile." },
+      { t: "Avvio sicuro", d: "All'accensione il computer verifica una firma digitale prima di caricare il sistema operativo." },
+      { t: "Firmware dei dispositivi", d: "Prima di eseguire il firmware, il dispositivo ne verifica la firma per essere sicuro che non sia stato manomesso." }
+    ];
+    var visteMappa = {};
+    document.getElementById("mappa").addEventListener("click", function (e) {
+      var b = e.target.closest("button");
+      if (!b) return;
+      var i = +b.getAttribute("data-m");
+      visteMappa[i] = true;
+      document.querySelectorAll("#mappa button").forEach(function (x) {
+        var k = +x.getAttribute("data-m");
+        x.setAttribute("aria-pressed", String(k === i));
+        x.classList.toggle("vista", !!visteMappa[k]);
+      });
+      document.getElementById("dettaglioMappa").innerHTML = "<h3>" + MAPPA[i].t + "</h3><p>" + MAPPA[i].d + "</p>";
+      if (Object.keys(visteMappa).length === MAPPA.length) document.getElementById("tuttiMappa").hidden = false;
+    });
+
+    /* ---------- Passo 6: dimensioni delle firme ---------- */
+    var RSA_BYTE = 384, ML_BYTE = 2420;
+    var nfirme = document.getElementById("nfirme");
+    function aggiornaFirme() {
+      var n = +nfirme.value, max = ML_BYTE * 10;
+      document.getElementById("vfirme").textContent = n;
+      document.getElementById("barRsa").style.width = (RSA_BYTE * n / max * 100) + "%";
+      document.getElementById("barMl").style.width = (ML_BYTE * n / max * 100) + "%";
+      document.getElementById("valRsa").textContent = it(RSA_BYTE * n) + " byte";
+      document.getElementById("valMl").textContent = it(ML_BYTE * n) + " byte";
+      document.getElementById("rapporto").innerHTML = "<span>Con " + n + (n === 1 ? " firma" : " firme") + ", ML-DSA invia in più</span><b>" + it((ML_BYTE - RSA_BYTE) * n) + " byte</b>";
+    }
+    nfirme.addEventListener("input", aggiornaFirme);
+    aggiornaFirme();
+
+    /* ---------- Passo 7: si aggiorna o va sostituito ---------- */
+    var risolti = 0;
+    document.querySelectorAll(".disp").forEach(function (c) {
+      c.addEventListener("click", function (e) {
+        var b = e.target.closest("button");
+        if (!b || c.classList.contains("risolto")) return;
+        c.querySelectorAll("button").forEach(function (x) { x.classList.remove("sbagliata"); });
+        if (b.getAttribute("data-r") === c.getAttribute("data-ok")) {
+          c.classList.add("risolto");
+          c.querySelector(".spiega").textContent = "✓ " + b.textContent + ". " + c.querySelector(".spiega").textContent;
+          risolti++;
+          if (risolti === 4) {
+            document.getElementById("introDisp").hidden = true;
+            document.getElementById("boxDisp").hidden = false;
+          }
+        } else {
+          b.classList.add("sbagliata");
+        }
+      });
+    });
+
+    /* ---------- Passo 8: quiz (il modulo si completa con 3 risposte giuste) ---------- */
+    var giuste = {};
+    var fbQuiz = document.getElementById("fbQuiz");
+    function controllaQuiz() {
+      if (Object.keys(giuste).length === 3) {
+        fbQuiz.className = "feedback ok";
+        fbQuiz.textContent = "✓ Tutte corrette! Hai completato il modulo 2: ora puoi andare avanti.";
+        player.complete();
+      } else {
+        fbQuiz.className = "feedback";
+        fbQuiz.textContent = "";
+      }
+    }
+    document.querySelectorAll(".domanda").forEach(function (d) {
+      d.addEventListener("click", function (e) {
+        var b = e.target.closest("button");
+        if (!b || giuste[d.getAttribute("data-q")]) return;
+        d.querySelectorAll("button").forEach(function (o) { o.classList.remove("sbagliata"); });
+        if (b.hasAttribute("data-ok")) {
+          b.classList.add("giusta");
+          b.textContent = "✓ " + b.textContent;
+          giuste[d.getAttribute("data-q")] = true;
+          controllaQuiz();
+        } else {
+          b.classList.add("sbagliata");
+          fbQuiz.className = "feedback ko";
+          fbQuiz.textContent = "✗ La risposta «" + b.textContent + "» non è corretta: riprova.";
+        }
+      });
+    });
+
+    /* Se il modulo era già completato, mostra il quiz risolto */
+    document.addEventListener("player:init", function (e) {
+      if (e.detail.lesson.status !== "done") return;
+      document.querySelectorAll(".domanda").forEach(function (d) {
+        var b = d.querySelector("[data-ok]");
+        if (!b.classList.contains("giusta")) { b.classList.add("giusta"); b.textContent = "✓ " + b.textContent; }
+        giuste[d.getAttribute("data-q")] = true;
+      });
+      fbQuiz.className = "feedback ok";
+      fbQuiz.textContent = "✓ Modulo già completato.";
+    });
+
+    mostraPasso(0);
+  </script>
+</body>
+</html>
