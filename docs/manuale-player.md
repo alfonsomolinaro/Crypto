@@ -242,7 +242,7 @@ Ogni lezione è un blocco tra `{ }` dentro `lessons`:
 | `type` | `video`: il Player mostra direttamente il video. `html`, `quiz`, `final`: pagina HTML in `pages/` (cambia solo l'icona nel menu). |
 | `src` | percorso del video o della pagina |
 | `audio` | narrazione MP3 riprodotta dal Player, con i suoi controlli |
-| `duration` | durata indicativa, es. `"6 min"`. I minuti vengono sommati nella copertina. |
+| `duration` | durata indicativa, es. `"6 min"`. I minuti vengono sommati nella copertina. Scrivi sempre i **minuti** (non `"90 s"`). **Per le lezioni `video` si può omettere:** il Player legge la durata dal file e la mostra da solo (es. «1 min 30 s»), anche offline. |
 | `complete.on` | `"media-end"`: a fine video/audio (predefinito per i video). `"page"`: quando la pagina lo comunica. `"visit"`: appena aperta (predefinito per le pagine). |
 | `complete.threshold` | per `media-end`: quota da guardare, es. `0.95` = 95% |
 | `resources` | risorse visibili solo in questa lezione |

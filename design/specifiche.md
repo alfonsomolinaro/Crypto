@@ -79,6 +79,7 @@ window.COURSE = {
 - `type`: `video` (renderizzato dal Player con `<video>`), `html` · `quiz` · `final` (iframe). Il tipo decide l'icona nel menu.
 - `complete.on`: `visit` (default), `page` (via bridge), `media-end` (fine del media, soglia `threshold`).
 - `audio`: narrazione riprodotta **dal Player**, non dalla pagina.
+- `duration`: testo in minuti (`"6 min"`), sommato nella copertina. Per le lezioni `video` è facoltativo: se manca, il Player legge la durata dai metadati del file (`<video preload="metadata">`, funziona anche da `file://`) e mostra «m min s s»; il totale del corso usa i secondi reali arrotondati al minuto.
 - `resources` può comparire anche dentro una lezione.
 
 ## 4. Anatomia del Player

@@ -34,7 +34,7 @@ window.COURSE = {
       title: "Introduzione · Crypto agility",
       type: "video",                    // il Player mostra il video direttamente
       src: "media/video/intro.mp4",     // MP4 (H.264 + AAC), sotto i 100 MB
-      duration: "3 min",
+      // duration: niente — il Player legge la durata dal file del video
       complete: { on: "media-end", threshold: 0.95 }   // completata al 95% del video
     },
     {

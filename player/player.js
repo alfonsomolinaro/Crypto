@@ -209,8 +209,43 @@
     if (name !== "player") { closeTransient(); }
   }
 
+  /* ---------- Durata delle lezioni ----------
+     "duration" in course.js è un testo scritto a mano ("6 min"). Per le lezioni video
+     senza "duration" il Player legge la durata dal file: solo i metadati, funziona anche da file://. */
+  function fmtDurata(sec) {
+    sec = Math.round(sec);
+    var m = Math.floor(sec / 60), s = sec % 60;
+    if (!m) return s + " s";
+    return m + " min" + (s ? " " + s + " s" : "");
+  }
+  function durataDi(l) { return l.duration || l._durataAuto || ""; }
+  function secondiDi(l) {
+    if (l.duration) { var m = parseInt(l.duration, 10); return isNaN(m) ? 0 : m * 60; }
+    return l._secondiAuto || 0;
+  }
+  function leggiDurateVideo() {
+    L.forEach(function (l) {
+      if (l.type !== "video" || l.duration || !l.src) return;
+      var v = document.createElement("video");
+      v.preload = "metadata";
+      v.muted = true;
+      v.addEventListener("loadedmetadata", function () {
+        if (isFinite(v.duration) && v.duration > 0) {
+          l._secondiAuto = v.duration;
+          l._durataAuto = fmtDurata(v.duration);
+          renderMenu();
+          if (S.screen === "cover") renderCover();
+        }
+        v.removeAttribute("src");
+        v.load();
+      });
+      v.src = l.src;
+    });
+  }
+
   function totalMinutes() {
-    return L.reduce(function (a, l) { var m = parseInt(l.duration, 10); return a + (isNaN(m) ? 0 : m); }, 0);
+    var sec = L.reduce(function (a, l) { return a + secondiDi(l); }, 0);
+    return sec ? Math.max(1, Math.round(sec / 60)) : 0;
   }
 
   function renderCover() {
@@ -228,7 +263,7 @@
       var dot = isDone(i)
         ? '<span class="dot dot-done">' + icon("completata") + "</span>"
         : '<span class="dot">' + (i + 1) + "</span>";
-      return '<li class="cover-item">' + dot + '<span class="ci-title">' + esc(l.title) + '</span><span class="ci-dur">' + esc(l.duration || "") + "</span></li>";
+      return '<li class="cover-item">' + dot + '<span class="ci-title">' + esc(l.title) + '</span><span class="ci-dur">' + esc(durataDi(l)) + "</span></li>";
     }).join("");
   }
 
@@ -363,7 +398,7 @@
     $("menuList").innerHTML = L.map(function (l, i) {
       var s = statusOf(i), cur = i === S.idx, label = t("st." + s);
       var meta = icon(TYPE_ICON[l.type] || "tipo-interattiva", "icon-xs") + esc(t("types." + l.type)) +
-        (l.duration ? " · " + esc(l.duration) : "") + " · " + esc(label);
+        (durataDi(l) ? " · " + esc(durataDi(l)) : "") + " · " + esc(label);
       return '<li><button type="button" class="mi' + (cur ? " is-current" : "") + '" data-i="' + i + '"' +
         (s === "locked" ? " disabled" : "") + (cur ? ' aria-current="page"' : "") +
         ' aria-label="' + esc(t("lessonN", { n: i + 1 }) + ": " + l.title + ", " + label) + '">' +
@@ -991,6 +1026,7 @@
     if (S.idx > 0 && !unlocked(S.idx)) S.idx = 0;
     renderCover();
     show("cover");
+    leggiDurateVideo();
     setInterval(function () {
       if (S.screen !== "player" || document.hidden) return;
       S.time += 1;
