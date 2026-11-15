@@ -11,7 +11,7 @@ window.COURSE = {
   // MODALITÀ SVILUPPO: tutte le lezioni sbloccate, badge DEV, pannello stati e "Azzera progressi".
   // Mettere false prima di consegnare il corso agli studenti.
   // (In alternativa si può usare l'indirizzo index.html?dev=1, e ?dev=0 per spegnerla.)
-  dev: true,
+  dev: false,
   // certificate: "resources/attestato.pdf",   // se presente, compare "Scarica l'attestato" alla fine
 
   // Facoltativo: sovrascrive i design token di player/tokens.css
