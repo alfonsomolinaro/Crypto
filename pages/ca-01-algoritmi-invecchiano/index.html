@@ -1,0 +1,610 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<title>Perché gli algoritmi invecchiano</title>
+<link rel="stylesheet" href="../pagina.css">
+<style>
+  body { gap: 16px; }
+  h1 { font-size: 38px; }
+  .passo { gap: 18px; }
+  .mono { font-family: ui-monospace, Consolas, monospace; }
+
+  /* Icone e card (stesso stile della lezione 4) */
+  .ic { width: 52px; height: 52px; border-radius: 14px; display: flex; align-items: center; justify-content: center; background: var(--color-primary-100); color: var(--color-primary); flex: none; }
+  .ic svg { width: 30px; height: 30px; }
+  .ic.oro { background: var(--color-accent-100); color: var(--color-accent-text); }
+  .card .num { display: block; font-size: 15px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--color-accent-text); }
+  .card-head { display: flex; align-items: center; gap: 14px; }
+  .tag { display: inline-block; font-size: 15px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; padding: 3px 10px; border-radius: 999px; background: var(--color-primary-100); color: var(--color-primary); white-space: nowrap; }
+  .tag.oro { background: var(--color-accent-100); color: var(--color-accent-text); }
+
+  .lab { background: var(--color-bg); border: 1px solid var(--color-border); border-radius: 16px; padding: 20px 24px; display: flex; flex-direction: column; gap: 12px; }
+  .lab label, .lab .etichetta { font-size: 19px; font-weight: 600; color: var(--color-primary); }
+  .colonna { display: flex; flex-direction: column; gap: 16px; }
+  .azioni { display: flex; gap: 10px; flex-wrap: wrap; }
+  .azioni button { height: 48px; font-size: 17px; padding: 0 18px; }
+  .risultato { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 18px; border-radius: 12px; background: var(--color-accent-100); font-size: 19px; font-weight: 600; color: var(--color-primary); }
+  .risultato b { font: 700 32px/1 ui-monospace, Consolas, monospace; }
+  .risultato.scuro { background: var(--color-primary); color: #fff; }
+  .risultato.ok { background: var(--color-success-100); color: var(--color-success); }
+  .risultato.ko { background: var(--color-error-100); color: var(--color-error); }
+
+  /* Passo 2: laboratorio dei bit */
+  .griglia-bit { display: grid; grid-template-columns: 430px minmax(0, 1fr); gap: 24px; align-items: start; }
+  .griglia-bit .colonna { gap: 12px; }
+  .griglia-bit .testo { font-size: 20px; }
+  .regola { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+  .regola span { background: #fff; border: 1px solid var(--color-border); border-radius: 10px; padding: 8px 10px; font-size: 18px; text-align: center; color: var(--color-text); }
+  .regola b { color: var(--color-primary); }
+  .bit-riga { display: grid; grid-template-columns: 170px auto minmax(0, 1fr); gap: 14px; align-items: center; font-size: 18px; color: var(--color-text); }
+  .bit-riga .nome { font-weight: 600; color: var(--color-primary); }
+  .bits { display: flex; gap: 6px; }
+  .griglia-bit .lab { gap: 6px; padding: 12px 22px; }
+  .griglia-bit .azioni button { height: 44px; }
+  .griglia-bit .risultato { padding: 10px 16px; }
+  .bit { width: 38px; height: 38px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font: 700 20px ui-monospace, Consolas, monospace;
+    background: #fff; color: var(--color-primary); border: 1.5px solid var(--color-border); padding: 0; }
+  .bit.uno { background: var(--color-primary); color: #fff; border-color: var(--color-primary); }
+  button.bit { cursor: pointer; box-shadow: none; border-color: var(--color-accent); }
+  button.bit:hover { background: var(--color-accent-100); }
+  button.bit.uno:hover { background: var(--color-primary-700); }
+  .bit.sbagliato { box-shadow: 0 0 0 3px var(--color-error); }
+  .bit-riga .esito { font-size: 18px; color: var(--color-text-muted); }
+  .bit-riga .esito b { font-size: 24px; color: var(--color-primary); }
+  .bit-riga.cifrata .bit { background: var(--color-accent-100); border-color: var(--color-accent); color: var(--color-accent-text); }
+  .bit-riga.cifrata .bit.uno { background: var(--color-accent-text); color: #fff; }
+  .lettera { width: 64px; height: 44px; font: 700 22px var(--font-family); text-align: center; text-transform: uppercase; border: 1.5px solid var(--color-border); border-radius: 8px; color: var(--color-primary); }
+  .lettera:focus-visible { outline: 3px solid var(--color-accent-text); outline-offset: 2px; }
+  .separatore { border-top: 1px dashed var(--color-border); }
+
+  /* Passo 3: confronto DES, Triple DES, AES */
+  .confronto { display: grid; grid-template-columns: 240px minmax(0, 1fr); gap: 24px; align-items: start; }
+  .scelta-alg { display: flex; flex-direction: column; gap: 10px; }
+  .scelta-alg button { height: auto; min-height: 72px; padding: 10px 18px; text-align: left; font-size: 22px; line-height: 1.2;
+    background: #fff; color: var(--color-primary); box-shadow: inset 0 0 0 1.5px var(--color-border); }
+  .scelta-alg button small { display: block; font-size: 17px; font-weight: 500; color: var(--color-text-muted); }
+  .scelta-alg button:hover { background: var(--color-bg); }
+  .scelta-alg button[aria-pressed="true"] { background: var(--color-primary); color: #fff; box-shadow: none; }
+  .scelta-alg button[aria-pressed="true"] small { color: var(--color-on-dark-muted, #C9D1DC); }
+  .scheda { gap: 10px; }
+  .metafora { font-size: 19px; line-height: 1.45; color: var(--color-text); max-width: none; }
+  .misura { display: grid; grid-template-columns: 90px minmax(0, 1fr) 300px; gap: 14px; align-items: center; font-size: 18px; }
+  .m-nome { font-weight: 600; color: var(--color-primary); }
+  .barra { height: 22px; border-radius: 999px; background: #fff; border: 1px solid var(--color-border); overflow: hidden; }
+  .barra span { display: block; height: 100%; background: var(--color-primary); border-radius: 999px; transition: width .3s var(--ease-standard, ease); }
+  .misura:nth-of-type(2) .barra span { background: var(--color-accent); }
+  .m-val { font-weight: 600; color: var(--color-text); }
+  .info-alg { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .info-alg > div { background: #fff; border: 1px solid var(--color-border); border-radius: 12px; padding: 10px 12px; font-size: 18px; line-height: 1.4; color: var(--color-text); display: flex; flex-direction: column; gap: 6px; }
+  .info-alg .tag { align-self: flex-start; }
+
+  /* Passo 4: forza bruta */
+  .slider-riga { display: flex; align-items: center; gap: 18px; font-size: 20px; font-weight: 600; color: var(--color-primary); }
+  .slider-riga input { flex: 1; height: 32px; accent-color: var(--color-primary); }
+  .slider-riga output { min-width: 110px; text-align: center; font-size: 24px; font-weight: 700; background: var(--color-primary-100); border-radius: 10px; padding: 4px 10px; }
+  .preset { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .preset button { height: auto; min-height: 56px; padding: 8px 14px; text-align: left; line-height: 1.25; font-size: 17px; font-weight: 600;
+    background: #fff; color: var(--color-primary); box-shadow: inset 0 0 0 1.5px var(--color-border); }
+  .preset button small { display: block; font-size: 16px; font-weight: 500; color: var(--color-text-muted); }
+  .preset button:hover { background: var(--color-bg); }
+  .preset button[aria-pressed="true"] { box-shadow: inset 0 0 0 2px var(--color-primary); background: var(--color-primary-100); }
+  .riga { display: flex; flex-direction: column; gap: 4px; padding: 10px 0; border-bottom: 1px solid var(--color-border); font-size: 18px; color: var(--color-text-muted); }
+  .riga:last-of-type { border-bottom: 0; }
+  .riga .valore { font: 700 26px/1.25 ui-monospace, Consolas, monospace; color: var(--color-primary); word-break: break-all; }
+  .riga .valore.oro { color: var(--color-accent-text); }
+
+  /* Passo 4: linea del tempo */
+  .timeline { position: relative; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; padding-top: 4px; }
+  .timeline::before { content: ""; position: absolute; left: 4%; right: 4%; top: 30px; height: 3px; background: var(--color-border); }
+  .tappa { position: relative; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+  .tappa button { height: 52px; min-width: 104px; padding: 0 16px; font-size: 20px; border-radius: 999px; background: #fff; color: var(--color-primary); box-shadow: inset 0 0 0 2px var(--color-border); }
+  .tappa button:hover { background: var(--color-bg); }
+  .tappa button.vista { box-shadow: inset 0 0 0 2px var(--color-accent); background: var(--color-accent-100); color: var(--color-accent-text); }
+  .tappa button[aria-pressed="true"] { background: var(--color-primary); color: #fff; box-shadow: none; }
+  .tappa span { font-size: 18px; font-weight: 600; color: var(--color-text-muted); text-align: center; line-height: 1.25; }
+  .dettaglio { min-height: 150px; }
+  .dettaglio h3 { display: flex; align-items: center; gap: 12px; }
+  .fonte { font-size: 18px; color: var(--color-text-muted); }
+
+  /* Passo 5: casi */
+  .caso .rivela { display: none; flex-direction: column; gap: 8px; }
+  .caso.aperto .rivela { display: flex; }
+  .caso.aperto .chiuso { display: none; }
+  .caso .lezione { font-size: 18px; line-height: 1.4; background: #fff; border-radius: 10px; padding: 8px 12px; color: var(--color-text); }
+  .caso .lezione strong { color: var(--color-accent-text); }
+  .caso button { align-self: flex-start; }
+  .caso.aperto { background: #fff; }
+  .caso { padding: 20px; gap: 8px; }
+  .caso p { font-size: 18px; line-height: 1.45; }
+
+  /* Quiz */
+  .domanda { display: flex; flex-direction: column; gap: 8px; }
+  .domanda p { font-size: 20px; font-weight: 600; color: var(--color-primary); max-width: none; }
+  .opzioni { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+  .opzioni button { height: auto; min-height: 56px; padding: 10px 14px; text-align: left; line-height: 1.3; font-size: 17px; font-weight: 500;
+    background: #fff; color: var(--color-text); box-shadow: inset 0 0 0 1.5px var(--color-border); }
+  .opzioni button:hover { background: var(--color-bg); }
+  .opzioni button.giusta { background: var(--color-success-100); color: var(--color-success); box-shadow: inset 0 0 0 2px var(--color-success); font-weight: 600; }
+  .opzioni button.sbagliata { background: var(--color-error-100); color: var(--color-error); box-shadow: inset 0 0 0 2px var(--color-error); }
+
+  /* Indicatore dei passi */
+  .punti { display: flex; gap: 8px; }
+  .punti span { width: 10px; height: 10px; border-radius: 50%; background: var(--color-border); }
+  .punti span.attivo { background: var(--color-accent); }
+  .passi-nav .spazio { flex: 1; }
+  .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+</style>
+</head>
+<body>
+  <p class="overline">Crypto agility · Modulo 1 di 4</p>
+  <h1>Perché gli algoritmi invecchiano</h1>
+
+  <!-- ================= PASSO 1 · Una chiave sola ================= -->
+  <section class="passo" aria-label="Passo 1 di 7: una chiave sola">
+    <p class="testo" style="max-width: none;">Il NIST parte dai cifrari <strong>simmetrici</strong> (DES, Triple DES, AES): c'è <strong>una sola chiave segreta</strong>, che serve sia per chiudere sia per aprire il messaggio.</p>
+    <div class="griglia-3">
+      <div class="card">
+        <div class="card-head"><span class="ic oro"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M17 6l3 3M15 8l2 2"/></svg></span>
+        <span><span class="num">1 · Alice e Bob</span><h3>Condividono la chiave</h3></span></div>
+        <p>Entrambi hanno una copia della stessa chiave segreta.</p>
+      </div>
+      <div class="card">
+        <div class="card-head"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></span>
+        <span><span class="num">2 · Alice</span><h3>Chiude il messaggio</h3></span></div>
+        <p>Con la chiave lo trasforma in dati illeggibili e lo spedisce.</p>
+      </div>
+      <div class="card">
+        <div class="card-head"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 7.5-2"/></svg></span>
+        <span><span class="num">3 · Bob</span><h3>Lo riapre</h3></span></div>
+        <p>Con <strong>la stessa chiave</strong> torna al messaggio originale.</p>
+      </div>
+    </div>
+    <div class="box-info"><span><strong>Dove la usi ogni giorno:</strong> Wi-Fi, dischi cifrati, siti con il lucchetto usano AES, un algoritmo simmetrico.</span></div>
+    <p class="fonte" style="max-width: none;">Riferimento: NIST CSWP 39-upd1, <em>Considerations for Achieving Crypto Agility</em> (2025), § 2.1. Il documento è in «Risorse».</p>
+  </section>
+
+  <!-- ================= PASSO 2 · Laboratorio dei bit ================= -->
+  <section class="passo" aria-label="Passo 2 di 7: laboratorio dei bit" hidden>
+    <div class="griglia-bit">
+      <div class="colonna">
+        <p class="testo">Per un computer ogni lettera è una fila di <strong>8 bit</strong>. Anche la chiave è una fila di bit. Cifrare vuol dire mescolare i bit del messaggio con quelli della chiave.</p>
+        <div class="regola" aria-label="Regola di mescolamento">
+          <span><b>bit uguali</b> → 0</span><span><b>bit diversi</b> → 1</span>
+        </div>
+        <div class="box-info"><span><strong>Prova:</strong> clicca i bit della chiave di Alice, poi dai a Bob una chiave sbagliata.</span></div>
+        <p class="fonte">Esempio semplificato (XOR). AES mescola i bit in molti cicli, ma anche lui usa la stessa chiave per cifrare e decifrare.</p>
+      </div>
+      <div class="lab" aria-live="polite">
+        <div class="bit-riga">
+          <label class="nome" for="lettera">Messaggio</label>
+          <span class="bits" id="bMsg"></span>
+          <span class="esito"><input id="lettera" class="lettera" maxlength="1" value="A" aria-label="Lettera del messaggio"></span>
+        </div>
+        <div class="bit-riga">
+          <span class="nome">Chiave di Alice</span>
+          <span class="bits" id="bChiave" role="group" aria-label="Bit della chiave di Alice, clicca per cambiarli"></span>
+          <span class="esito">clicca i bit</span>
+        </div>
+        <div class="bit-riga cifrata">
+          <span class="nome">Cifrato</span>
+          <span class="bits" id="bCifrato"></span>
+          <span class="esito">illeggibile</span>
+        </div>
+        <div class="separatore" aria-hidden="true"></div>
+        <div class="bit-riga">
+          <span class="nome">Chiave di Bob</span>
+          <span class="bits" id="bChiaveBob"></span>
+          <span class="esito" id="statoBob">uguale</span>
+        </div>
+        <div class="bit-riga">
+          <span class="nome">Bob legge</span>
+          <span class="bits" id="bRisultato"></span>
+          <span class="esito"><b id="letteraBob">A</b></span>
+        </div>
+        <div class="azioni">
+          <button type="button" id="bobSbaglia">Dai a Bob una chiave sbagliata</button>
+        </div>
+        <div class="risultato ok" id="esitoBit">✓ Stessa chiave: Bob legge il messaggio di Alice.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= PASSO 3 · DES, Triple DES e AES a confronto ================= -->
+  <section class="passo" aria-label="Passo 3 di 7: DES, Triple DES e AES a confronto" hidden>
+    <p class="testo" style="max-width: none;">Tre algoritmi simmetrici, tre generazioni. Cambiano soprattutto la <strong>chiave</strong> (quanti bit ha il segreto) e il <strong>blocco</strong> (quanti bit di messaggio si cifrano in un colpo). <strong>Scegli un algoritmo.</strong></p>
+    <div class="confronto">
+      <div class="scelta-alg" id="sceltaAlg" role="group" aria-label="Scegli l'algoritmo da confrontare">
+        <button type="button" data-a="0">DES<small>1977</small></button>
+        <button type="button" data-a="1">Triple DES<small>1999</small></button>
+        <button type="button" data-a="2">AES<small>2001</small></button>
+      </div>
+      <div class="lab scheda" aria-live="polite">
+        <h3 id="algNome"></h3>
+        <p class="metafora" id="algMetafora"></p>
+        <div class="misura"><span class="m-nome">Chiave</span><span class="barra"><span id="barChiave"></span></span><span class="m-val" id="valChiave"></span></div>
+        <div class="misura"><span class="m-nome">Blocco</span><span class="barra"><span id="barBlocco"></span></span><span class="m-val" id="valBlocco"></span></div>
+        <div class="info-alg">
+          <div><span class="tag">Velocità</span><span id="algVel"></span></div>
+          <div><span class="tag oro">Oggi</span><span id="algOggi"></span></div>
+        </div>
+      </div>
+    </div>
+    <p class="fonte" style="max-width: none;">Fonte: NIST CSWP 39-upd1, § 2.1, § 3.2.2 e § 4.5. Le barre sono in scala: la barra piena vale 256 bit.</p>
+  </section>
+
+  <!-- ================= PASSO 4 · Forza bruta ================= -->
+  <section class="passo" aria-label="Passo 4 di 7: forza bruta" hidden>
+    <p class="testo" style="max-width: none;">Senza la chiave si possono solo <strong>provare tutte</strong> (forza bruta) e <strong>ogni bit in più raddoppia</strong> i tentativi. Per questo, con computer sempre più potenti, si è passati da 56 bit (DES) a 112 (Triple DES) ad almeno 128 (AES).</p>
+    <div class="griglia-2">
+      <div class="lab">
+        <div class="slider-riga">
+          <label for="nbit">Lunghezza della chiave</label>
+          <input type="range" id="nbit" min="8" max="256" step="8" value="40">
+          <output id="vbit" for="nbit">40 bit</output>
+        </div>
+        <div class="preset" id="preset">
+          <button type="button" data-bit="56">DES · 56 bit<small>standard del 1977</small></button>
+          <button type="button" data-bit="112">Triple DES · 112 bit<small>soluzione temporanea</small></button>
+          <button type="button" data-bit="128">AES-128 · 128 bit<small>lo standard di oggi</small></button>
+          <button type="button" data-bit="256">AES-256 · 256 bit<small>il più robusto</small></button>
+        </div>
+      </div>
+      <div class="lab" aria-live="polite">
+        <div class="riga"><span>Chiavi possibili</span><span class="valore" id="vComb"></span></div>
+        <div class="riga"><span>Tempo per provarle tutte, a 1.000 miliardi di chiavi al secondo</span><span class="valore oro" id="vTempo"></span></div>
+        <div class="risultato" id="vVerdetto"></div>
+      </div>
+    </div>
+    <p class="fonte" style="max-width: none;">Fonte: NIST CSWP 39-upd1, § 2.1 e § 3.2.2. La velocità di 1.000 miliardi di chiavi al secondo è un'ipotesi didattica.</p>
+  </section>
+
+  <!-- ================= PASSO 4 · La linea del tempo ================= -->
+  <section class="passo" aria-label="Passo 5 di 7: la linea del tempo" hidden>
+    <p class="testo">Il NIST usa la storia dei cifrari simmetrici come primo esempio di transizione. <strong>Clicca ogni anno</strong> per scoprire cosa è successo.</p>
+    <div class="timeline" id="timeline">
+      <div class="tappa"><button type="button" data-t="0">1977</button><span>DES</span></div>
+      <div class="tappa"><button type="button" data-t="1">1999</button><span>Triple DES</span></div>
+      <div class="tappa"><button type="button" data-t="2">2001</button><span>AES</span></div>
+      <div class="tappa"><button type="button" data-t="3">2023</button><span>Stop alla cifratura</span></div>
+      <div class="tappa"><button type="button" data-t="4">2024</button><span>Triple DES vietato</span></div>
+    </div>
+    <div class="card dettaglio" id="dettaglio" aria-live="polite">
+      <h3>Scegli un anno sulla linea del tempo</h3>
+      <p>Le tappe visitate si colorano d'oro.</p>
+    </div>
+    <div class="risultato scuro" id="ventitre" hidden><span>Dal nuovo standard AES (2001) all'addio definitivo a Triple DES (2024):</span><b>23 anni</b></div>
+  </section>
+
+  <!-- ================= PASSO 5 · Succede sempre ================= -->
+  <section class="passo" aria-label="Passo 6 di 7: succede sempre" hidden>
+    <p class="testo" id="introCasi">Non è successo una volta sola. <strong>Apri i tre casi</strong>: ogni algoritmo, prima o poi, va sostituito.</p>
+    <div class="box-info" id="agility" hidden><span><strong>Ecco la crypto agility:</strong> per il NIST è la capacità di sostituire e adattare gli algoritmi senza fermare le attività e senza perdere sicurezza (CSWP 39, Abstract).</span></div>
+    <div class="griglia-3" id="casi">
+      <div class="card caso">
+        <span class="num">Hash · 2005 · § 2.2</span><h3>SHA-1</h3>
+        <p class="chiuso">Usato per anni nelle firme digitali e nei certificati.</p>
+        <div class="rivela">
+          <p>Nel 2005 si scopre una debolezza. Il NIST chiede di non usarlo più per le firme dal 2010, ma l'abbandono completo è previsto <strong>entro il 2030</strong>.</p>
+          <p class="lezione"><strong>Lezione:</strong> anche quando il problema è noto, la compatibilità rallenta il cambio.</p>
+        </div>
+        <button type="button" class="btn-secondario">Scopri cosa è successo</button>
+      </div>
+      <div class="card caso">
+        <span class="num">Chiavi · 2013 · § 2.3</span><h3>RSA</h3>
+        <p class="chiuso">Dal 2000 bastava una chiave da 1024 bit.</p>
+        <div class="rivela">
+          <p>Con computer più veloci, nel 2013 il minimo sale a <strong>2048 bit</strong>. Chi non può cambiare chiave deve sostituire il dispositivo.</p>
+          <p class="lezione"><strong>Lezione:</strong> invecchia anche la lunghezza della chiave, non solo l'algoritmo.</p>
+        </div>
+        <button type="button" class="btn-secondario">Scopri cosa è successo</button>
+      </div>
+      <div class="card caso">
+        <span class="num">Browser · 2015 · § 3.2.1</span><h3>RC4</h3>
+        <p class="chiuso">Un cifrario usato per anni per proteggere i siti web.</p>
+        <div class="rivela">
+          <p>Anche se debole, i browser lo hanno supportato a lungo per compatibilità. Solo nel <strong>2015</strong> uno standard IETF ne ha vietato l'uso.</p>
+          <p class="lezione"><strong>Lezione:</strong> gli algoritmi deboli restano accesi finché qualcuno non li spegne.</p>
+        </div>
+        <button type="button" class="btn-secondario">Scopri cosa è successo</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= PASSO 6 · Verifica ================= -->
+  <section class="passo" aria-label="Passo 7 di 7: verifica" hidden>
+    <p class="testo">Rispondi correttamente alle tre domande per completare il modulo.</p>
+    <div class="domanda" data-q="1">
+      <p>1. Nella crittografia simmetrica, quale chiave usa Bob per decifrare?</p>
+      <div class="opzioni">
+        <button type="button" data-ok>La stessa chiave usata da Alice</button>
+        <button type="button">Una chiave diversa, pubblica</button>
+        <button type="button">Nessuna: basta l'algoritmo</button>
+      </div>
+    </div>
+    <div class="domanda" data-q="2">
+      <p>2. Cosa succede se si aggiunge un bit alla chiave?</p>
+      <div class="opzioni">
+        <button type="button">Si aggiunge una sola chiave possibile</button>
+        <button type="button" data-ok>Le chiavi possibili raddoppiano</button>
+        <button type="button">Non cambia nulla</button>
+      </div>
+    </div>
+    <div class="domanda" data-q="3">
+      <p>3. Quanto è durato il passaggio completo da Triple DES ad AES?</p>
+      <div class="opzioni">
+        <button type="button">Circa 2 anni</button>
+        <button type="button">Circa 5 anni</button>
+        <button type="button" data-ok>23 anni</button>
+      </div>
+    </div>
+    <div class="feedback" id="fbQuiz" aria-live="polite"></div>
+  </section>
+
+  <div class="passi-nav">
+    <button type="button" class="btn-secondario" id="indietro">Indietro</button>
+    <button type="button" id="continua">Continua</button>
+    <span id="contatore">Passo 1 di 7</span>
+    <span class="spazio"></span>
+    <span class="punti" id="punti" aria-hidden="true"></span>
+  </div>
+
+  <script src="../../player/player-bridge.js"></script>
+  <script>
+    /* ---------- Passi ---------- */
+    var passi = Array.prototype.slice.call(document.querySelectorAll(".passo"));
+    var attuale = 0;
+    var punti = document.getElementById("punti");
+    punti.innerHTML = passi.map(function () { return "<span></span>"; }).join("");
+    function mostraPasso(n) {
+      attuale = n;
+      passi.forEach(function (p, i) { p.hidden = i !== n; });
+      document.getElementById("indietro").hidden = n === 0;
+      document.getElementById("continua").hidden = n === passi.length - 1;
+      document.getElementById("contatore").textContent = "Passo " + (n + 1) + " di " + passi.length;
+      Array.prototype.forEach.call(punti.children, function (s, i) { s.className = i <= n ? "attivo" : ""; });
+    }
+    document.getElementById("continua").addEventListener("click", function () { mostraPasso(attuale + 1); });
+    document.getElementById("indietro").addEventListener("click", function () { mostraPasso(attuale - 1); });
+
+    function it(n) { return n.toLocaleString("it-IT"); }
+
+    /* ---------- Passo 2: laboratorio dei bit (XOR) ---------- */
+    var chiave = [1, 0, 1, 1, 0, 0, 1, 0];
+    var bobSbaglia = false;
+    var inLettera = document.getElementById("lettera");
+
+    function bitsDi(n) { var b = []; for (var k = 7; k >= 0; k--) b.push((n >> k) & 1); return b; }
+    function numeroDi(b) { return b.reduce(function (a, v) { return a * 2 + v; }, 0); }
+    function celle(b, classiExtra) {
+      return b.map(function (v, i) {
+        var c = "bit" + (v ? " uno" : "") + (classiExtra && classiExtra[i] ? " " + classiExtra[i] : "");
+        return '<span class="' + c + '">' + v + "</span>";
+      }).join("");
+    }
+    function disegnaBit() {
+      var l = (inLettera.value || "A").toUpperCase();
+      if (!/[A-Z]/.test(l)) l = "A";
+      var msg = bitsDi(l.charCodeAt(0));
+      var cif = msg.map(function (v, i) { return v ^ chiave[i]; });
+      var chiaveBob = chiave.slice();
+      if (bobSbaglia) chiaveBob[6] = 1 - chiaveBob[6];
+      var ris = cif.map(function (v, i) { return v ^ chiaveBob[i]; });
+      var letteraBob = String.fromCharCode(numeroDi(ris));
+
+      document.getElementById("bMsg").innerHTML = celle(msg);
+      document.getElementById("bChiave").innerHTML = chiave.map(function (v, i) {
+        return '<button type="button" class="bit' + (v ? " uno" : "") + '" data-i="' + i + '" aria-label="Bit ' + (i + 1) + ' della chiave: ' + v + '">' + v + "</button>";
+      }).join("");
+      document.getElementById("bCifrato").innerHTML = celle(cif);
+      document.getElementById("bChiaveBob").innerHTML = celle(chiaveBob, bobSbaglia ? [0, 0, 0, 0, 0, 0, "sbagliato", 0] : null);
+      document.getElementById("bRisultato").innerHTML = celle(ris);
+      document.getElementById("letteraBob").textContent = /[A-Za-z0-9]/.test(letteraBob) ? letteraBob : "?";
+      document.getElementById("statoBob").textContent = bobSbaglia ? "1 bit diverso" : "uguale";
+
+      var esito = document.getElementById("esitoBit");
+      if (bobSbaglia) {
+        esito.className = "risultato ko";
+        esito.textContent = "✗ Basta un bit diverso: Bob legge «" + document.getElementById("letteraBob").textContent + "» invece di «" + l + "».";
+      } else {
+        esito.className = "risultato ok";
+        esito.textContent = "✓ Stessa chiave: Bob rimescola i bit e legge «" + l + "».";
+      }
+      document.getElementById("bobSbaglia").textContent = bobSbaglia ? "Ridai a Bob la chiave giusta" : "Dai a Bob una chiave sbagliata";
+    }
+    document.getElementById("bChiave").addEventListener("click", function (e) {
+      var b = e.target.closest("button");
+      if (!b) return;
+      var i = +b.getAttribute("data-i");
+      chiave[i] = 1 - chiave[i];
+      disegnaBit();
+      var nuovo = document.querySelector('#bChiave button[data-i="' + i + '"]');
+      if (nuovo) nuovo.focus();
+    });
+    document.getElementById("bobSbaglia").addEventListener("click", function () { bobSbaglia = !bobSbaglia; disegnaBit(); });
+    inLettera.addEventListener("input", function () {
+      inLettera.value = inLettera.value.toUpperCase().replace(/[^A-Z]/g, "");
+      disegnaBit();
+    });
+    disegnaBit();
+
+    /* ---------- Passo 3: confronto DES, Triple DES, AES ---------- */
+    var ALG = [
+      { nome: "DES · Data Encryption Standard",
+        metafora: "Una serratura con una chiave da 56 bit. Nel 1977 era sicura; oggi, provando tutte le chiavi, si apre in meno di un giorno.",
+        chiave: 56, chiaveTesto: "56 bit", blocco: 64, bloccoTesto: "64 bit (8 lettere)",
+        vel: "Veloce per i computer dell'epoca.", oggi: "Ritirato: non è più uno standard dal 2005." },
+      { nome: "Triple DES · DES applicato tre volte",
+        metafora: "La stessa serratura DES usata tre volte di fila con chiavi diverse. Più robusta, ma è una toppa: il blocco resta piccolo.",
+        chiave: 112, chiaveTesto: "3 × 56 bit, sicurezza reale 112 bit", blocco: 64, bloccoTesto: "64 bit (8 lettere)",
+        vel: "Lenta: fa tre volte il lavoro di DES.", oggi: "Vietato dal NIST dal 2024." },
+      { nome: "AES · Advanced Encryption Standard",
+        metafora: "Un algoritmo nuovo, progettato da zero: chiavi molto più lunghe e blocchi grandi il doppio.",
+        chiave: 256, chiaveTesto: "128, 192 o 256 bit", blocco: 128, bloccoTesto: "128 bit (16 lettere)",
+        vel: "Veloce: molti processori hanno istruzioni dedicate ad AES.", oggi: "È lo standard attuale, usato ovunque." }
+    ];
+    function mostraAlg(i) {
+      var a = ALG[i];
+      document.getElementById("algNome").textContent = a.nome;
+      document.getElementById("algMetafora").textContent = a.metafora;
+      document.getElementById("barChiave").style.width = (a.chiave / 256 * 100) + "%";
+      document.getElementById("valChiave").textContent = a.chiaveTesto;
+      document.getElementById("barBlocco").style.width = (a.blocco / 256 * 100) + "%";
+      document.getElementById("valBlocco").textContent = a.bloccoTesto;
+      document.getElementById("algVel").textContent = a.vel;
+      document.getElementById("algOggi").textContent = a.oggi;
+      document.querySelectorAll("#sceltaAlg button").forEach(function (b) {
+        b.setAttribute("aria-pressed", String(+b.getAttribute("data-a") === i));
+      });
+    }
+    document.getElementById("sceltaAlg").addEventListener("click", function (e) {
+      var b = e.target.closest("button");
+      if (b) mostraAlg(+b.getAttribute("data-a"));
+    });
+    mostraAlg(0);
+
+    /* ---------- Passo 4: forza bruta ---------- */
+    var nbit = document.getElementById("nbit");
+    var VELOCITA = 1e12;                   // chiavi provate al secondo (ipotesi)
+    var ETA_UNIVERSO = 1.38e10;            // anni
+    function potenza10(log10) {
+      var esp = Math.floor(log10), mant = Math.pow(10, log10 - esp);
+      return mant.toFixed(1).replace(".", ",") + " × 10" + apici(esp);
+    }
+    function apici(n) {
+      var s = "⁰¹²³⁴⁵⁶⁷⁸⁹";
+      return String(n).split("").map(function (c) { return s[+c]; }).join("");
+    }
+    function tempoLeggibile(log10sec) {
+      var sec = Math.pow(10, log10sec);
+      if (sec < 1) return "meno di un secondo";
+      if (sec < 60) return Math.round(sec) + " secondi";
+      if (sec < 3600) return Math.round(sec / 60) + " minuti";
+      if (sec < 86400) return Math.round(sec / 3600) + " ore";
+      if (sec < 31557600) return Math.round(sec / 86400) + " giorni";
+      var log10anni = log10sec - Math.log10(31557600);
+      if (log10anni < 6) return it(Math.round(Math.pow(10, log10anni))) + " anni";
+      return potenza10(log10anni) + " anni";
+    }
+    function aggiornaForza() {
+      var n = +nbit.value;
+      document.getElementById("vbit").textContent = n + " bit";
+      var log10comb = n * Math.log10(2);
+      document.getElementById("vComb").textContent = n <= 56 ? (2n ** BigInt(n)).toLocaleString("it-IT") : "≈ " + potenza10(log10comb);
+      var log10sec = log10comb - Math.log10(VELOCITA);
+      document.getElementById("vTempo").textContent = tempoLeggibile(log10sec);
+      var log10anni = log10sec - Math.log10(31557600);
+      var v = document.getElementById("vVerdetto");
+      if (log10anni < 2) {
+        v.className = "risultato ko";
+        v.textContent = "✗ Violabile: con abbastanza computer si trova la chiave.";
+      } else if (log10anni < Math.log10(ETA_UNIVERSO)) {
+        v.className = "risultato";
+        v.textContent = "! Resistente oggi, ma con poco margine per il futuro.";
+      } else {
+        v.className = "risultato ok";
+        v.textContent = "✓ Fuori portata: più dell'età dell'universo.";
+      }
+      document.querySelectorAll("#preset button").forEach(function (b) {
+        b.setAttribute("aria-pressed", String(+b.getAttribute("data-bit") === n));
+      });
+    }
+    nbit.addEventListener("input", aggiornaForza);
+    document.getElementById("preset").addEventListener("click", function (e) {
+      var b = e.target.closest("button");
+      if (!b) return;
+      nbit.value = b.getAttribute("data-bit");
+      aggiornaForza();
+    });
+    aggiornaForza();
+
+    /* ---------- Passo 4: linea del tempo ---------- */
+    var TAPPE = [
+      { t: "1977 · Nasce DES", d: "Il primo standard pubblico di cifratura: blocchi da 64 bit e chiave da 56 bit. Con l'aumento della potenza di calcolo, un attacco a forza bruta diventa realistico. (§ 2.1)" },
+      { t: "1999 · Arriva Triple DES", d: "Una soluzione temporanea: DES applicato tre volte, con due o tre chiavi da 56 bit, in attesa di un algoritmo più forte. (§ 2.1)" },
+      { t: "2001 · Lo standard AES", d: "Il nuovo algoritmo, con chiavi da 128, 192 o 256 bit. Eppure molte applicazioni continuano a usare Triple DES. (§ 2.1)" },
+      { t: "2023 · Stop alla cifratura", d: "La linea guida NIST SP 800-131A rev. 2 fissa alla fine del 2023 il divieto di usare Triple DES a tre chiavi per cifrare nuovi dati. (§ 5.1)" },
+      { t: "2024 · Triple DES vietato", d: "Triple DES non è più consentito. La transizione completa ad AES ha richiesto 23 anni. (§ 2.1)" }
+    ];
+    var viste = {};
+    document.getElementById("timeline").addEventListener("click", function (e) {
+      var b = e.target.closest("button");
+      if (!b) return;
+      var i = +b.getAttribute("data-t");
+      viste[i] = true;
+      document.querySelectorAll("#timeline button").forEach(function (x) {
+        var k = +x.getAttribute("data-t");
+        x.setAttribute("aria-pressed", String(k === i));
+        x.classList.toggle("vista", !!viste[k]);
+      });
+      var det = document.getElementById("dettaglio");
+      det.innerHTML = "<h3>" + TAPPE[i].t + "</h3><p>" + TAPPE[i].d + "</p>";
+      if (Object.keys(viste).length === TAPPE.length) {
+        document.getElementById("ventitre").hidden = false;
+        det.innerHTML += '<p class="fonte">Fonte: NIST CSWP 39, sezione 2.1.</p>';
+      }
+    });
+
+    /* ---------- Passo 5: i tre casi ---------- */
+    var aperti = 0;
+    document.querySelectorAll(".caso").forEach(function (c) {
+      var b = c.querySelector("button");
+      b.addEventListener("click", function () {
+        if (c.classList.contains("aperto")) return;
+        c.classList.add("aperto");
+        b.hidden = true;
+        aperti++;
+        if (aperti === 3) {
+          document.getElementById("introCasi").hidden = true;
+          document.getElementById("agility").hidden = false;
+        }
+      });
+    });
+
+    /* ---------- Passo 6: quiz (il modulo si completa con 3 risposte giuste) ---------- */
+    var giuste = {};
+    var fbQuiz = document.getElementById("fbQuiz");
+    function controllaQuiz() {
+      if (Object.keys(giuste).length === 3) {
+        fbQuiz.className = "feedback ok";
+        fbQuiz.textContent = "✓ Tutte corrette! Hai completato il modulo 1: ora puoi andare avanti.";
+        player.complete();
+      } else {
+        fbQuiz.className = "feedback";
+        fbQuiz.textContent = "";
+      }
+    }
+    document.querySelectorAll(".domanda").forEach(function (d) {
+      d.addEventListener("click", function (e) {
+        var b = e.target.closest("button");
+        if (!b || giuste[d.getAttribute("data-q")]) return;
+        d.querySelectorAll("button").forEach(function (o) { o.classList.remove("sbagliata"); });
+        if (b.hasAttribute("data-ok")) {
+          b.classList.add("giusta");
+          b.textContent = "✓ " + b.textContent;
+          giuste[d.getAttribute("data-q")] = true;
+          controllaQuiz();
+        } else {
+          b.classList.add("sbagliata");
+          fbQuiz.className = "feedback ko";
+          fbQuiz.textContent = "✗ La risposta «" + b.textContent + "» non è corretta: riprova.";
+        }
+      });
+    });
+
+    /* Se il modulo era già completato, mostra il quiz risolto */
+    document.addEventListener("player:init", function (e) {
+      if (e.detail.lesson.status !== "done") return;
+      document.querySelectorAll(".domanda").forEach(function (d) {
+        var b = d.querySelector("[data-ok]");
+        if (!b.classList.contains("giusta")) { b.classList.add("giusta"); b.textContent = "✓ " + b.textContent; }
+        giuste[d.getAttribute("data-q")] = true;
+      });
+      fbQuiz.className = "feedback ok";
+      fbQuiz.textContent = "✓ Modulo già completato.";
+    });
+
+    mostraPasso(0);
+  </script>
+</body>
+</html>

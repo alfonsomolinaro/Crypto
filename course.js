@@ -24,7 +24,7 @@ window.COURSE = {
   // I PDF si aprono dentro il Player su computer, in una nuova scheda su smartphone.
   // Si possono aggiungere risorse anche a una singola lezione, con la stessa proprietà "resources".
   resources: [
-    { title: "Fonte di esempio", file: "resources/fonte-esempio.pdf", size: "1 KB" }
+    { title: "Approfondimento · NIST CSWP 39-upd1: Considerations for Achieving Crypto Agility (2025)", file: "resources/NIST.CSWP.39-upd1.pdf", size: "1,1 MB" }
     // { title: "Slide del corso", file: "resources/slide.pdf", size: "2,4 MB" }
   ],
 
@@ -36,6 +36,15 @@ window.COURSE = {
       src: "media/video/intro.mp4",     // MP4 (H.264 + AAC), sotto i 100 MB
       duration: "3 min",
       complete: { on: "media-end", threshold: 0.95 }   // completata al 95% del video
+    },
+    {
+      // Percorso Crypto Agility · modulo 1 di 4 (in prova)
+      id: "ca-algoritmi-invecchiano",
+      title: "Crypto agility 1 · Perché gli algoritmi invecchiano",
+      type: "html",
+      src: "pages/ca-01-algoritmi-invecchiano/index.html",
+      duration: "8 min",
+      complete: { on: "page" }          // completata con le 3 risposte giuste del quiz finale
     },
     {
       id: "cifrari-classici",
