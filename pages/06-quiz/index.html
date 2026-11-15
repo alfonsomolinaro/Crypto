@@ -2,33 +2,375 @@
 <html lang="it">
 <head>
 <meta charset="utf-8">
-<title>Quiz finale</title>
+<title>Verifica finale</title>
 <link rel="stylesheet" href="../pagina.css">
+<style>
+  [hidden] { display: none !important; }
+  body { gap: 16px; }
+  h1 { font-size: 38px; }
+
+  .quiz { flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 14px; }
+  .testa { display: flex; align-items: center; gap: 16px; }
+  .testa .n { font-size: 15px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--color-accent-text); }
+  .testa .tipo { font-size: 15px; font-weight: 600; padding: 3px 10px; border-radius: 999px; background: var(--color-primary-100); color: var(--color-primary); }
+  .barra { flex: 1; display: flex; gap: 6px; }
+  .barra span { flex: 1; height: 6px; border-radius: 3px; background: var(--color-border); }
+  .barra span.fatta { background: var(--color-accent); }
+  .domanda-testo { font-size: 24px; line-height: 1.35; font-weight: 600; color: var(--color-primary); max-width: none; }
+  .area { flex: 1; min-height: 0; border: 0; display: flex; flex-direction: column; align-items: stretch; justify-content: flex-start; gap: 12px; color: var(--color-text); font-size: 19px; }
+  .azioni { display: flex; gap: 12px; align-items: center; }
+  .feedback { font-size: 19px; line-height: 1.45; }
+
+  /* Scelta multipla */
+  .mc { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .mc button, .vf button { height: auto; min-height: 56px; padding: 10px 16px; text-align: left; font-size: 18px; line-height: 1.3; font-weight: 500;
+    background: #fff; color: var(--color-text); box-shadow: inset 0 0 0 1.5px var(--color-border); }
+  .mc button:hover, .vf button:hover { background: var(--color-bg); }
+  .mc button[aria-pressed="true"], .vf button[aria-pressed="true"] { box-shadow: inset 0 0 0 2px var(--color-primary); background: var(--color-primary-100); color: var(--color-primary); font-weight: 600; }
+  .giusta { background: var(--color-success-100) !important; color: var(--color-success) !important; box-shadow: inset 0 0 0 2px var(--color-success) !important; }
+  .sbagliata { background: var(--color-error-100) !important; color: var(--color-error) !important; box-shadow: inset 0 0 0 2px var(--color-error) !important; }
+
+  /* Vero / falso */
+  .vf-riga { display: grid; grid-template-columns: minmax(0, 1fr) 130px 130px; gap: 10px; align-items: center; background: var(--color-bg); border-radius: 12px; padding: 8px 8px 8px 16px; }
+  .vf-riga span { font-size: 19px; }
+  .vf { display: contents; }
+  .vf button { text-align: center; min-height: 48px; }
+
+  /* Trascina e rilascia */
+  .pool { display: flex; gap: 10px; flex-wrap: wrap; min-height: 64px; padding: 8px; border: 1.5px dashed var(--color-border); border-radius: 12px; align-items: center; }
+  .pool .vuoto { font-size: 18px; color: var(--color-text-muted); padding: 0 8px; }
+  .chip { height: 48px; padding: 0 18px; border-radius: 999px; font-size: 18px; background: #fff; color: var(--color-primary); box-shadow: inset 0 0 0 1.5px var(--color-primary); cursor: grab; }
+  .chip:hover { background: var(--color-primary-100); }
+  .chip[aria-pressed="true"] { background: var(--color-primary); color: #fff; }
+  .zone { display: grid; gap: 10px; }
+  .zone.righe { grid-template-columns: 1fr; }
+  .zone.colonne { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .zona { border: 1.5px solid var(--color-border); border-radius: 14px; background: var(--color-bg); padding: 8px; display: grid; gap: 8px; align-items: center; }
+  .zone.righe .zona { grid-template-columns: minmax(0, 1fr) 260px; }
+  .zona.sopra { border-color: var(--color-accent); background: var(--color-accent-100); }
+  .zona-target { height: auto; min-height: 48px; padding: 8px 14px; text-align: left; font-size: 18px; font-weight: 600; background: transparent; color: var(--color-primary); box-shadow: none; }
+  .zona-target:hover { background: #fff; }
+  .slot { display: flex; gap: 8px; flex-wrap: wrap; min-height: 52px; align-items: center; padding: 2px 6px; border-radius: 10px; background: #fff; border: 1px dashed var(--color-border); }
+  .zone.colonne .slot { min-height: 100px; align-content: flex-start; padding: 8px; }
+  .zone.tre { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .zone.tre .zona-target { min-height: 72px; }
+  .zone.tre .slot { min-height: 60px; justify-content: center; }
+
+  /* Ordinamento */
+  .ordine { display: flex; flex-direction: column; gap: 10px; }
+  .ordine-riga { display: grid; grid-template-columns: 44px minmax(0, 1fr) 52px 52px; gap: 10px; align-items: center; background: #fff; border: 1.5px solid var(--color-border); border-radius: 12px; padding: 6px 8px 6px 14px; font-size: 19px; }
+  .ordine-riga .pos { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; background: var(--color-accent-100); color: var(--color-accent-text); }
+  .ordine-riga button { width: 52px; height: 48px; padding: 0; font-size: 20px; background: #fff; color: var(--color-primary); box-shadow: inset 0 0 0 1.5px var(--color-border); }
+  .ordine-riga button:disabled { opacity: .35; cursor: default; }
+  .ordine-riga.giusta, .ordine-riga.sbagliata { box-shadow: none !important; }
+
+  /* Completa la frase */
+  .frase { font-size: 22px; line-height: 2.1; color: var(--color-text); max-width: none; }
+  .frase select { font: 600 20px var(--font-family); color: var(--color-primary); height: 48px; padding: 0 10px; border: 1.5px solid var(--color-primary); border-radius: 10px; background: #fff; margin: 0 4px; }
+  .frase select:focus-visible, .chip:focus-visible, .zona-target:focus-visible { outline: 3px solid var(--color-accent-text); outline-offset: 2px; }
+  .frase select.giusta, .frase select.sbagliata { border-width: 2px; }
+
+  /* Esito finale */
+  .esito-finale { flex: 1; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; gap: 18px; }
+  .punteggio { font: 700 72px/1 var(--font-family); color: var(--color-primary); }
+  .punteggio small { font-size: 28px; color: var(--color-text-muted); font-weight: 600; }
+  .esito-finale .feedback { font-size: 21px; max-width: 900px; }
+</style>
 </head>
 <body>
-  <p class="overline">Lezione 6 · Quiz · segnaposto</p>
-  <h1>Quiz finale</h1>
-  <p>[Qui andranno le domande del quiz. Per ora puoi simulare l'esito per provare il Player.]</p>
-  <div class="area" id="area">
-    <span class="todo">[Area del quiz]</span>
-    <div class="row todo">
-      <button type="button" id="passBtn">Simula: superato</button>
-      <button type="button" class="secondary" id="failBtn">Simula: non superato</button>
+  <p class="overline">Crypto agility · Verifica finale</p>
+  <h1>Verifica finale</h1>
+
+  <div class="quiz" id="quiz">
+    <div class="testa"><span class="n" id="numero"></span><span class="tipo" id="tipo"></span><span class="barra" id="barra" aria-hidden="true"></span></div>
+    <p class="domanda-testo" id="testo"></p>
+    <div class="area" id="area"></div>
+    <div class="feedback" id="feedback" aria-live="polite"></div>
+    <div class="azioni">
+      <button type="button" id="verifica">Verifica</button>
+      <button type="button" id="avanti" hidden>Avanti</button>
+      <span class="piccolo" id="aiuto"></span>
     </div>
-    <span class="done">✓ Quiz superato</span>
   </div>
+
+  <div class="esito-finale" id="finale" hidden>
+    <div class="punteggio" id="punteggio"></div>
+    <div class="feedback" id="fbFinale" aria-live="polite"></div>
+    <div class="azioni"><button type="button" id="riprova" hidden>Riprova la verifica</button></div>
+  </div>
+
   <script src="../../player/player-bridge.js"></script>
   <script>
-    document.getElementById("passBtn").addEventListener("click", function () {
-      player.setStatus("passed");
-      document.getElementById("area").classList.add("is-done");
+    /* ===================== Le 8 domande (2 per modulo) ===================== */
+    var SOGLIA = 6;   // risposte giuste necessarie su 8 per superare la verifica
+    var DOMANDE = [
+      { tipo: "dndRighe", etichetta: "Trascina", testo: "Trascina ogni algoritmo accanto alla sua descrizione.",
+        chips: ["DES", "Triple DES", "AES"],
+        zone: [{ id: "z1", t: "1977 · chiave da 56 bit", ok: "DES" },
+               { id: "z2", t: "1999 · soluzione temporanea: DES applicato tre volte", ok: "Triple DES" },
+               { id: "z3", t: "2001 · chiavi da 128, 192 o 256 bit", ok: "AES" }],
+        spiega: "DES (1977) ha una chiave da 56 bit; Triple DES (1999) era una soluzione temporanea; AES (2001) è lo standard attuale." },
+      { tipo: "mc", etichetta: "Scelta multipla", testo: "Perché DES è stato sostituito?",
+        opzioni: ["Era troppo lento per i computer moderni", "Con computer più potenti si potevano provare tutte le chiavi", "Usava due chiavi diverse", "Non funzionava sui telefoni"], ok: 1,
+        spiega: "Con 56 bit, l'aumento della potenza di calcolo ha reso realistico provare tutte le chiavi (forza bruta)." },
+      { tipo: "vf", etichetta: "Vero o falso", testo: "Per ogni affermazione sulla crittografia asimmetrica, scegli vero o falso.",
+        righe: [{ t: "La chiave pubblica si può dare a chiunque.", ok: true },
+                { t: "La chiave pubblica serve a riaprire il messaggio.", ok: false },
+                { t: "La chiave privata resta solo al suo proprietario.", ok: true }],
+        spiega: "La chiave pubblica serve a chiudere e si dà a tutti; solo la chiave privata, che resta al proprietario, riapre il messaggio." },
+      { tipo: "mc", etichetta: "Scelta multipla", testo: "Secondo il NIST, cosa minaccia un computer quantistico crittograficamente rilevante?",
+        opzioni: ["Solo le password", "La crittografia a chiave pubblica", "Solo i vecchi algoritmi come DES", "Nessun algoritmo in uso oggi"], ok: 1,
+        spiega: "La minaccia riguarda la crittografia a chiave pubblica: per questo va sostituita tutta, non un solo algoritmo." },
+      { tipo: "ordine", etichetta: "Ordina", testo: "Metti in ordine le fasi del passaggio al post-quantum descritte dal NIST.",
+        voci: ["Solo algoritmi classici", "Modalità ibrida: classico e post-quantum insieme", "Solo algoritmi post-quantum"],
+        partenza: [2, 0, 1],
+        spiega: "Si parte dagli algoritmi classici, si passa alla modalità ibrida e infine ai soli algoritmi post-quantum." },
+      { tipo: "completa", etichetta: "Completa la frase", testo: "Scegli le parole giuste per completare la frase.",
+        frase: ["Dispositivo e servizio scelgono l'algoritmo ", 0, ". Se una spia toglie le opzioni più forti si parla di attacco di ", 1, "."],
+        menu: [["…", "più nuovo che esiste", "migliore che conoscono entrambi", "scelto dal dispositivo"],
+               ["…", "forza bruta", "downgrade", "aggiornamento"]],
+        ok: [2, 2],
+        spiega: "Si sceglie il migliore che conoscono entrambi. Forzare la scelta di un algoritmo più debole è un attacco di downgrade." },
+      { tipo: "dndColonne", etichetta: "Trascina", testo: "Trascina ogni oggetto nella colonna giusta.",
+        chips: ["Browser", "App del telefono", "Smart card", "Chiavetta USB di firma"],
+        zone: [{ id: "agg", t: "Si aggiorna con il software", ok: ["Browser", "App del telefono"] },
+               { id: "sost", t: "Di solito va sostituito", ok: ["Smart card", "Chiavetta USB di firma"] }],
+        spiega: "Il software riceve i nuovi algoritmi con gli aggiornamenti; carte e chiavette con chip supportano algoritmi fissi e di solito si sostituiscono." },
+      { tipo: "mc", etichetta: "Scelta multipla", testo: "Hai un file cifrato con un algoritmo appena ritirato. Cosa succede di solito?",
+        opzioni: ["Non si può più aprire", "Si cancella da solo", "Si può ancora aprire, ma non si cifrano nuovi file con quell'algoritmo", "Viene ri-cifrato da solo"], ok: 2,
+        spiega: "Cifrare nuovi dati con l'algoritmo ritirato viene bloccato, ma decifrare i file già salvati può restare permesso." }
+    ];
+
+    /* ===================== Stato e utilità ===================== */
+    var idx = 0, punti = 0, verificata = false, stato = {};
+    var area = document.getElementById("area"), fb = document.getElementById("feedback");
+    var bVerifica = document.getElementById("verifica"), bAvanti = document.getElementById("avanti");
+    document.getElementById("barra").innerHTML = DOMANDE.map(function () { return "<span></span>"; }).join("");
+    function esc(s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/"/g, "&quot;"); }
+    function mescola(a) { a = a.slice(); for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+
+    /* ===================== Disegno delle domande ===================== */
+    function mostra() {
+      var d = DOMANDE[idx];
+      verificata = false;
+      document.getElementById("numero").textContent = "Domanda " + (idx + 1) + " di " + DOMANDE.length;
+      document.getElementById("tipo").textContent = d.etichetta;
+      document.getElementById("testo").textContent = d.testo;
+      Array.prototype.forEach.call(document.getElementById("barra").children, function (s, i) { s.className = i < idx ? "fatta" : ""; });
+      fb.className = "feedback"; fb.textContent = "";
+      bVerifica.hidden = false; bAvanti.hidden = true;
+      document.getElementById("aiuto").textContent = d.tipo.indexOf("dnd") === 0 ? "Puoi trascinare, oppure cliccare un elemento e poi la sua destinazione." : "";
+      if (d.tipo === "mc") { stato = { scelta: null }; disegnaMc(); }
+      if (d.tipo === "vf") { stato = { r: d.righe.map(function () { return null; }) }; disegnaVf(); }
+      if (d.tipo === "ordine") { stato = { ordine: d.partenza.slice() }; disegnaOrdine(); }
+      if (d.tipo === "completa") { disegnaCompleta(); }
+      if (d.tipo === "dndRighe" || d.tipo === "dndColonne") {
+        var pos = {}; mescola(d.chips).forEach(function (c) { pos[c] = "pool"; });
+        stato = { pos: pos, ordinePool: Object.keys(pos), sel: null };
+        disegnaDnd();
+      }
+    }
+
+    function disegnaMc() {
+      var d = DOMANDE[idx];
+      area.innerHTML = '<div class="mc" role="group">' + d.opzioni.map(function (o, i) {
+        return '<button type="button" data-i="' + i + '" aria-pressed="' + (stato.scelta === i) + '">' + esc(o) + "</button>";
+      }).join("") + "</div>";
+    }
+    function disegnaVf() {
+      var d = DOMANDE[idx];
+      area.innerHTML = d.righe.map(function (r, i) {
+        return '<div class="vf-riga"><span>' + esc(r.t) + '</span><div class="vf" role="group" aria-label="' + esc(r.t) + '">' +
+          '<button type="button" data-r="' + i + '" data-v="1" aria-pressed="' + (stato.r[i] === true) + '">Vero</button>' +
+          '<button type="button" data-r="' + i + '" data-v="0" aria-pressed="' + (stato.r[i] === false) + '">Falso</button></div></div>';
+      }).join("");
+    }
+    function disegnaOrdine() {
+      var d = DOMANDE[idx], n = stato.ordine.length;
+      area.innerHTML = '<div class="ordine">' + stato.ordine.map(function (v, i) {
+        return '<div class="ordine-riga" data-pos="' + i + '"><span class="pos">' + (i + 1) + "</span><span>" + esc(d.voci[v]) + "</span>" +
+          '<button type="button" data-su="' + i + '" aria-label="Sposta su: ' + esc(d.voci[v]) + '"' + (i === 0 || verificata ? " disabled" : "") + ">↑</button>" +
+          '<button type="button" data-giu="' + i + '" aria-label="Sposta giù: ' + esc(d.voci[v]) + '"' + (i === n - 1 || verificata ? " disabled" : "") + ">↓</button></div>";
+      }).join("") + "</div>";
+    }
+    function disegnaCompleta() {
+      var d = DOMANDE[idx];
+      area.innerHTML = '<p class="frase">' + d.frase.map(function (p) {
+        if (typeof p === "string") return esc(p);
+        return '<select data-m="' + p + '" aria-label="Spazio ' + (p + 1) + '">' + d.menu[p].map(function (o, i) { return '<option value="' + i + '">' + esc(o) + "</option>"; }).join("") + "</select>";
+      }).join("") + "</p>";
+    }
+    function disegnaDnd() {
+      var d = DOMANDE[idx];
+      function chip(c) {
+        return '<button type="button" class="chip" draggable="true" data-chip="' + esc(c) + '" aria-pressed="' + (stato.sel === c) + '">' + esc(c) + "</button>";
+      }
+      var inPool = stato.ordinePool.filter(function (c) { return stato.pos[c] === "pool"; });
+      var html = '<div class="pool" data-zona="pool">' + (inPool.length ? inPool.map(chip).join("") : '<span class="vuoto">Tutti gli elementi sono stati posizionati.</span>') +
+        '</div><div class="zone ' + (d.tipo === "dndRighe" ? "tre" : "colonne") + '">' + d.zone.map(function (z) {
+          var dentro = stato.ordinePool.filter(function (c) { return stato.pos[c] === z.id; });
+          return '<div class="zona" data-zona="' + z.id + '"><button type="button" class="zona-target" data-zona="' + z.id + '">' + esc(z.t) + '</button><div class="slot">' + dentro.map(chip).join("") + "</div></div>";
+        }).join("") + "</div>";
+      area.innerHTML = html;
+    }
+
+    /* ===================== Interazioni ===================== */
+    area.addEventListener("click", function (e) {
+      if (verificata) return;
+      var d = DOMANDE[idx], b = e.target.closest("button");
+      if (!b) return;
+      if (d.tipo === "mc") { stato.scelta = +b.getAttribute("data-i"); disegnaMc(); area.querySelector('[data-i="' + stato.scelta + '"]').focus(); }
+      if (d.tipo === "vf") {
+        var r = +b.getAttribute("data-r"), v = b.getAttribute("data-v") === "1";
+        stato.r[r] = v; disegnaVf(); area.querySelector('[data-r="' + r + '"][data-v="' + (v ? 1 : 0) + '"]').focus();
+      }
+      if (d.tipo === "ordine") {
+        var o = stato.ordine, i, j, sel;
+        if (b.hasAttribute("data-su")) { i = +b.getAttribute("data-su"); j = i - 1; sel = "data-su"; }
+        else if (b.hasAttribute("data-giu")) { i = +b.getAttribute("data-giu"); j = i + 1; sel = "data-giu"; }
+        else return;
+        var t = o[i]; o[i] = o[j]; o[j] = t; disegnaOrdine();
+        var f = area.querySelector("[" + sel + '="' + j + '"]:not([disabled])') || area.querySelector('[data-pos="' + j + '"] button:not([disabled])');
+        if (f) f.focus();
+      }
+      if (d.tipo === "dndRighe" || d.tipo === "dndColonne") {
+        if (b.classList.contains("chip")) {
+          var c = b.getAttribute("data-chip");
+          stato.sel = stato.sel === c ? null : c; disegnaDnd();
+          var cb = area.querySelector('.chip[data-chip="' + c.replace(/"/g, '\\"') + '"]'); if (cb) cb.focus();
+        } else if (b.classList.contains("zona-target") && stato.sel) {
+          sposta(stato.sel, b.getAttribute("data-zona"));
+        }
+      }
     });
-    document.getElementById("failBtn").addEventListener("click", function () {
-      player.setStatus("failed");
+    function sposta(c, zona) {
+      var d = DOMANDE[idx];
+      if (d.tipo === "dndRighe" && zona !== "pool") {   // una sola risposta per riga: chi c'era torna in alto
+        Object.keys(stato.pos).forEach(function (k) { if (stato.pos[k] === zona && k !== c) stato.pos[k] = "pool"; });
+      }
+      stato.pos[c] = zona; stato.sel = null; disegnaDnd();
+      var t = area.querySelector('.zona-target[data-zona="' + zona + '"]') || area.querySelector(".chip"); if (t) t.focus();
+    }
+    // Clic sull'area «pool» per riportare indietro un elemento selezionato
+    area.addEventListener("click", function (e) {
+      var d = DOMANDE[idx];
+      if (verificata || !(d.tipo === "dndRighe" || d.tipo === "dndColonne") || !stato.sel) return;
+      if (e.target.classList && e.target.classList.contains("pool")) sposta(stato.sel, "pool");
     });
+    // Trascinamento con il mouse
+    area.addEventListener("dragstart", function (e) {
+      var b = e.target.closest && e.target.closest(".chip"); if (!b || verificata) return;
+      e.dataTransfer.setData("text/plain", b.getAttribute("data-chip")); e.dataTransfer.effectAllowed = "move";
+    });
+    area.addEventListener("dragover", function (e) {
+      var z = e.target.closest && e.target.closest("[data-zona]"); if (!z || verificata) return;
+      e.preventDefault();
+      area.querySelectorAll(".zona.sopra").forEach(function (x) { x.classList.remove("sopra"); });
+      var box = z.closest(".zona"); if (box) box.classList.add("sopra");
+    });
+    area.addEventListener("dragleave", function (e) {
+      var box = e.target.closest && e.target.closest(".zona"); if (box && !box.contains(e.relatedTarget)) box.classList.remove("sopra");
+    });
+    area.addEventListener("drop", function (e) {
+      var z = e.target.closest && e.target.closest("[data-zona]"); if (!z || verificata) return;
+      e.preventDefault();
+      var c = e.dataTransfer.getData("text/plain"); if (c) sposta(c, z.getAttribute("data-zona"));
+    });
+
+    /* ===================== Verifica ===================== */
+    function completa() {
+      var d = DOMANDE[idx];
+      if (d.tipo === "mc") return stato.scelta !== null;
+      if (d.tipo === "vf") return stato.r.every(function (v) { return v !== null; });
+      if (d.tipo === "completa") return Array.prototype.every.call(area.querySelectorAll("select"), function (s) { return s.value !== "0"; });
+      if (d.tipo === "dndRighe" || d.tipo === "dndColonne") return Object.keys(stato.pos).every(function (k) { return stato.pos[k] !== "pool"; });
+      return true;
+    }
+    bVerifica.addEventListener("click", function () {
+      if (!completa()) { fb.className = "feedback ko"; fb.textContent = "Completa la risposta prima di verificare."; return; }
+      var d = DOMANDE[idx], giusto = true;
+      verificata = true;
+      if (d.tipo === "mc") {
+        giusto = stato.scelta === d.ok;
+        area.querySelectorAll(".mc button").forEach(function (b) {
+          var i = +b.getAttribute("data-i");
+          if (i === d.ok) b.classList.add("giusta"); else if (i === stato.scelta) b.classList.add("sbagliata");
+        });
+      }
+      if (d.tipo === "vf") {
+        d.righe.forEach(function (r, i) {
+          var ok = stato.r[i] === r.ok; if (!ok) giusto = false;
+          var b = area.querySelector('[data-r="' + i + '"][data-v="' + (stato.r[i] ? 1 : 0) + '"]'); b.classList.add(ok ? "giusta" : "sbagliata");
+        });
+      }
+      if (d.tipo === "ordine") {
+        disegnaOrdine();
+        area.querySelectorAll(".ordine-riga").forEach(function (riga, i) {
+          var ok = stato.ordine[i] === i; if (!ok) giusto = false; riga.classList.add(ok ? "giusta" : "sbagliata");
+        });
+      }
+      if (d.tipo === "completa") {
+        area.querySelectorAll("select").forEach(function (s) {
+          var ok = +s.value === d.ok[+s.getAttribute("data-m")]; if (!ok) giusto = false;
+          s.classList.add(ok ? "giusta" : "sbagliata"); s.disabled = true;
+        });
+      }
+      if (d.tipo === "dndRighe" || d.tipo === "dndColonne") {
+        area.querySelectorAll(".chip").forEach(function (b) {
+          var c = b.getAttribute("data-chip"), z = d.zone.filter(function (x) { return x.id === stato.pos[c]; })[0];
+          var ok = z && (Array.isArray(z.ok) ? z.ok.indexOf(c) >= 0 : z.ok === c);
+          if (!ok) giusto = false; b.classList.add(ok ? "giusta" : "sbagliata"); b.draggable = false;
+        });
+      }
+      if (giusto) punti++;
+      fb.className = "feedback " + (giusto ? "ok" : "ko");
+      fb.textContent = (giusto ? "✓ Corretto. " : "✗ Non del tutto. ") + d.spiega;
+      bVerifica.hidden = true; bAvanti.hidden = false;
+      bAvanti.textContent = idx < DOMANDE.length - 1 ? "Avanti" : "Vedi il risultato";
+      bAvanti.focus();
+    });
+    bAvanti.addEventListener("click", function () {
+      if (idx < DOMANDE.length - 1) { idx++; mostra(); return; }
+      fine();
+    });
+
+    /* ===================== Risultato ===================== */
+    function fine() {
+      document.getElementById("quiz").hidden = true;
+      document.getElementById("finale").hidden = false;
+      document.getElementById("punteggio").innerHTML = punti + " <small>su " + DOMANDE.length + "</small>";
+      var f = document.getElementById("fbFinale"), r = document.getElementById("riprova");
+      if (punti >= SOGLIA) {
+        f.className = "feedback ok";
+        f.textContent = "✓ Verifica superata! Hai risposto correttamente a " + punti + " domande su " + DOMANDE.length + ". Premi Avanti per concludere il percorso.";
+        r.hidden = true;
+        player.setStatus("passed");
+      } else {
+        f.className = "feedback ko";
+        f.textContent = "✗ Verifica non superata: servono almeno " + SOGLIA + " risposte giuste su " + DOMANDE.length + ". Ripassa i moduli e riprova.";
+        r.hidden = false;
+        player.setStatus("failed");
+      }
+    }
+    document.getElementById("riprova").addEventListener("click", function () {
+      idx = 0; punti = 0;
+      document.getElementById("finale").hidden = true;
+      document.getElementById("quiz").hidden = false;
+      mostra();
+    });
+
+    /* Se la verifica era già superata, mostra direttamente l'esito */
     document.addEventListener("player:init", function (e) {
-      if (e.detail.lesson.status === "done") document.getElementById("area").classList.add("is-done");
+      if (e.detail.lesson.status !== "done") return;
+      document.getElementById("quiz").hidden = true;
+      document.getElementById("finale").hidden = false;
+      document.getElementById("punteggio").textContent = "✓";
+      var f = document.getElementById("fbFinale");
+      f.className = "feedback ok"; f.textContent = "✓ Verifica già superata. Puoi rifarla quando vuoi.";
+      document.getElementById("riprova").hidden = false;
     });
+
+    mostra();
   </script>
 </body>
 </html>

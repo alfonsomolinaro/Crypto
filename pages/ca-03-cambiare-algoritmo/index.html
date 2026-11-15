@@ -1,0 +1,373 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<title>Perché cambiare è così difficile</title>
+<link rel="stylesheet" href="../pagina.css">
+<style>
+  [hidden] { display: none !important; }   /* i riquadri nascosti restano nascosti anche se hanno display: flex */
+  body { gap: 16px; }
+  h1 { font-size: 38px; }
+  .passo { gap: 18px; }
+  .fonte { font-size: 18px; color: var(--color-text-muted); max-width: none; }
+
+  /* Icone e card (stesso stile dei moduli 1 e 2) */
+  .ic { width: 52px; height: 52px; border-radius: 14px; display: flex; align-items: center; justify-content: center; background: var(--color-primary-100); color: var(--color-primary); flex: none; }
+  .ic svg { width: 30px; height: 30px; }
+  .ic.oro { background: var(--color-accent-100); color: var(--color-accent-text); }
+  .card .num { display: block; font-size: 15px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--color-accent-text); }
+  .card-head { display: flex; align-items: center; gap: 14px; }
+  .tag { display: inline-block; font-size: 15px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; padding: 3px 10px; border-radius: 999px; background: var(--color-primary-100); color: var(--color-primary); white-space: nowrap; }
+  .tag.ok { background: var(--color-success-100); color: var(--color-success); }
+  .tag.ko { background: var(--color-error-100); color: var(--color-error); }
+  .tag.warn { background: var(--color-warning-100); color: var(--color-warning); }
+
+  .lab { background: var(--color-bg); border: 1px solid var(--color-border); border-radius: 16px; padding: 18px 20px; display: flex; flex-direction: column; gap: 10px; }
+  .azioni { display: flex; gap: 10px; flex-wrap: wrap; }
+  .azioni button { height: 48px; font-size: 17px; padding: 0 18px; }
+  .risultato { display: flex; align-items: center; gap: 12px; padding: 12px 18px; border-radius: 12px; background: var(--color-accent-100); font-size: 19px; font-weight: 600; line-height: 1.4; color: var(--color-primary); }
+  .risultato.ok { background: var(--color-success-100); color: var(--color-success); }
+  .risultato.ko { background: var(--color-error-100); color: var(--color-error); }
+  .risultato.warn { background: var(--color-warning-100); color: var(--color-warning); }
+
+  /* Passo 2: il collegamento */
+  .collegamento { display: grid; grid-template-columns: minmax(0, 1fr) 270px minmax(0, 1fr); gap: 16px; align-items: stretch; }
+  .collegamento .lab { padding: 14px 16px; gap: 8px; }
+  #esitoColl { font-size: 18px; padding: 10px 16px; }
+  #sezColl { gap: 12px; }
+  #sezQuiz .opzioni button { min-height: 50px; }
+  .lato h3 { display: flex; align-items: center; gap: 10px; }
+  .lato h3 svg { width: 26px; height: 26px; }
+  .algo-lista { display: flex; flex-direction: column; gap: 6px; }
+  .algo-lista button { height: auto; min-height: 46px; padding: 6px 12px; display: grid; grid-template-columns: 24px minmax(0, 1fr); gap: 10px; align-items: center; text-align: left;
+    font-size: 17px; line-height: 1.2; background: #fff; color: var(--color-text-muted); box-shadow: inset 0 0 0 1.5px var(--color-border); }
+  .algo-lista button small { display: block; font-size: 15px; font-weight: 500; }
+  .algo-lista button .spunta { width: 22px; height: 22px; border-radius: 6px; border: 2px solid var(--color-border); display: flex; align-items: center; justify-content: center; font-size: 15px; }
+  .algo-lista button[aria-pressed="true"] { color: var(--color-primary); box-shadow: inset 0 0 0 2px var(--color-primary); }
+  .algo-lista button[aria-pressed="true"] .spunta { background: var(--color-primary); border-color: var(--color-primary); color: #fff; }
+  .algo-lista button.scelto { background: var(--color-accent-100); box-shadow: inset 0 0 0 2px var(--color-accent); }
+  .centro { display: flex; flex-direction: column; gap: 10px; justify-content: center; }
+  .centro .scelta { text-align: center; padding: 14px 10px; border-radius: 14px; background: var(--color-primary); color: #fff; }
+  .centro .scelta small { display: block; font-size: 15px; letter-spacing: .08em; text-transform: uppercase; color: var(--color-accent-on-dark, #E2C38E); }
+  .centro .scelta b { display: block; font-size: 22px; margin-top: 4px; }
+  .centro .scelta.nessuna { background: var(--color-error); }
+  .opzione { display: flex; align-items: center; justify-content: space-between; gap: 10px; font-size: 17px; font-weight: 600; color: var(--color-primary); }
+  .opzione button { width: 72px; height: 40px; padding: 0; border-radius: 999px; background: var(--color-border); position: relative; flex: none; }
+  .opzione button::after { content: ""; position: absolute; top: 5px; left: 5px; width: 30px; height: 30px; border-radius: 50%; background: #fff; transition: left .2s; }
+  .opzione button[aria-pressed="true"] { background: var(--color-primary); }
+  .opzione button[aria-pressed="true"]::after { left: 37px; }
+  .opzione.eva button[aria-pressed="true"] { background: var(--color-error); }
+
+  /* Passo 3: ibrido */
+  .ibrido { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+  .componente { background: #fff; border: 1.5px solid var(--color-border); border-radius: 16px; padding: 16px 18px; display: flex; flex-direction: column; gap: 10px; }
+  .componente.rotto { border-color: var(--color-error); background: var(--color-error-100); }
+  .componente p { font-size: 18px; line-height: 1.4; color: var(--color-text); max-width: none; }
+  .componente button { align-self: flex-start; height: 44px; font-size: 17px; }
+
+  /* Passo 4: riepilogo */
+  .card p { font-size: 18px; }
+  #sezSintesi .card { padding: 18px 20px; }
+
+  /* Quiz */
+  .domanda { display: flex; flex-direction: column; gap: 6px; }
+  .domanda p { font-size: 20px; font-weight: 600; color: var(--color-primary); max-width: none; }
+  .opzioni { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+  .opzioni button { height: auto; min-height: 52px; padding: 10px 14px; text-align: left; line-height: 1.3; font-size: 17px; font-weight: 500;
+    background: #fff; color: var(--color-text); box-shadow: inset 0 0 0 1.5px var(--color-border); }
+  .opzioni button:hover { background: var(--color-bg); }
+  .opzioni button.giusta { background: var(--color-success-100); color: var(--color-success); box-shadow: inset 0 0 0 2px var(--color-success); font-weight: 600; }
+  .opzioni button.sbagliata { background: var(--color-error-100); color: var(--color-error); box-shadow: inset 0 0 0 2px var(--color-error); }
+  #sezQuiz { gap: 8px; }
+
+  /* Indicatore dei passi */
+  .punti { display: flex; gap: 8px; }
+  .punti span { width: 10px; height: 10px; border-radius: 50%; background: var(--color-border); }
+  .punti span.attivo { background: var(--color-accent); }
+  .passi-nav .spazio { flex: 1; }
+</style>
+</head>
+<body>
+  <p class="overline">Crypto agility · Modulo 3 di 4</p>
+  <h1>Perché cambiare è così difficile</h1>
+
+  <!-- ================= PASSO 1 · Introduzione ================= -->
+  <section class="passo" aria-label="Introduzione">
+    <p class="testo" style="max-width: none;">Sapere che un algoritmo va sostituito non basta: il cambio richiede anni. Il NIST ne indica le ragioni, e la crypto agility nasce proprio per superarle.</p>
+    <div class="griglia-3">
+      <div class="card">
+        <div class="card-head"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="5" width="8" height="12" rx="1.5"/><rect x="14" y="3" width="8" height="16" rx="1.5"/><path d="M10 11h4"/></svg></span>
+        <span><span class="num">Accordo</span><h3>Si cambia in due</h3></span></div>
+        <p>Il tuo dispositivo e il servizio a cui ti colleghi devono conoscere lo stesso algoritmo. Se uno resta indietro, il nuovo non si usa.</p>
+      </div>
+      <div class="card">
+        <div class="card-head"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l9 16H3z"/><path d="M12 10v4M12 17h.01"/></svg></span>
+        <span><span class="num">Compatibilità</span><h3>Il vecchio resta acceso</h3></span></div>
+        <p>Per non escludere chi è indietro, gli algoritmi deboli restano attivi a lungo. E qualcuno può approfittarne.</p>
+      </div>
+      <div class="card">
+        <div class="card-head"><span class="ic oro"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12a8 8 0 0 1 14-5.3M20 12a8 8 0 0 1-14 5.3"/><path d="M18 3v4h-4M6 21v-4h4"/></svg></span>
+        <span><span class="num">La soluzione</span><h3>Essere pronti</h3></span></div>
+        <p>Progettare dispositivi e servizi in modo che l'algoritmo si possa cambiare senza rifare tutto: è la crypto agility.</p>
+      </div>
+    </div>
+    <p class="fonte">Riferimento: NIST CSWP 39-upd1, <em>Considerations for Achieving Crypto Agility</em> (2025). Il documento è in «Risorse».</p>
+  </section>
+
+  <!-- ================= PASSO 2 · Laboratorio: il collegamento ================= -->
+  <section class="passo" id="sezColl" aria-label="Laboratorio: il collegamento" hidden>
+    <p class="testo" style="max-width: none;">Per <strong>scambiarsi la chiave</strong>, dispositivo e servizio scelgono <strong>il migliore algoritmo che hanno in comune</strong>. Attiva o disattiva gli algoritmi dei due lati e guarda cosa succede.</p>
+    <div class="collegamento">
+      <div class="lab lato">
+        <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="2" width="12" height="20" rx="2"/><path d="M11 18h2"/></svg>Il tuo dispositivo</h3>
+        <div class="algo-lista" id="listaDisp" role="group" aria-label="Algoritmi del dispositivo"></div>
+      </div>
+      <div class="centro">
+        <div class="scelta" id="scelta" aria-live="polite"><small>Algoritmo scelto</small><b id="sceltaNome"></b></div>
+        <div class="opzione eva"><span>Eva nel mezzo</span><button type="button" id="eva" aria-pressed="false" aria-label="Eva nel mezzo"></button></div>
+        <div class="opzione"><span>Scelta protetta</span><button type="button" id="protetta" aria-pressed="false" aria-label="Scelta protetta"></button></div>
+      </div>
+      <div class="lab lato">
+        <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="7" rx="1.5"/><rect x="3" y="14" width="18" height="7" rx="1.5"/><path d="M7 6.5h.01M7 17.5h.01"/></svg>Il servizio</h3>
+        <div class="algo-lista" id="listaServ" role="group" aria-label="Algoritmi del servizio"></div>
+      </div>
+    </div>
+    <div class="risultato" id="esitoColl" aria-live="polite"></div>
+  </section>
+
+  <!-- ================= PASSO 3 · La modalità ibrida ================= -->
+  <section class="passo" aria-label="La modalità ibrida" hidden>
+    <p class="testo" style="max-width: none;">Durante il passaggio al post-quantum il NIST descrive la <strong>modalità ibrida</strong>: la chiave si stabilisce con <strong>due algoritmi insieme</strong>, uno classico e uno nuovo, e il risultato li combina. L'idea è che almeno uno dei due resti sicuro. <strong>Prova a romperli.</strong></p>
+    <div class="ibrido">
+      <div class="componente" id="cEcdh">
+        <h3>ECDH <span class="tag">classico</span></h3>
+        <p>Usato da anni e ben collaudato. Un computer quantistico rilevante potrebbe romperlo.</p>
+        <button type="button" class="btn-secondario" data-c="ecdh">Si scopre una falla in ECDH</button>
+      </div>
+      <div class="componente" id="cMlkem">
+        <h3>ML-KEM <span class="tag">post-quantum</span></h3>
+        <p>Resistente ai computer quantistici, ma più recente: le sue implementazioni stanno ancora maturando.</p>
+        <button type="button" class="btn-secondario" data-c="mlkem">Si scopre una falla in ML-KEM</button>
+      </div>
+    </div>
+    <div class="risultato ok" id="esitoIbrido" aria-live="polite"></div>
+    <div class="azioni"><button type="button" class="btn-secondario" id="resetIbrido">Ricomincia</button></div>
+  </section>
+
+  <!-- ================= PASSO 4 · In sintesi ================= -->
+  <section class="passo" id="sezSintesi" aria-label="In sintesi" hidden>
+    <p class="testo" style="max-width: none;">Da Triple DES ad AES sono serviti 23 anni. Ecco perché, e come accorciare i tempi.</p>
+    <div class="griglia-3">
+      <div class="card">
+        <span class="num">Cosa rende lento il cambio</span>
+        <p>Tutte le parti devono aggiornarsi, i vecchi algoritmi restano attivi per compatibilità, alcuni dispositivi non si possono aggiornare.</p>
+      </div>
+      <div class="card">
+        <span class="num">Cosa lo rende possibile</span>
+        <p>Algoritmi che si scelgono e si cambiano come un'impostazione, una scelta protetta dagli inganni, la modalità ibrida nella fase di passaggio.</p>
+      </div>
+      <div class="card">
+        <span class="num">Cosa significa per te</span>
+        <p>I nuovi algoritmi arrivano sul tuo dispositivo con gli aggiornamenti: un dispositivo non aggiornato resta agli algoritmi di ieri.</p>
+      </div>
+    </div>
+    <div class="box-info"><span><strong>La crypto agility</strong> è la capacità di sostituire e adattare gli algoritmi crittografici senza fermare le attività e senza perdere sicurezza.</span></div>
+    <p class="fonte">Fonte: NIST CSWP 39-upd1. La riga «Cosa significa per te» applica il documento all'uso personale.</p>
+  </section>
+
+  <!-- ================= PASSO 5 · Verifica ================= -->
+  <section class="passo" id="sezQuiz" aria-label="Verifica" hidden>
+    <p class="testo">Rispondi correttamente alle tre domande per completare il modulo.</p>
+    <div class="domanda" data-q="1">
+      <p>1. Come scelgono l'algoritmo il tuo dispositivo e il servizio?</p>
+      <div class="opzioni">
+        <button type="button">Usano sempre quello più nuovo che esiste</button>
+        <button type="button" data-ok>Scelgono il migliore che conoscono entrambi</button>
+        <button type="button">Lo sceglie il dispositivo da solo</button>
+      </div>
+    </div>
+    <div class="domanda" data-q="2">
+      <p>2. Perché tenere attivi i vecchi algoritmi «per compatibilità» è un rischio?</p>
+      <div class="opzioni">
+        <button type="button">Perché rallentano il collegamento</button>
+        <button type="button">Perché consumano più batteria</button>
+        <button type="button" data-ok>Chi si mette in mezzo può far scegliere quello debole</button>
+      </div>
+    </div>
+    <div class="domanda" data-q="3">
+      <p>3. Cosa garantisce la modalità ibrida?</p>
+      <div class="opzioni">
+        <button type="button" data-ok>Resta sicuro finché almeno uno dei due regge</button>
+        <button type="button">Raddoppia la velocità del collegamento</button>
+        <button type="button">Rende inutili gli aggiornamenti</button>
+      </div>
+    </div>
+    <div class="feedback" id="fbQuiz" aria-live="polite"></div>
+  </section>
+
+  <div class="passi-nav">
+    <button type="button" class="btn-secondario" id="indietro">Indietro</button>
+    <button type="button" id="continua">Continua</button>
+    <span id="contatore">Passo 1 di 5</span>
+    <span class="spazio"></span>
+    <span class="punti" id="punti" aria-hidden="true"></span>
+  </div>
+
+  <script src="../../player/player-bridge.js"></script>
+  <script>
+    /* ---------- Passi ---------- */
+    var passi = Array.prototype.slice.call(document.querySelectorAll(".passo"));
+    var attuale = 0;
+    var punti = document.getElementById("punti");
+    punti.innerHTML = passi.map(function () { return "<span></span>"; }).join("");
+    function mostraPasso(n) {
+      attuale = n;
+      passi.forEach(function (p, i) { p.hidden = i !== n; });
+      document.getElementById("indietro").hidden = n === 0;
+      document.getElementById("continua").hidden = n === passi.length - 1;
+      document.getElementById("contatore").textContent = "Passo " + (n + 1) + " di " + passi.length;
+      Array.prototype.forEach.call(punti.children, function (s, i) { s.className = i <= n ? "attivo" : ""; });
+    }
+    document.getElementById("continua").addEventListener("click", function () { mostraPasso(attuale + 1); });
+    document.getElementById("indietro").addEventListener("click", function () { mostraPasso(attuale - 1); });
+
+    /* ---------- Passo 2: il collegamento ----------
+       Algoritmi per scambiarsi la chiave, dal migliore al più debole.
+       Regola (NIST): si sceglie il più adatto tra quelli supportati da entrambe le parti. */
+    var ALGO = [
+      { id: "ibrido", nome: "Ibrido ECDH + ML-KEM", nota: "resiste anche al quantum", livello: "ok" },
+      { id: "ecdh",   nome: "ECDH",                 nota: "sicuro oggi, non contro il quantum", livello: "warn" },
+      { id: "rsa2048", nome: "RSA a 2048 bit",      nota: "sicuro oggi, non contro il quantum", livello: "warn" },
+      { id: "rsa1024", nome: "RSA a 1024 bit",      nota: "debole: non più ammesso", livello: "ko" }
+    ];
+    var disp = { ibrido: false, ecdh: false, rsa2048: true, rsa1024: true };
+    var serv = { ibrido: true,  ecdh: true,  rsa2048: true, rsa1024: true };
+    var eva = false, protetta = false;
+
+    function disegnaLista(id, stato, scelto) {
+      document.getElementById(id).innerHTML = ALGO.map(function (a) {
+        var on = stato[a.id];
+        return '<button type="button" data-a="' + a.id + '" aria-pressed="' + on + '" class="' + (a.id === scelto ? "scelto" : "") + '">' +
+          '<span class="spunta" aria-hidden="true">' + (on ? "✓" : "") + "</span><span>" + a.nome + "<small>" + a.nota + "</small></span></button>";
+      }).join("");
+    }
+    function calcola() {
+      var comuni = ALGO.filter(function (a) { return disp[a.id] && serv[a.id]; });
+      if (!comuni.length) return { scelto: null, ingannato: false };
+      var migliore = comuni[0], peggiore = comuni[comuni.length - 1];
+      if (eva && !protetta && peggiore !== migliore) return { scelto: peggiore, ingannato: true, migliore: migliore };
+      return { scelto: migliore, ingannato: false, scoperto: eva && protetta && peggiore !== migliore };
+    }
+    function disegnaCollegamento() {
+      var r = calcola();
+      var idScelto = r.scelto ? r.scelto.id : null;
+      disegnaLista("listaDisp", disp, idScelto);
+      disegnaLista("listaServ", serv, idScelto);
+      var box = document.getElementById("scelta");
+      box.className = "scelta" + (r.scelto ? "" : " nessuna");
+      document.getElementById("sceltaNome").textContent = r.scelto ? r.scelto.nome : "Nessuno: collegamento fallito";
+      var e = document.getElementById("esitoColl"), testo, cls;
+      if (!r.scelto) {
+        cls = "ko"; testo = "✗ Nessun algoritmo in comune: il collegamento non parte. Per questo si esita a spegnere i vecchi.";
+      } else if (r.ingannato) {
+        cls = "ko"; testo = "✗ Downgrade: Eva toglie le opzioni migliori e si usa «" + r.scelto.nome + "» invece di «" + r.migliore.nome + "».";
+      } else if (r.scoperto) {
+        cls = "ok"; testo = "✓ La scelta è protetta: l'inganno di Eva viene scoperto e si usa «" + r.scelto.nome + "».";
+      } else if (r.scelto.livello === "ko") {
+        cls = "ko"; testo = "✗ Si collegano con un algoritmo non più ammesso: in questi casi i browser mostrano un avviso.";
+      } else if (r.scelto.livello === "warn") {
+        var nuovoSoloUnLato = (serv.ibrido && !disp.ibrido) || (disp.ibrido && !serv.ibrido);
+        cls = "warn"; testo = nuovoSoloUnLato ? "! L'ibrido c'è solo da un lato: finché l'altro non si aggiorna, non si usa." : "! Sicuro oggi, ma non contro un computer quantistico.";
+      } else {
+        cls = "ok"; testo = "✓ Entrambi conoscono l'ibrido: il collegamento resiste anche a un computer quantistico.";
+      }
+      e.className = "risultato " + cls; e.textContent = testo;
+      document.getElementById("eva").setAttribute("aria-pressed", String(eva));
+      document.getElementById("protetta").setAttribute("aria-pressed", String(protetta));
+    }
+    function cliccaLista(stato) {
+      return function (e) {
+        var b = e.target.closest("button");
+        if (!b) return;
+        var id = b.getAttribute("data-a");
+        stato[id] = !stato[id];
+        disegnaCollegamento();
+        var nuovo = e.currentTarget.querySelector('[data-a="' + id + '"]');
+        if (nuovo) nuovo.focus();
+      };
+    }
+    document.getElementById("listaDisp").addEventListener("click", cliccaLista(disp));
+    document.getElementById("listaServ").addEventListener("click", cliccaLista(serv));
+    document.getElementById("eva").addEventListener("click", function () { eva = !eva; disegnaCollegamento(); });
+    document.getElementById("protetta").addEventListener("click", function () { protetta = !protetta; disegnaCollegamento(); });
+    disegnaCollegamento();
+
+    /* ---------- Passo 3: modalità ibrida ---------- */
+    var rotto = { ecdh: false, mlkem: false };
+    function disegnaIbrido() {
+      document.getElementById("cEcdh").classList.toggle("rotto", rotto.ecdh);
+      document.getElementById("cMlkem").classList.toggle("rotto", rotto.mlkem);
+      document.querySelector('[data-c="ecdh"]').disabled = rotto.ecdh;
+      document.querySelector('[data-c="mlkem"]').disabled = rotto.mlkem;
+      var e = document.getElementById("esitoIbrido");
+      if (rotto.ecdh && rotto.mlkem) {
+        e.className = "risultato ko"; e.textContent = "✗ Entrambi rotti: la chiave non è più protetta. Bisogna cambiare algoritmo, ed è qui che serve la crypto agility.";
+      } else if (rotto.ecdh) {
+        e.className = "risultato ok"; e.textContent = "✓ ECDH è rotto, ma ML-KEM regge: la chiave resta protetta.";
+      } else if (rotto.mlkem) {
+        e.className = "risultato ok"; e.textContent = "✓ ML-KEM ha una falla, ma ECDH regge: la chiave resta protetta.";
+      } else {
+        e.className = "risultato ok"; e.textContent = "✓ Entrambi integri: la chiave è protetta due volte. Il prezzo è un collegamento più complesso.";
+      }
+    }
+    document.querySelectorAll("[data-c]").forEach(function (b) {
+      b.addEventListener("click", function () { rotto[b.getAttribute("data-c")] = true; disegnaIbrido(); });
+    });
+    document.getElementById("resetIbrido").addEventListener("click", function () { rotto = { ecdh: false, mlkem: false }; disegnaIbrido(); });
+    disegnaIbrido();
+
+    /* ---------- Passo 5: quiz (il modulo si completa con 3 risposte giuste) ---------- */
+    var giuste = {};
+    var fbQuiz = document.getElementById("fbQuiz");
+    function controllaQuiz() {
+      if (Object.keys(giuste).length === 3) {
+        fbQuiz.className = "feedback ok";
+        fbQuiz.textContent = "✓ Tutte corrette! Hai completato il modulo 3: ora puoi andare avanti.";
+        player.complete();
+      } else {
+        fbQuiz.className = "feedback";
+        fbQuiz.textContent = "";
+      }
+    }
+    document.querySelectorAll(".domanda").forEach(function (d) {
+      d.addEventListener("click", function (e) {
+        var b = e.target.closest("button");
+        if (!b || giuste[d.getAttribute("data-q")]) return;
+        d.querySelectorAll("button").forEach(function (o) { o.classList.remove("sbagliata"); });
+        if (b.hasAttribute("data-ok")) {
+          b.classList.add("giusta");
+          b.textContent = "✓ " + b.textContent;
+          giuste[d.getAttribute("data-q")] = true;
+          controllaQuiz();
+        } else {
+          b.classList.add("sbagliata");
+          fbQuiz.className = "feedback ko";
+          fbQuiz.textContent = "✗ La risposta «" + b.textContent + "» non è corretta: riprova.";
+        }
+      });
+    });
+    document.addEventListener("player:init", function (e) {
+      if (e.detail.lesson.status !== "done") return;
+      document.querySelectorAll(".domanda").forEach(function (d) {
+        var b = d.querySelector("[data-ok]");
+        if (!b.classList.contains("giusta")) { b.classList.add("giusta"); b.textContent = "✓ " + b.textContent; }
+        giuste[d.getAttribute("data-q")] = true;
+      });
+      fbQuiz.className = "feedback ok";
+      fbQuiz.textContent = "✓ Modulo già completato.";
+    });
+
+    mostraPasso(0);
+  </script>
+</body>
+</html>

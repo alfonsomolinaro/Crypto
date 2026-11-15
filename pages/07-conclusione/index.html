@@ -2,16 +2,35 @@
 <html lang="it">
 <head>
 <meta charset="utf-8">
-<title>Conclusione</title>
+<title>Hai completato il percorso</title>
 <link rel="stylesheet" href="../pagina.css">
+<style>
+  body { gap: 18px; }
+  h1 { font-size: 42px; }
+  .card .num { display: block; font-size: 15px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--color-accent-text); }
+  .card p { font-size: 18px; }
+  .griglia-4 { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+  .fonte { font-size: 18px; color: var(--color-text-muted); max-width: none; }
+  .chiusura { display: flex; align-items: center; gap: 12px; font-size: 19px; color: var(--color-text-muted); }
+  .chiusura svg { width: 28px; height: 28px; color: var(--color-success); flex: none; }
+</style>
 </head>
 <body>
-  <p class="overline">Lezione 7 · Conclusione · segnaposto</p>
-  <h1>Conclusione</h1>
-  <p>[Riepilogo dei concetti principali del corso.]</p>
-  <div class="area">
-    <span>Premi <b>Termina</b> nella barra in basso per concludere il corso.</span>
+  <p class="overline">Crypto agility · Conclusione</p>
+  <h1>Hai completato il percorso</h1>
+
+  <div class="griglia-4">
+    <div class="card"><span class="num">Modulo 1</span><h3>Gli algoritmi invecchiano</h3><p>Con computer più potenti una chiave sicura smette di esserlo: da DES ad AES ci sono voluti 23 anni.</p></div>
+    <div class="card"><span class="num">Modulo 2</span><h3>Chiave pubblica e quantum</h3><p>Un computer quantistico rilevante minaccia la chiave pubblica: va sostituita tutta.</p></div>
+    <div class="card"><span class="num">Modulo 3</span><h3>Cambiare è difficile</h3><p>Le due parti devono aggiornarsi insieme; i vecchi algoritmi accesi sono un rischio; l'ibrido aiuta nel passaggio.</p></div>
+    <div class="card"><span class="num">Modulo 4</span><h3>Cosa significa per te</h3><p>Aggiorna, non ignorare gli avvisi, considera i dispositivi con chip e i dati di lunga durata.</p></div>
   </div>
+
+  <div class="box-info"><span><strong>Il messaggio:</strong> la crittografia che ti protegge non è per sempre. La crypto agility è la capacità di sostituire gli algoritmi senza fermarsi e senza restare scoperti.</span></div>
+
+  <p class="chiusura"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-6"/></svg>Premi <b>Termina</b> nella barra in basso per concludere il corso.</p>
+  <p class="fonte">Fonte: NIST CSWP 39-upd1, <em>Considerations for Achieving Crypto Agility</em> (2025). Il documento è in «Risorse».</p>
+
   <script src="../../player/player-bridge.js"></script>
 </body>
 </html>

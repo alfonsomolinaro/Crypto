@@ -1,0 +1,279 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<title>Quando un algoritmo viene ritirato</title>
+<link rel="stylesheet" href="../pagina.css">
+<style>
+  [hidden] { display: none !important; }   /* i riquadri nascosti restano nascosti anche se hanno display: flex */
+  body { gap: 16px; }
+  h1 { font-size: 38px; }
+  .passo { gap: 18px; }
+  .fonte { font-size: 18px; color: var(--color-text-muted); max-width: none; }
+
+  /* Icone e card (stesso stile dei moduli precedenti) */
+  .ic { width: 52px; height: 52px; border-radius: 14px; display: flex; align-items: center; justify-content: center; background: var(--color-primary-100); color: var(--color-primary); flex: none; }
+  .ic svg { width: 30px; height: 30px; }
+  .ic.oro { background: var(--color-accent-100); color: var(--color-accent-text); }
+  .card .num { display: block; font-size: 15px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--color-accent-text); }
+  .card-head { display: flex; align-items: center; gap: 14px; }
+  .card p { font-size: 18px; }
+
+  .lab { background: var(--color-bg); border: 1px solid var(--color-border); border-radius: 16px; padding: 20px 24px; display: flex; flex-direction: column; gap: 12px; }
+  .azioni { display: flex; gap: 10px; flex-wrap: wrap; }
+  .azioni button { height: 48px; font-size: 17px; padding: 0 18px; }
+
+  /* Passo 2: un caso alla volta */
+  .caso-testa { display: flex; align-items: center; gap: 14px; }
+  .caso-testa .contatore-caso { font-size: 15px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--color-accent-text); }
+  .caso-titolo { font-size: 26px; line-height: 1.25; font-weight: 700; color: var(--color-primary); max-width: none; }
+  .caso-domanda { font-size: 20px; color: var(--color-text); max-width: none; }
+  .scelte-caso { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+  .scelte-caso button { height: auto; min-height: 60px; padding: 10px 14px; text-align: left; font-size: 18px; line-height: 1.3; font-weight: 500;
+    background: #fff; color: var(--color-text); box-shadow: inset 0 0 0 1.5px var(--color-border); }
+  .scelte-caso button:hover { background: var(--color-bg); }
+  .scelte-caso button.giusta { background: var(--color-success-100); color: var(--color-success); box-shadow: inset 0 0 0 2px var(--color-success); font-weight: 600; }
+  .scelte-caso button.sbagliata { background: var(--color-error-100); color: var(--color-error); box-shadow: inset 0 0 0 2px var(--color-error); }
+  .feedback { font-size: 19px; }
+  .avanzamento { display: flex; gap: 6px; }
+  .avanzamento span { width: 28px; height: 6px; border-radius: 3px; background: var(--color-border); }
+  .avanzamento span.fatto { background: var(--color-accent); }
+
+  /* Passo 3: cosa ti porti a casa */
+  .punto { display: grid; grid-template-columns: 40px minmax(0, 1fr); gap: 14px; align-items: start; background: var(--color-bg); border: 1px solid var(--color-border); border-radius: 14px; padding: 12px 16px; }
+  .punto .n { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; background: var(--color-accent-100); color: var(--color-accent-text); }
+  .punto p { font-size: 18px; line-height: 1.45; color: var(--color-text); max-width: none; }
+  .punti-lista { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  #sezCasiLab .lab { gap: 10px; }
+  #sezCasa { gap: 14px; }
+
+  /* Quiz */
+  .domanda { display: flex; flex-direction: column; gap: 6px; }
+  .domanda p { font-size: 20px; font-weight: 600; color: var(--color-primary); max-width: none; }
+  .opzioni { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+  .opzioni button { height: auto; min-height: 52px; padding: 10px 14px; text-align: left; line-height: 1.3; font-size: 17px; font-weight: 500;
+    background: #fff; color: var(--color-text); box-shadow: inset 0 0 0 1.5px var(--color-border); }
+  .opzioni button:hover { background: var(--color-bg); }
+  .opzioni button.giusta { background: var(--color-success-100); color: var(--color-success); box-shadow: inset 0 0 0 2px var(--color-success); font-weight: 600; }
+  .opzioni button.sbagliata { background: var(--color-error-100); color: var(--color-error); box-shadow: inset 0 0 0 2px var(--color-error); }
+  #sezQuiz { gap: 10px; }
+
+  /* Indicatore dei passi */
+  .punti { display: flex; gap: 8px; }
+  .punti span { width: 10px; height: 10px; border-radius: 50%; background: var(--color-border); }
+  .punti span.attivo { background: var(--color-accent); }
+  .passi-nav .spazio { flex: 1; }
+</style>
+</head>
+<body>
+  <p class="overline">Crypto agility · Modulo 4 di 4</p>
+  <h1>Quando un algoritmo viene ritirato</h1>
+
+  <!-- ================= PASSO 1 · Introduzione ================= -->
+  <section class="passo" aria-label="Introduzione">
+    <p class="testo" style="max-width: none;">Quando un algoritmo non è più sicuro viene <strong>ritirato</strong>: non si può più usare per proteggere nuovi dati. Cosa succede ai dispositivi che usi e ai dati che hai già?</p>
+    <div class="griglia-3">
+      <div class="card">
+        <div class="card-head"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12a8 8 0 0 1 14-5.3M20 12a8 8 0 0 1-14 5.3"/><path d="M18 3v4h-4M6 21v-4h4"/></svg></span>
+        <span><span class="num">Il software</span><h3>Si aggiorna</h3></span></div>
+        <p>Browser, sistemi e app ricevono i nuovi algoritmi con gli aggiornamenti.</p>
+      </div>
+      <div class="card">
+        <div class="card-head"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="2"/><path d="M9 2v4M15 2v4M9 18v4M15 18v4M2 9h4M2 15h4M18 9h4M18 15h4"/></svg></span>
+        <span><span class="num">Alcuni chip</span><h3>No</h3></span></div>
+        <p>Carte e chip di sicurezza supportano pochi algoritmi fissi: spesso vanno sostituiti.</p>
+      </div>
+      <div class="card">
+        <div class="card-head"><span class="ic oro"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/></svg></span>
+        <span><span class="num">I tuoi dati</span><h3>Vanno gestiti</h3></span></div>
+        <p>File cifrati e documenti firmati con un algoritmo ritirato richiedono attenzione.</p>
+      </div>
+    </div>
+    <p class="fonte">Tutti i casi di questo modulo sono tratti da: NIST CSWP 39-upd1, <em>Considerations for Achieving Crypto Agility</em> (2025). Il documento è in «Risorse».</p>
+  </section>
+
+  <!-- ================= PASSO 2 · Laboratorio: sette casi ================= -->
+  <section class="passo" id="sezCasiLab" aria-label="Laboratorio: sette casi" hidden>
+    <div class="lab" aria-live="polite">
+      <div class="caso-testa"><span class="contatore-caso" id="contCaso"></span><span class="avanzamento" id="avanzamento" aria-hidden="true"></span></div>
+      <p class="caso-titolo" id="titoloCaso"></p>
+      <p class="caso-domanda" id="domandaCaso"></p>
+      <div class="scelte-caso" id="scelteCaso"></div>
+      <div class="feedback" id="fbCaso"></div>
+      <div class="azioni"><button type="button" id="prossimoCaso" hidden>Prossimo caso</button></div>
+    </div>
+    <p class="fonte">Ogni risposta riporta quello che dice il NIST CSWP 39-upd1.</p>
+  </section>
+
+  <!-- ================= PASSO 3 · Cosa ti porti a casa ================= -->
+  <section class="passo" id="sezCasa" aria-label="Cosa ti porti a casa" hidden>
+    <p class="testo" style="max-width: none;">Quattro cose da ricordare, valide per chiunque usi un telefono o un computer.</p>
+    <div class="punti-lista">
+      <div class="punto"><span class="n">1</span><p><strong>Aggiorna.</strong> È con gli aggiornamenti che browser, sistemi e app ricevono i nuovi algoritmi e disattivano quelli ritirati.</p></div>
+      <div class="punto"><span class="n">2</span><p><strong>Non ignorare gli avvisi.</strong> Un avviso di sicurezza del browser può indicare un algoritmo non più ammesso.</p></div>
+      <div class="punto"><span class="n">3</span><p><strong>Considera i dispositivi con chip.</strong> Smart card, chiavette di firma e chip di sicurezza a volte non si aggiornano: vanno sostituiti.</p></div>
+      <div class="punto"><span class="n">4</span><p><strong>Pensa ai dati di lunga durata.</strong> File cifrati e documenti firmati anni fa possono richiedere una gestione quando l'algoritmo viene ritirato.</p></div>
+    </div>
+    <div class="box-info"><span><strong>Il messaggio:</strong> la crittografia che ti protegge non è per sempre. Con i computer quantistici arriva il cambio più grande di sempre: la crypto agility è la capacità di farlo senza fermarsi e senza restare scoperti.</span></div>
+    <p class="fonte">Questi quattro punti applicano all'uso personale le indicazioni del NIST CSWP 39-upd1.</p>
+  </section>
+
+  <!-- ================= PASSO 4 · Verifica ================= -->
+  <section class="passo" id="sezQuiz" aria-label="Verifica" hidden>
+    <p class="testo">Rispondi correttamente alle tre domande per completare il modulo.</p>
+    <div class="domanda" data-q="1">
+      <p>1. Dove è più facile aggiungere un nuovo algoritmo?</p>
+      <div class="opzioni">
+        <button type="button" data-ok>Nel software, con un aggiornamento</button>
+        <button type="button">In un chip già prodotto</button>
+        <button type="button">Nella chiave dell'avvio sicuro</button>
+      </div>
+    </div>
+    <div class="domanda" data-q="2">
+      <p>2. Hai un file cifrato con un algoritmo appena ritirato. Cosa succede di solito?</p>
+      <div class="opzioni">
+        <button type="button">Non si può più aprire</button>
+        <button type="button" data-ok>Si può ancora aprire, ma non si cifrano nuovi file con quell'algoritmo</button>
+        <button type="button">Viene ri-cifrato da solo</button>
+      </div>
+    </div>
+    <div class="domanda" data-q="3">
+      <p>3. Il browser mostra un avviso di sicurezza su un sito. Cosa può indicare?</p>
+      <div class="opzioni">
+        <button type="button">Che il sito è più sicuro del solito</button>
+        <button type="button">Un errore del browser, da ignorare</button>
+        <button type="button" data-ok>Che il sito usa un algoritmo non più ammesso</button>
+      </div>
+    </div>
+    <div class="feedback" id="fbQuiz" aria-live="polite"></div>
+  </section>
+
+  <div class="passi-nav">
+    <button type="button" class="btn-secondario" id="indietro">Indietro</button>
+    <button type="button" id="continua">Continua</button>
+    <span id="contatore">Passo 1 di 4</span>
+    <span class="spazio"></span>
+    <span class="punti" id="punti" aria-hidden="true"></span>
+  </div>
+
+  <script src="../../player/player-bridge.js"></script>
+  <script>
+    /* ---------- Passi ---------- */
+    var passi = Array.prototype.slice.call(document.querySelectorAll(".passo"));
+    var attuale = 0;
+    var punti = document.getElementById("punti");
+    punti.innerHTML = passi.map(function () { return "<span></span>"; }).join("");
+    function mostraPasso(n) {
+      attuale = n;
+      passi.forEach(function (p, i) { p.hidden = i !== n; });
+      document.getElementById("indietro").hidden = n === 0;
+      document.getElementById("continua").hidden = n === passi.length - 1;
+      document.getElementById("contatore").textContent = "Passo " + (n + 1) + " di " + passi.length;
+      Array.prototype.forEach.call(punti.children, function (s, i) { s.className = i <= n ? "attivo" : ""; });
+    }
+    document.getElementById("continua").addEventListener("click", function () { mostraPasso(attuale + 1); });
+    document.getElementById("indietro").addEventListener("click", function () { mostraPasso(attuale - 1); });
+
+    /* ---------- Passo 2: i sette casi (tutti tratti dal NIST CSWP 39-upd1) ---------- */
+    var CASI = [
+      { t: "Il browser e le app del telefono o del computer", q: "Esce un nuovo algoritmo. Cosa succede?",
+        o: ["Lo ricevono con un aggiornamento", "Vanno sostituiti", "Non possono usarlo"], ok: 0,
+        s: "Nel software è più facile aggiungere algoritmi: arrivano con gli aggiornamenti." },
+      { t: "La SIM, una smart card o una chiavetta USB di firma", q: "Il loro algoritmo viene ritirato. Cosa succede di solito?",
+        o: ["Si aggiornano da sole", "Si sostituisce la carta o il dispositivo", "Smettono di usare la crittografia"], ok: 1,
+        s: "Supportano un insieme limitato di algoritmi e la chiave privata non esce mai dal chip: di solito si sostituisce la carta o il dispositivo." },
+      { t: "Il chip di sicurezza del portatile o del telefono (TPM)", q: "Bisogna cambiare il suo algoritmo. Cosa succede?",
+        o: ["Si cambia con un clic", "Si sostituisce il chip in negozio", "Spesso si deve cambiare il dispositivo"], ok: 2,
+        s: "Questi chip sono fatti apposta per essere difficili da sostituire: cambiare algoritmo spesso vuol dire cambiare il dispositivo." },
+      { t: "L'avvio sicuro del computer", q: "All'accensione verifica una firma digitale. La sua chiave pubblica si può aggiornare?",
+        o: ["Sì, con ogni aggiornamento", "No: deve restare sicura per tutta la vita del dispositivo", "Non serve: non usa firme"], ok: 1,
+        s: "La chiave pubblica e il programma di verifica sono nel codice di avvio e non si aggiornano: vanno scelti pensando a tutta la vita del dispositivo." },
+      { t: "Un tuo file cifrato con un algoritmo ritirato", q: "Cosa succede?",
+        o: ["Non si può più aprire", "Si può ancora aprire, ma non si cifrano nuovi file con quell'algoritmo", "Si cancella da solo"], ok: 1,
+        s: "Il NIST fa l'esempio di Triple DES: cifrare nuovi dati viene bloccato, ma decifrare i file già salvati può restare permesso. Serve un modo per gestire questi dati." },
+      { t: "Un documento firmato con un algoritmo che viene ritirato", q: "Cosa serve?",
+        o: ["Niente: la firma vale per sempre", "Un modo per gestire i documenti già firmati", "Cancellare il documento"], ok: 1,
+        s: "Quando un algoritmo di firma va sostituito, il NIST indica che serve un modo per gestire i documenti già firmati con quell'algoritmo." },
+      { t: "Il browser mostra un avviso di sicurezza su un sito", q: "Cosa può indicare?",
+        o: ["Un errore del browser, da ignorare", "Che il sito usa un algoritmo non più ammesso", "Che il sito è più veloce"], ok: 1,
+        s: "Alcuni browser mostrano un avviso quando si usa un algoritmo non più ammesso: è anche un incentivo per i siti ad aggiornarsi." }
+    ];
+    var caso = 0, risolto = false;
+    var av = document.getElementById("avanzamento");
+    av.innerHTML = CASI.map(function () { return "<span></span>"; }).join("");
+    function mostraCaso() {
+      risolto = false;
+      var c = CASI[caso];
+      document.getElementById("contCaso").textContent = "Caso " + (caso + 1) + " di " + CASI.length;
+      document.getElementById("titoloCaso").textContent = c.t;
+      document.getElementById("domandaCaso").textContent = c.q;
+      document.getElementById("scelteCaso").innerHTML = c.o.map(function (o, i) { return '<button type="button" data-i="' + i + '">' + o + "</button>"; }).join("");
+      var fb = document.getElementById("fbCaso"); fb.className = "feedback"; fb.textContent = "";
+      document.getElementById("prossimoCaso").hidden = true;
+      Array.prototype.forEach.call(av.children, function (s, i) { s.className = i < caso ? "fatto" : ""; });
+    }
+    document.getElementById("scelteCaso").addEventListener("click", function (e) {
+      var b = e.target.closest("button");
+      if (!b || risolto) return;
+      var c = CASI[caso], fb = document.getElementById("fbCaso");
+      document.querySelectorAll("#scelteCaso button").forEach(function (x) { x.classList.remove("sbagliata"); });
+      if (+b.getAttribute("data-i") === c.ok) {
+        b.classList.add("giusta"); risolto = true;
+        fb.className = "feedback ok"; fb.textContent = "✓ " + c.s;
+        Array.prototype.forEach.call(av.children, function (s, i) { s.className = i <= caso ? "fatto" : ""; });
+        var p = document.getElementById("prossimoCaso");
+        p.hidden = false; p.textContent = caso < CASI.length - 1 ? "Prossimo caso" : "Ricomincia dal primo";
+        p.focus();
+      } else {
+        b.classList.add("sbagliata");
+        fb.className = "feedback ko"; fb.textContent = "✗ Non è così. Riprova.";
+      }
+    });
+    document.getElementById("prossimoCaso").addEventListener("click", function () { caso = (caso + 1) % CASI.length; mostraCaso(); });
+    mostraCaso();
+
+    /* ---------- Passo 4: quiz (il modulo si completa con 3 risposte giuste) ---------- */
+    var giuste = {};
+    var fbQuiz = document.getElementById("fbQuiz");
+    function controllaQuiz() {
+      if (Object.keys(giuste).length === 3) {
+        fbQuiz.className = "feedback ok";
+        fbQuiz.textContent = "✓ Tutte corrette! Hai completato il modulo 4: ora puoi passare alla verifica finale.";
+        player.complete();
+      } else {
+        fbQuiz.className = "feedback";
+        fbQuiz.textContent = "";
+      }
+    }
+    document.querySelectorAll(".domanda").forEach(function (d) {
+      d.addEventListener("click", function (e) {
+        var b = e.target.closest("button");
+        if (!b || giuste[d.getAttribute("data-q")]) return;
+        d.querySelectorAll("button").forEach(function (o) { o.classList.remove("sbagliata"); });
+        if (b.hasAttribute("data-ok")) {
+          b.classList.add("giusta");
+          b.textContent = "✓ " + b.textContent;
+          giuste[d.getAttribute("data-q")] = true;
+          controllaQuiz();
+        } else {
+          b.classList.add("sbagliata");
+          fbQuiz.className = "feedback ko";
+          fbQuiz.textContent = "✗ La risposta «" + b.textContent + "» non è corretta: riprova.";
+        }
+      });
+    });
+    document.addEventListener("player:init", function (e) {
+      if (e.detail.lesson.status !== "done") return;
+      document.querySelectorAll(".domanda").forEach(function (d) {
+        var b = d.querySelector("[data-ok]");
+        if (!b.classList.contains("giusta")) { b.classList.add("giusta"); b.textContent = "✓ " + b.textContent; }
+        giuste[d.getAttribute("data-q")] = true;
+      });
+      fbQuiz.className = "feedback ok";
+      fbQuiz.textContent = "✓ Modulo già completato.";
+    });
+
+    mostraPasso(0);
+  </script>
+</body>
+</html>
