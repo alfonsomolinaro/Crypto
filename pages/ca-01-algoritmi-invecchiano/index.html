@@ -89,6 +89,10 @@
   .preset button small { display: block; font-size: 16px; font-weight: 500; color: var(--color-text-muted); }
   .preset button:hover { background: var(--color-bg); }
   .preset button[aria-pressed="true"] { box-shadow: inset 0 0 0 2px var(--color-primary); background: var(--color-primary-100); }
+  .preset.tre { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .preset.tre button { min-height: 48px; font-size: 17px; }
+  .preset button { min-height: 48px; padding: 4px 14px; }
+  .preset { gap: 8px; }
   .riga { display: flex; flex-direction: column; gap: 4px; padding: 10px 0; border-bottom: 1px solid var(--color-border); font-size: 18px; color: var(--color-text-muted); }
   .riga:last-of-type { border-bottom: 0; }
   .riga .valore { font: 700 26px/1.25 ui-monospace, Consolas, monospace; color: var(--color-primary); word-break: break-all; }
@@ -115,8 +119,12 @@
   .caso .lezione strong { color: var(--color-accent-text); }
   .caso button { align-self: flex-start; }
   .caso.aperto { background: #fff; }
-  .caso { padding: 20px; gap: 8px; }
+  .caso { padding: 16px 20px; gap: 8px; }
+  .caso button { height: 44px; }
+  #sezCasi, #sezQuiz { gap: 12px; }
+  #sezForza .lab { gap: 8px; }
   .caso p { font-size: 18px; line-height: 1.45; }
+  .caso p.sotto { color: var(--color-text-muted); font-style: italic; }
 
   /* Quiz */
   .domanda { display: flex; flex-direction: column; gap: 8px; }
@@ -140,9 +148,32 @@
   <p class="overline">Crypto agility · Modulo 1 di 4</p>
   <h1>Perché gli algoritmi invecchiano</h1>
 
-  <!-- ================= PASSO 1 · Una chiave sola ================= -->
-  <section class="passo" aria-label="Passo 1 di 7: una chiave sola">
-    <p class="testo" style="max-width: none;">Il NIST parte dai cifrari <strong>simmetrici</strong> (DES, Triple DES, AES): c'è <strong>una sola chiave segreta</strong>, che serve sia per chiudere sia per aprire il messaggio.</p>
+  <!-- ================= PASSO 1 · Introduzione ================= -->
+  <section class="passo" aria-label="Introduzione">
+    <p class="testo" style="max-width: none;">La <strong>crittografia</strong> protegge i dati rendendoli illeggibili a chi non ha la chiave giusta. Lo fa con degli <strong>algoritmi</strong>, cioè procedure di calcolo precise. Ma un algoritmo sicuro oggi può non esserlo più domani.</p>
+    <div class="griglia-3">
+      <div class="card">
+        <div class="card-head"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21h18M5 21V10M19 21V10M9 21v-7M15 21v-7M12 3l9 5H3z"/></svg></span>
+        <span><span class="num">Chi è</span><h3>Il NIST</h3></span></div>
+        <p>L'ente degli Stati Uniti per gli standard tecnologici. I suoi standard di crittografia, come AES, sono usati in tutto il mondo.</p>
+      </div>
+      <div class="card">
+        <div class="card-head"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></svg></span>
+        <span><span class="num">Il documento</span><h3>Crypto agility</h3></span></div>
+        <p>Una guida del 2025 su come prepararsi a sostituire gli algoritmi crittografici quando diventano deboli.</p>
+      </div>
+      <div class="card">
+        <div class="card-head"><span class="ic oro"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>
+        <span><span class="num">Questo modulo</span><h3>Da DES ad AES</h3></span></div>
+        <p>La crittografia simmetrica e la storia di DES, Triple DES e AES: il primo esempio con cui il NIST mostra che gli algoritmi invecchiano.</p>
+      </div>
+    </div>
+    <p class="fonte" style="max-width: none;">Riferimento: NIST CSWP 39-upd1, <em>Considerations for Achieving Crypto Agility</em> (2025). Il documento è in «Risorse».</p>
+  </section>
+
+  <!-- ================= PASSO 2 · Una chiave sola ================= -->
+  <section class="passo" aria-label="Una chiave sola" hidden>
+    <p class="testo" style="max-width: none;">Nella crittografia <strong>simmetrica</strong> mittente e destinatario usano <strong>la stessa chiave segreta</strong>. Serve sia per <strong>cifrare</strong> (rendere il messaggio illeggibile) sia per <strong>decifrare</strong> (tornare al testo originale).</p>
     <div class="griglia-3">
       <div class="card">
         <div class="card-head"><span class="ic oro"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M17 6l3 3M15 8l2 2"/></svg></span>
@@ -160,12 +191,10 @@
         <p>Con <strong>la stessa chiave</strong> torna al messaggio originale.</p>
       </div>
     </div>
-    <div class="box-info"><span><strong>Dove la usi ogni giorno:</strong> Wi-Fi, dischi cifrati, siti con il lucchetto usano AES, un algoritmo simmetrico.</span></div>
-    <p class="fonte" style="max-width: none;">Riferimento: NIST CSWP 39-upd1, <em>Considerations for Achieving Crypto Agility</em> (2025), § 2.1. Il documento è in «Risorse».</p>
-  </section>
+    <div class="box-info"><span><strong>Dove la usi ogni giorno:</strong> Wi-Fi, dischi cifrati, siti con il lucchetto usano AES, un algoritmo simmetrico.</span></div>  </section>
 
   <!-- ================= PASSO 2 · Laboratorio dei bit ================= -->
-  <section class="passo" aria-label="Passo 2 di 7: laboratorio dei bit" hidden>
+  <section class="passo" aria-label="Laboratorio dei bit" hidden>
     <div class="griglia-bit">
       <div class="colonna">
         <p class="testo">Per un computer ogni lettera è una fila di <strong>8 bit</strong>. Anche la chiave è una fila di bit. Cifrare vuol dire mescolare i bit del messaggio con quelli della chiave.</p>
@@ -211,7 +240,7 @@
   </section>
 
   <!-- ================= PASSO 3 · DES, Triple DES e AES a confronto ================= -->
-  <section class="passo" aria-label="Passo 3 di 7: DES, Triple DES e AES a confronto" hidden>
+  <section class="passo" aria-label="DES, Triple DES e AES a confronto" hidden>
     <p class="testo" style="max-width: none;">Tre algoritmi simmetrici, tre generazioni. Cambiano soprattutto la <strong>chiave</strong> (quanti bit ha il segreto) e il <strong>blocco</strong> (quanti bit di messaggio si cifrano in un colpo). <strong>Scegli un algoritmo.</strong></p>
     <div class="confronto">
       <div class="scelta-alg" id="sceltaAlg" role="group" aria-label="Scegli l'algoritmo da confrontare">
@@ -230,11 +259,11 @@
         </div>
       </div>
     </div>
-    <p class="fonte" style="max-width: none;">Fonte: NIST CSWP 39-upd1, § 2.1, § 3.2.2 e § 4.5. Le barre sono in scala: la barra piena vale 256 bit.</p>
+    <p class="fonte" style="max-width: none;">Fonte: NIST CSWP 39-upd1. Le barre sono in scala: la barra piena vale 256 bit.</p>
   </section>
 
   <!-- ================= PASSO 4 · Forza bruta ================= -->
-  <section class="passo" aria-label="Passo 4 di 7: forza bruta" hidden>
+  <section class="passo" id="sezForza" aria-label="Forza bruta" hidden>
     <p class="testo" style="max-width: none;">Senza la chiave si possono solo <strong>provare tutte</strong> (forza bruta) e <strong>ogni bit in più raddoppia</strong> i tentativi. Per questo, con computer sempre più potenti, si è passati da 56 bit (DES) a 112 (Triple DES) ad almeno 128 (AES).</p>
     <div class="griglia-2">
       <div class="lab">
@@ -249,18 +278,24 @@
           <button type="button" data-bit="128">AES-128 · 128 bit<small>lo standard di oggi</small></button>
           <button type="button" data-bit="256">AES-256 · 256 bit<small>il più robusto</small></button>
         </div>
+        <span class="etichetta">Chi attacca?</span>
+        <div class="preset tre" id="attaccante">
+          <button type="button" data-v="9">1 PC<small>1 miliardo/s</small></button>
+          <button type="button" data-v="12">1.000 PC<small>1.000 miliardi/s</small></button>
+          <button type="button" data-v="15">1 milione di PC<small>10¹⁵ chiavi/s</small></button>
+        </div>
       </div>
       <div class="lab" aria-live="polite">
         <div class="riga"><span>Chiavi possibili</span><span class="valore" id="vComb"></span></div>
-        <div class="riga"><span>Tempo per provarle tutte, a 1.000 miliardi di chiavi al secondo</span><span class="valore oro" id="vTempo"></span></div>
+        <div class="riga"><span id="vTempoLabel">Tempo per provarle tutte</span><span class="valore oro" id="vTempo"></span></div>
         <div class="risultato" id="vVerdetto"></div>
       </div>
     </div>
-    <p class="fonte" style="max-width: none;">Fonte: NIST CSWP 39-upd1, § 2.1 e § 3.2.2. La velocità di 1.000 miliardi di chiavi al secondo è un'ipotesi didattica.</p>
+    <p class="fonte" style="max-width: none;">Ipotesi didattica: ogni PC prova 1 miliardo di chiavi al secondo. I tempi servono solo a confrontare le lunghezze delle chiavi.</p>
   </section>
 
   <!-- ================= PASSO 4 · La linea del tempo ================= -->
-  <section class="passo" aria-label="Passo 5 di 7: la linea del tempo" hidden>
+  <section class="passo" aria-label="La linea del tempo" hidden>
     <p class="testo">Il NIST usa la storia dei cifrari simmetrici come primo esempio di transizione. <strong>Clicca ogni anno</strong> per scoprire cosa è successo.</p>
     <div class="timeline" id="timeline">
       <div class="tappa"><button type="button" data-t="0">1977</button><span>DES</span></div>
@@ -277,34 +312,37 @@
   </section>
 
   <!-- ================= PASSO 5 · Succede sempre ================= -->
-  <section class="passo" aria-label="Passo 6 di 7: succede sempre" hidden>
-    <p class="testo" id="introCasi">Non è successo una volta sola. <strong>Apri i tre casi</strong>: ogni algoritmo, prima o poi, va sostituito.</p>
-    <div class="box-info" id="agility" hidden><span><strong>Ecco la crypto agility:</strong> per il NIST è la capacità di sostituire e adattare gli algoritmi senza fermare le attività e senza perdere sicurezza (CSWP 39, Abstract).</span></div>
+  <section class="passo" id="sezCasi" aria-label="Succede sempre" hidden>
+    <p class="testo" id="introCasi" style="max-width: none;">Non è successo una volta sola: <strong>apri i tre casi</strong>.</p>
+    <div class="box-info" id="agility" hidden><span><strong>Ecco la crypto agility:</strong> per il NIST è la capacità di sostituire e adattare gli algoritmi senza fermare le attività e senza perdere sicurezza.</span></div>
     <div class="griglia-3" id="casi">
       <div class="card caso">
-        <span class="num">Hash · 2005 · § 2.2</span><h3>SHA-1</h3>
+        <span class="num">Hash · 2005</span><h3>SHA-1</h3>
+        <p class="sotto">Funzione di hash: l'«impronta» di un documento.</p>
         <p class="chiuso">Usato per anni nelle firme digitali e nei certificati.</p>
         <div class="rivela">
-          <p>Nel 2005 si scopre una debolezza. Il NIST chiede di non usarlo più per le firme dal 2010, ma l'abbandono completo è previsto <strong>entro il 2030</strong>.</p>
-          <p class="lezione"><strong>Lezione:</strong> anche quando il problema è noto, la compatibilità rallenta il cambio.</p>
+          <p>Debole dal 2005: il NIST lo esclude dalle firme dal 2010, ma l'abbandono completo è previsto <strong>entro il 2030</strong>.</p>
+          <p class="lezione"><strong>Lezione:</strong> la compatibilità rallenta il cambio.</p>
         </div>
         <button type="button" class="btn-secondario">Scopri cosa è successo</button>
       </div>
       <div class="card caso">
-        <span class="num">Chiavi · 2013 · § 2.3</span><h3>RSA</h3>
-        <p class="chiuso">Dal 2000 bastava una chiave da 1024 bit.</p>
+        <span class="num">Chiavi · 2013</span><h3>RSA</h3>
+        <p class="sotto">Algoritmo a chiave pubblica, per firme e scambio di chiavi.</p>
+        <p class="chiuso">La sua sicurezza dipende dalla lunghezza della chiave.</p>
         <div class="rivela">
-          <p>Con computer più veloci, nel 2013 il minimo sale a <strong>2048 bit</strong>. Chi non può cambiare chiave deve sostituire il dispositivo.</p>
-          <p class="lezione"><strong>Lezione:</strong> invecchia anche la lunghezza della chiave, non solo l'algoritmo.</p>
+          <p>Nel 2000 bastavano 1024 bit, dal 2013 ne servono <strong>2048</strong>. I dispositivi con chiave fissa vanno sostituiti.</p>
+          <p class="lezione"><strong>Lezione:</strong> invecchia anche la chiave.</p>
         </div>
         <button type="button" class="btn-secondario">Scopri cosa è successo</button>
       </div>
       <div class="card caso">
-        <span class="num">Browser · 2015 · § 3.2.1</span><h3>RC4</h3>
-        <p class="chiuso">Un cifrario usato per anni per proteggere i siti web.</p>
+        <span class="num">Browser · 2015</span><h3>RC4</h3>
+        <p class="sotto">Cifrario simmetrico, come DES e AES.</p>
+        <p class="chiuso">Usato per anni per proteggere i siti web.</p>
         <div class="rivela">
-          <p>Anche se debole, i browser lo hanno supportato a lungo per compatibilità. Solo nel <strong>2015</strong> uno standard IETF ne ha vietato l'uso.</p>
-          <p class="lezione"><strong>Lezione:</strong> gli algoritmi deboli restano accesi finché qualcuno non li spegne.</p>
+          <p>Debole, ma i browser lo tengono a lungo per compatibilità, fino al divieto del <strong>2015</strong>.</p>
+          <p class="lezione"><strong>Lezione:</strong> serve qualcuno che lo spenga.</p>
         </div>
         <button type="button" class="btn-secondario">Scopri cosa è successo</button>
       </div>
@@ -312,7 +350,7 @@
   </section>
 
   <!-- ================= PASSO 6 · Verifica ================= -->
-  <section class="passo" aria-label="Passo 7 di 7: verifica" hidden>
+  <section class="passo" id="sezQuiz" aria-label="Verifica" hidden>
     <p class="testo">Rispondi correttamente alle tre domande per completare il modulo.</p>
     <div class="domanda" data-q="1">
       <p>1. Nella crittografia simmetrica, quale chiave usa Bob per decifrare?</p>
@@ -344,7 +382,7 @@
   <div class="passi-nav">
     <button type="button" class="btn-secondario" id="indietro">Indietro</button>
     <button type="button" id="continua">Continua</button>
-    <span id="contatore">Passo 1 di 7</span>
+    <span id="contatore">Passo 1 di 8</span>
     <span class="spazio"></span>
     <span class="punti" id="punti" aria-hidden="true"></span>
   </div>
@@ -431,11 +469,11 @@
     /* ---------- Passo 3: confronto DES, Triple DES, AES ---------- */
     var ALG = [
       { nome: "DES · Data Encryption Standard",
-        metafora: "Una serratura con una chiave da 56 bit. Nel 1977 era sicura; oggi, provando tutte le chiavi, si apre in meno di un giorno.",
+        metafora: "Una serratura con una chiave da 56 bit. Nel 1977 era sicura; oggi, con abbastanza computer, si prova ogni chiave in meno di un giorno.",
         chiave: 56, chiaveTesto: "56 bit", blocco: 64, bloccoTesto: "64 bit (8 lettere)",
         vel: "Veloce per i computer dell'epoca.", oggi: "Ritirato: non è più uno standard dal 2005." },
       { nome: "Triple DES · DES applicato tre volte",
-        metafora: "La stessa serratura DES usata tre volte di fila con chiavi diverse. Più robusta, ma è una toppa: il blocco resta piccolo.",
+        metafora: "La stessa serratura DES usata tre volte con chiavi diverse: un modo rapido per renderla più robusta riusando ciò che c'era già. Ma il blocco resta piccolo.",
         chiave: 112, chiaveTesto: "3 × 56 bit, sicurezza reale 112 bit", blocco: 64, bloccoTesto: "64 bit (8 lettere)",
         vel: "Lenta: fa tre volte il lavoro di DES.", oggi: "Vietato dal NIST dal 2024." },
       { nome: "AES · Advanced Encryption Standard",
@@ -465,7 +503,9 @@
 
     /* ---------- Passo 4: forza bruta ---------- */
     var nbit = document.getElementById("nbit");
-    var VELOCITA = 1e12;                   // chiavi provate al secondo (ipotesi)
+    // Ipotesi didattica: ogni PC prova 1 miliardo (10^9) di chiavi al secondo
+    var logVelocita = 12;                  // log10 delle chiavi al secondo (default: 1.000 PC)
+    var NOMI_ATTACCANTE = { 9: "1 PC", 12: "1.000 PC", 15: "1 milione di PC" };
     var ETA_UNIVERSO = 1.38e10;            // anni
     function potenza10(log10) {
       var esp = Math.floor(log10), mant = Math.pow(10, log10 - esp);
@@ -478,10 +518,11 @@
     function tempoLeggibile(log10sec) {
       var sec = Math.pow(10, log10sec);
       if (sec < 1) return "meno di un secondo";
-      if (sec < 60) return Math.round(sec) + " secondi";
-      if (sec < 3600) return Math.round(sec / 60) + " minuti";
-      if (sec < 86400) return Math.round(sec / 3600) + " ore";
-      if (sec < 31557600) return Math.round(sec / 86400) + " giorni";
+      function u(n, uno, molti) { return n + " " + (n === 1 ? uno : molti); }
+      if (sec < 60) return u(Math.round(sec), "secondo", "secondi");
+      if (sec < 3600) return u(Math.round(sec / 60), "minuto", "minuti");
+      if (sec < 86400) return u(Math.round(sec / 3600), "ora", "ore");
+      if (sec < 31557600) return u(Math.round(sec / 86400), "giorno", "giorni");
       var log10anni = log10sec - Math.log10(31557600);
       if (log10anni < 6) return it(Math.round(Math.pow(10, log10anni))) + " anni";
       return potenza10(log10anni) + " anni";
@@ -491,7 +532,8 @@
       document.getElementById("vbit").textContent = n + " bit";
       var log10comb = n * Math.log10(2);
       document.getElementById("vComb").textContent = n <= 56 ? (2n ** BigInt(n)).toLocaleString("it-IT") : "≈ " + potenza10(log10comb);
-      var log10sec = log10comb - Math.log10(VELOCITA);
+      var log10sec = log10comb - logVelocita;
+      document.getElementById("vTempoLabel").textContent = "Tempo per provarle tutte con " + NOMI_ATTACCANTE[logVelocita];
       document.getElementById("vTempo").textContent = tempoLeggibile(log10sec);
       var log10anni = log10sec - Math.log10(31557600);
       var v = document.getElementById("vVerdetto");
@@ -508,7 +550,16 @@
       document.querySelectorAll("#preset button").forEach(function (b) {
         b.setAttribute("aria-pressed", String(+b.getAttribute("data-bit") === n));
       });
+      document.querySelectorAll("#attaccante button").forEach(function (b) {
+        b.setAttribute("aria-pressed", String(+b.getAttribute("data-v") === logVelocita));
+      });
     }
+    document.getElementById("attaccante").addEventListener("click", function (e) {
+      var b = e.target.closest("button");
+      if (!b) return;
+      logVelocita = +b.getAttribute("data-v");
+      aggiornaForza();
+    });
     nbit.addEventListener("input", aggiornaForza);
     document.getElementById("preset").addEventListener("click", function (e) {
       var b = e.target.closest("button");
@@ -520,11 +571,11 @@
 
     /* ---------- Passo 4: linea del tempo ---------- */
     var TAPPE = [
-      { t: "1977 · Nasce DES", d: "Il primo standard pubblico di cifratura: blocchi da 64 bit e chiave da 56 bit. Con l'aumento della potenza di calcolo, un attacco a forza bruta diventa realistico. (§ 2.1)" },
-      { t: "1999 · Arriva Triple DES", d: "Una soluzione temporanea: DES applicato tre volte, con due o tre chiavi da 56 bit, in attesa di un algoritmo più forte. (§ 2.1)" },
-      { t: "2001 · Lo standard AES", d: "Il nuovo algoritmo, con chiavi da 128, 192 o 256 bit. Eppure molte applicazioni continuano a usare Triple DES. (§ 2.1)" },
-      { t: "2023 · Stop alla cifratura", d: "La linea guida NIST SP 800-131A rev. 2 fissa alla fine del 2023 il divieto di usare Triple DES a tre chiavi per cifrare nuovi dati. (§ 5.1)" },
-      { t: "2024 · Triple DES vietato", d: "Triple DES non è più consentito. La transizione completa ad AES ha richiesto 23 anni. (§ 2.1)" }
+      { t: "1977 · Nasce DES", d: "Il primo standard pubblico di cifratura: blocchi da 64 bit e chiave da 56 bit. Con l'aumento della potenza di calcolo, un attacco a forza bruta diventa realistico." },
+      { t: "1999 · Perché Triple DES", d: "Serviva subito una chiave più lunga, ma un nuovo algoritmo non era ancora pronto. La via più rapida: riusare DES, già presente in moltissimi sistemi, applicandolo tre volte con due o tre chiavi. Doveva essere una soluzione temporanea." },
+      { t: "2001 · Lo standard AES", d: "Il nuovo algoritmo, con chiavi da 128, 192 o 256 bit. Eppure molte applicazioni restano su Triple DES: cambiare algoritmo costa, richiede tempo e crea problemi di compatibilità." },
+      { t: "2023 · Stop alla cifratura", d: "Una linea guida del NIST (SP 800-131A rev. 2) fissa alla fine del 2023 il divieto di usare Triple DES a tre chiavi per cifrare nuovi dati." },
+      { t: "2024 · Triple DES vietato", d: "Triple DES non è più consentito. La transizione completa ad AES ha richiesto 23 anni." }
     ];
     var viste = {};
     document.getElementById("timeline").addEventListener("click", function (e) {
@@ -541,7 +592,7 @@
       det.innerHTML = "<h3>" + TAPPE[i].t + "</h3><p>" + TAPPE[i].d + "</p>";
       if (Object.keys(viste).length === TAPPE.length) {
         document.getElementById("ventitre").hidden = false;
-        det.innerHTML += '<p class="fonte">Fonte: NIST CSWP 39, sezione 2.1.</p>';
+        det.innerHTML += '<p class="fonte">Fonte: NIST CSWP 39-upd1.</p>';
       }
     });
 
