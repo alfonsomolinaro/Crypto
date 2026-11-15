@@ -342,7 +342,7 @@
       var f = document.getElementById("fbFinale"), r = document.getElementById("riprova");
       if (punti >= SOGLIA) {
         f.className = "feedback ok";
-        f.textContent = "✓ Verifica superata! Hai risposto correttamente a " + punti + " domande su " + DOMANDE.length + ". Premi Avanti per concludere il percorso.";
+        f.textContent = "✓ Verifica superata! Hai risposto correttamente a " + punti + " domande su " + DOMANDE.length + ". Premi Termina nella barra in basso per concludere il corso.";
         r.hidden = true;
         player.setStatus("passed");
       } else {

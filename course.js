@@ -89,8 +89,11 @@ window.COURSE = {
       src: "pages/06-quiz/index.html",
       duration: "8 min",
       complete: { on: "page" }          // la pagina chiama player.setStatus("passed" | "failed"): servono 6 risposte giuste su 8
-    },
-    {
+    }
+    /* Pagina NASCOSTA (non cancellata): riepilogo «Hai completato il percorso».
+       Il Player mostra già la sua schermata finale dopo «Termina». Per rimetterla nel corso,
+       aggiungi una virgola dopo il blocco della verifica qui sopra e togli i segni di commento.
+    ,{
       id: "conclusione",
       title: "Hai completato il percorso",
       type: "final",
@@ -98,5 +101,6 @@ window.COURSE = {
       duration: "1 min",
       complete: { on: "visit" }         // completata appena aperta
     }
+    */
   ]
 };
