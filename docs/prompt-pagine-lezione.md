@@ -14,9 +14,10 @@ Il risultato è una cartella da mettere in `pages/`, più il blocco da aggiunger
 | Dove lavori | Come fare |
 |---|---|
 | **Qualsiasi chat (web o app)** | Apri questo file su GitHub (`github.com/alfonsomolinaro/Crypto` › `docs` › `prompt-pagine-lezione.md`). Nel riquadro del prompt usa il pulsante **Copia** in alto a destra, poi incolla nella chat e compila la parte finale. |
-| **Claude (claude.ai o app desktop)**, consigliato | Crea un **Progetto** (es. «Player e-learning») e nelle *conoscenze del progetto* carica: questo file, `pages/pagina.css` e `docs/manuale-player.md`. Da quel momento ogni nuova chat del progetto conosce già le regole: basta scrivere «Crea la pagina della lezione 3 secondo il prompt delle pagine» e incollare i contenuti. |
+| **Claude (claude.ai o app desktop)**, con un Progetto | Crea un **Progetto** (es. «Player e-learning»), carica nelle *conoscenze del progetto* questo file, `pages/pagina.css` e `pages/_modello/index.html`, e incolla nelle *istruzioni del progetto* il testo pronto in `docs/progetto-claude.md`. Da quel momento ogni nuova chat del progetto conosce già le regole. |
 | **ChatGPT** | Stessa idea: crea un **Progetto** (o un GPT personalizzato) e aggiungi gli stessi tre file come documenti. |
-| **Claude Code** (nella cartella del corso, sul PC) | Apri Claude Code nella cartella del corso e scrivi: «Leggi `docs/prompt-pagine-lezione.md` e crea la pagina della lezione 3 seguendo quelle regole», poi incolla i contenuti. Per non ripeterlo ogni volta, crea nella cartella del corso un file `CLAUDE.md` con la riga *«Per creare o modificare le pagine di lezione segui `docs/prompt-pagine-lezione.md` e aggiungi la lezione in `course.js`»*: Claude Code lo legge da solo a ogni avvio. |
+| **Claude Code** (nella cartella del corso, sul PC) | Non serve nulla: il repository contiene la skill `pagina-lezione` (`.claude/skills/`), che segue questo prompt. Basta chiedere «crea la pagina della lezione 3» e fornire i contenuti. |
+| **Claude, in tutte le chat** | Carica `skill-pagina-lezione.zip` in claude.ai › *Impostazioni › Funzionalità › Skill*. Dettagli in `docs/progetto-claude.md`. |
 | **Altro computer** | Scarica il repository da GitHub (*Code › Download ZIP* oppure GitHub Desktop › *Clone*). Il prompt è in `docs/`. |
 
 > Se il repository è **privato**, per aprirlo da un altro computer o dal web devi aver fatto l'accesso a GitHub con il tuo account.

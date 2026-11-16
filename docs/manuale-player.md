@@ -255,7 +255,7 @@ Ogni lezione è un blocco tra `{ }` dentro `lessons`:
 2. Modifica il suo `index.html`.
 3. In `course.js` aggiorna `src` con il nuovo percorso.
 
-**Con un assistente AI (Claude o altri):** le regole complete per le pagine sono in `docs/prompt-pagine-lezione.md`, che spiega anche come usarlo con Claude, Claude Code e ChatGPT. Con Claude Code basta chiedere, nella cartella del corso: «Leggi `docs/prompt-pagine-lezione.md` e crea la pagina della lezione N», e incollare i contenuti. Gli autori esterni trovano lo stesso prompt nel kit (`PROMPT-CLAUDE.md`).
+**Con un assistente AI (Claude o altri):** le regole complete per le pagine sono in `docs/prompt-pagine-lezione.md`. Con Claude Code basta chiedere, nella cartella del corso, «crea la pagina della lezione N» e incollare i contenuti: la skill `pagina-lezione` del repository applica le regole da sola. Per claude.ai (skill da caricare o Progetto dedicato) vedi `docs/progetto-claude.md`. Gli autori esterni trovano tutto nel kit.
 
 Modello minimo:
 

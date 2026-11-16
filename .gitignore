@@ -10,8 +10,9 @@ desktop.ini
 # Claude Code (impostazioni locali)
 .claude/settings.local.json
 
-# Impostazioni locali di Claude Code
-.claude/
+# Impostazioni locali di Claude Code (la skill delle pagine invece va su GitHub)
+.claude/*
+!.claude/skills/
 
 # Istruzioni per Claude Code: solo in locale, non su GitHub
 CLAUDE.md

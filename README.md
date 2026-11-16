@@ -33,19 +33,14 @@ La cartella `player/` resta identica per tutti i corsi.
 
 ## Lavorare con Claude
 
-Le regole per creare le pagine di lezione sono in **[`docs/prompt-pagine-lezione.md`](docs/prompt-pagine-lezione.md)**: valgono per qualsiasi assistente AI.
+Le regole per creare le pagine di lezione sono in **[`docs/prompt-pagine-lezione.md`](docs/prompt-pagine-lezione.md)**: valgono per qualsiasi assistente AI. Per avere Claude già «istruito» ci sono tre strade, spiegate in **[`docs/progetto-claude.md`](docs/progetto-claude.md)**:
 
-- **Claude (claude.ai o app desktop):** crea un *Progetto* e carica nelle conoscenze `docs/prompt-pagine-lezione.md`, `pages/pagina.css` e `docs/manuale-player.md`. Poi chiedi «Crea la pagina della lezione N secondo il prompt delle pagine» e incolla i contenuti.
-- **Claude Code (nella cartella del corso):** scrivi «Leggi `docs/prompt-pagine-lezione.md` e crea la pagina della lezione N», poi i contenuti. Per non ripeterlo ogni volta, crea un file `CLAUDE.md` nella cartella del corso con le regole principali, per esempio:
-  ```
-  - Per creare o modificare le pagine in pages/ segui docs/prompt-pagine-lezione.md.
-  - Aggiungi sempre la lezione in course.js.
-  - Non modificare la cartella player/.
-  - Nessuna dipendenza esterna: il corso deve funzionare con doppio clic su index.html.
-  - Chiedi conferma prima di ogni push.
-  ```
-  Claude Code legge `CLAUDE.md` da solo a ogni avvio. (Il file non è nel repository: ognuno crea il proprio.)
-- **Autori esterni:** il kit (`kit-autori.zip`) contiene `PROMPT-CLAUDE.md` e le istruzioni per usarlo, nella guida `LEGGIMI-PRIMA.md`.
+- **Claude Code:** il repository contiene la skill `.claude/skills/pagina-lezione/`. Basta aprire Claude Code nella cartella del corso e chiedere «crea la pagina della lezione N» con i contenuti (oppure `/pagina-lezione`).
+- **claude.ai, in tutte le chat:** carica `skill-pagina-lezione.zip` in *Impostazioni › Funzionalità › Skill*.
+- **claude.ai, con un Progetto:** istruzioni del progetto pronte da incollare e i 3 file da caricare.
+- **Autori esterni:** il kit (`kit-autori.zip`) contiene la skill, il suo zip e `PROMPT-CLAUDE.md`, con le istruzioni nella guida `LEGGIMI-PRIMA.md`.
+
+Facoltativo: un file `CLAUDE.md` nella cartella del corso (non è nel repository, ognuno crea il proprio) per regole personali, per esempio «chiedi conferma prima di ogni push».
 
 Qualunque assistente si usi, la pagina va sempre provata: misure 1280×720, completamento della lezione, nessun errore nella console del browser.
 
@@ -59,9 +54,11 @@ Qualunque assistente si usi, la pagina va sempre provata: misure 1280×720, comp
 | `pages/` | Pagine delle lezioni: `ca-01…ca-04` (moduli), `06-quiz` (verifica). Le altre cartelle sono lezioni di esempio non usate nel corso; `_modello/` è la pagina da copiare |
 | `media/`, `resources/` | Video, audio e file scaricabili (qui il documento NIST CSWP 39-upd1) |
 | `docs/manuale-player.md` | **Manuale d'uso del Player**: per chi segue il corso e per chi lo crea |
-| `kit-autori.zip` · `kit-autori/` | **Kit per autori esterni**: guida, prompt per Claude, pagina modello, foglio di stile e `prova.html` per verificare il completamento. Si rigenera con `tools\crea-kit-autori.ps1` |
+| `kit-autori.zip` · `kit-autori/` | **Kit per autori esterni**: guida, prompt e skill per Claude, pagina modello, foglio di stile e `prova.html` per verificare il completamento. Si rigenera con `tools\crea-kit-autori.ps1` |
 | `docs/guida-autori-esterni.md` | Guida passo passo per creare una pagina di lezione (inclusa nel kit) |
 | `docs/prompt-pagine-lezione.md` | Prompt per far creare le pagine a un assistente AI (incluso nel kit come `PROMPT-CLAUDE.md`) |
+| `docs/progetto-claude.md` | Come usare Claude già istruito: skill per Claude Code e claude.ai, istruzioni per un Progetto |
+| `.claude/skills/pagina-lezione/` · `skill-pagina-lezione.zip` | Skill «pagina-lezione» per Claude (generata in parte da `tools\crea-kit-autori.ps1`) |
 | `design/specifiche.md` | Specifiche per lo sviluppo: struttura, comportamenti, responsive, accessibilità, `course.js`, bridge |
 | `design/tokens.css` | Design token (colori, tipografia, spaziature, animazioni) |
 | `design/icone.svg` | Set di icone del Player |
