@@ -12,3 +12,6 @@ desktop.ini
 
 # Impostazioni locali di Claude Code
 .claude/
+
+# Istruzioni per Claude Code: solo in locale, non su GitHub
+CLAUDE.md
