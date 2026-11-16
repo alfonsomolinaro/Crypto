@@ -49,6 +49,8 @@
   .scelte-3 button { height: auto; min-height: 60px; padding: 10px 14px; font-size: 18px; line-height: 1.25;
     background: #fff; color: var(--color-primary); box-shadow: inset 0 0 0 1.5px var(--color-border); }
   .scelte-3 button:hover { background: var(--color-bg); }
+  section.passo:first-of-type .griglia-3 { align-items: stretch; }   /* le tre card dell'introduzione hanno la stessa altezza */
+  .scelte-3 button small { display: block; margin-top: 4px; font-size: 16px; font-weight: 500; opacity: .8; }
   .scelte-3 button.giusta { background: var(--color-success-100); color: var(--color-success); box-shadow: inset 0 0 0 2px var(--color-success); }
   .scelte-3 button.sbagliata { background: var(--color-error-100); color: var(--color-error); box-shadow: inset 0 0 0 2px var(--color-error); }
   .feedback { font-size: 19px; }
@@ -75,26 +77,17 @@
   .dettaglio { min-height: 110px; }
 
   /* Passo 6: barre */
-  .misura { display: grid; grid-template-columns: 210px minmax(0, 1fr) 190px; gap: 14px; align-items: center; font-size: 18px; }
+  .misura { display: grid; grid-template-columns: 250px minmax(0, 1fr) 150px; gap: 14px; align-items: center; font-size: 18px; }
   .m-nome { font-weight: 600; color: var(--color-primary); }
   .barra { height: 26px; border-radius: 999px; background: #fff; border: 1px solid var(--color-border); overflow: hidden; }
   .barra span { display: block; height: 100%; border-radius: 999px; background: var(--color-primary); transition: width .3s; }
-  .barra.oro span { background: var(--color-accent); }
+  .barra.oro span { background: var(--color-accent); transition: width .8s var(--ease-standard, ease); }
+  .etichetta-lab { font-size: 19px; font-weight: 600; color: var(--color-primary); }
   .m-val { font: 700 20px ui-monospace, Consolas, monospace; color: var(--color-primary); }
   .slider-riga { display: flex; align-items: center; gap: 18px; font-size: 19px; font-weight: 600; color: var(--color-primary); }
   .slider-riga input { flex: 1; height: 32px; accent-color: var(--color-primary); }
   .slider-riga output { min-width: 70px; text-align: center; font-size: 22px; font-weight: 700; background: var(--color-primary-100); border-radius: 10px; padding: 4px 10px; }
 
-  /* Passo 7: aggiornabile o da sostituire */
-  .disp { padding: 16px 20px; gap: 8px; }
-  .disp p { font-size: 18px; line-height: 1.4; }
-  .disp .azioni button { height: 44px; font-size: 17px; background: #fff; color: var(--color-primary); box-shadow: inset 0 0 0 1.5px var(--color-border); }
-  .disp .azioni button.giusta { background: var(--color-success-100); color: var(--color-success); box-shadow: inset 0 0 0 2px var(--color-success); }
-  .disp .azioni button.sbagliata { background: var(--color-error-100); color: var(--color-error); box-shadow: inset 0 0 0 2px var(--color-error); }
-  .disp .spiega { display: none; font-size: 18px; color: var(--color-text); }
-  .disp.risolto .spiega { display: block; }
-  .disp.risolto .azioni { display: none; }
-  .disp .spiega { color: var(--color-success); }
   .domanda { gap: 6px; }
   .opzioni button { min-height: 52px; }
 
@@ -131,8 +124,8 @@
       </div>
       <div class="card">
         <div class="card-head"><span class="ic oro"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 7.5-2"/></svg></span>
-        <span><span class="num">La soluzione</span><h3>La chiave pubblica</h3></span></div>
-        <p>Due chiavi diverse: una si può dare a tutti, l'altra resta segreta. Nessun segreto deve viaggiare.</p>
+        <span><span class="num">La soluzione</span><h3>La crittografia asimmetrica</h3></span></div>
+        <p>Detta anche «a chiave pubblica»: due chiavi diverse, una si dà a tutti, l'altra resta segreta.</p>
       </div>
       <div class="card">
         <div class="card-head"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l9 16H3z"/><path d="M12 10v4M12 17h.01"/></svg></span>
@@ -145,7 +138,7 @@
 
   <!-- ================= PASSO 2 · Due chiavi invece di una ================= -->
   <section class="passo" aria-label="Due chiavi invece di una" hidden>
-    <p class="testo" style="max-width: none;">Nella crittografia <strong>asimmetrica</strong> (o a chiave pubblica) Bob ha <strong>due chiavi</strong>. La <strong>chiave pubblica</strong> è come un lucchetto aperto: la dà a tutti e chiunque può usarla per chiudere. La <strong>chiave privata</strong> resta solo a Bob ed è l'unica che riapre. <strong>Segui i quattro passaggi.</strong></p>
+    <p class="testo" style="max-width: none;">Nella crittografia <strong>asimmetrica</strong>, detta anche <strong>a chiave pubblica</strong>, Bob ha <strong>due chiavi</strong>. La <strong>chiave pubblica</strong> è come un lucchetto aperto: la dà a tutti e chiunque può usarla per chiudere. La <strong>chiave privata</strong> resta solo a Bob ed è l'unica che riapre. <strong>Segui i quattro passaggi.</strong></p>
     <div class="scena">
       <div class="attore" id="aAlice">
         <div class="card-head"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></span><h3>Alice</h3></div>
@@ -171,14 +164,14 @@
 
   <!-- ================= PASSO 3 · Tre lavori diversi ================= -->
   <section class="passo" aria-label="Tre lavori diversi" hidden>
-    <p class="testo" style="max-width: none;">La crittografia fa tre lavori. <strong>Cifrare i dati</strong> è compito della simmetrica, veloce. <strong>Accordarsi su una chiave</strong> e <strong>firmare</strong> sono compiti della chiave pubblica. Per ogni situazione, scegli il lavoro giusto.</p>
+    <p class="testo" style="max-width: none;">La crittografia ha <strong>tre compiti</strong> principali. Leggi ogni situazione e scegli quale serve.</p>
     <div class="lab situazione" aria-live="polite">
       <span class="contatore-sit" id="contSit"></span>
       <p class="testo-sit" id="testoSit"></p>
       <div class="scelte-3" id="scelteSit">
-        <button type="button" data-l="dati">Cifrare i dati</button>
-        <button type="button" data-l="chiave">Accordarsi su una chiave</button>
-        <button type="button" data-l="firma">Firmare</button>
+        <button type="button" data-l="dati">Proteggere i dati<small>con la crittografia simmetrica</small></button>
+        <button type="button" data-l="chiave">Accordarsi su una chiave<small>con la crittografia asimmetrica</small></button>
+        <button type="button" data-l="firma">Firma digitale<small>con la crittografia asimmetrica: chi l'ha inviato?</small></button>
       </div>
       <div class="feedback" id="fbSit"></div>
       <div class="azioni"><button type="button" id="prossimaSit" hidden>Prossima situazione</button></div>
@@ -226,46 +219,15 @@
 
   <!-- ================= PASSO 6 · I nuovi algoritmi ================= -->
   <section class="passo" aria-label="I nuovi algoritmi" hidden>
-    <p class="testo" style="max-width: none;">Il NIST ha standardizzato nuovi algoritmi resistenti ai computer quantistici: <strong>ML-KEM</strong> per accordarsi sulle chiavi e <strong>ML-DSA</strong> per le firme. Sono più sicuri, ma <strong>più pesanti</strong>.</p>
+    <p class="testo" style="max-width: none;">Il NIST ha standardizzato nuovi algoritmi resistenti ai computer quantistici: <strong>ML-KEM</strong> per accordarsi sulle chiavi e <strong>ML-DSA</strong> per le firme. Il prezzo: le firme sono <strong>molto più grandi</strong>.</p>
     <div class="lab">
-      <div class="slider-riga">
-        <label for="nfirme">Quante firme inviare in rete</label>
-        <input type="range" id="nfirme" min="1" max="10" value="1">
-        <output id="vfirme" for="nfirme">1</output>
-      </div>
-      <div class="misura"><span class="m-nome">RSA a 3072 bit</span><span class="barra"><span id="barRsa"></span></span><span class="m-val" id="valRsa"></span></div>
-      <div class="misura"><span class="m-nome">ML-DSA</span><span class="barra oro"><span id="barMl"></span></span><span class="m-val" id="valMl"></span></div>
-      <div class="risultato" id="rapporto"></div>
+      <span class="etichetta-lab">Quanto spazio occupa una firma digitale?</span>
+      <div class="misura"><span class="m-nome">RSA (oggi)</span><span class="barra"><span id="barRsa"></span></span><span class="m-val">384 byte</span></div>
+      <div class="misura"><span class="m-nome">ML-DSA (post-quantum)</span><span class="barra oro"><span id="barMl"></span></span><span class="m-val" id="valMl">?</span></div>
+      <div class="azioni"><button type="button" id="passaPq">Passa alla firma post-quantum</button></div>
+      <div class="risultato" id="rapporto">Premi il pulsante per sostituire la firma RSA con quella post-quantum.</div>
     </div>
     <p class="fonte">Fonte: NIST CSWP 39-upd1. Entrambe le firme offrono una sicurezza paragonabile (circa 128 bit). La firma RSA a 3072 bit occupa 384 byte; quella ML-DSA 2.420 byte, il dato riportato dal NIST.</p>
-  </section>
-
-  <!-- ================= PASSO 7 · Si può aggiornare? ================= -->
-  <section class="passo" aria-label="Si può aggiornare?" hidden>
-    <p class="testo" id="introDisp" style="max-width: none;">Non tutto si cambia con un aggiornamento. Per ogni oggetto scegli: <strong>si aggiorna</strong> o <strong>va sostituito</strong>?</p>
-    <div class="box-info" id="boxDisp" hidden><span><strong>Il consiglio del NIST:</strong> progettare i dispositivi pensando fin da subito alle transizioni future costa meno che sostituirli dopo.</span></div>
-    <div class="griglia-2" id="dispositivi">
-      <div class="card disp" data-ok="agg">
-        <h3>Libreria crittografica sul server</h3>
-        <div class="azioni"><button type="button" data-r="agg">Si aggiorna</button><button type="button" data-r="sost">Va sostituito</button></div>
-        <p class="spiega">Nel software è più facile aggiungere nuovi algoritmi: basta aggiornare la libreria.</p>
-      </div>
-      <div class="card disp" data-ok="sost">
-        <h3>Chip dedicato (SIM, smart card, TPM)</h3>
-        <div class="azioni"><button type="button" data-r="agg">Si aggiorna</button><button type="button" data-r="sost">Va sostituito</button></div>
-        <p class="spiega">Supporta pochi algoritmi fissi: di solito per cambiarli si sostituisce il chip o il dispositivo.</p>
-      </div>
-      <div class="card disp" data-ok="sost">
-        <h3>Chiave pubblica nell'avvio sicuro</h3>
-        <div class="azioni"><button type="button" data-r="agg">Si aggiorna</button><button type="button" data-r="sost">Va sostituito</button></div>
-        <p class="spiega">Non si può aggiornare: va scelta fin dall'inizio perché resti sicura per tutta la vita del dispositivo.</p>
-      </div>
-      <div class="card disp" data-ok="agg">
-        <h3>Circuito riprogrammabile (FPGA)</h3>
-        <div class="azioni"><button type="button" data-r="agg">Si aggiorna</button><button type="button" data-r="sost">Va sostituito</button></div>
-        <p class="spiega">È l'eccezione tra i chip: si può riconfigurare anche dopo l'installazione.</p>
-      </div>
-    </div>
   </section>
 
   <!-- ================= PASSO 8 · Verifica ================= -->
@@ -301,7 +263,7 @@
   <div class="passi-nav">
     <button type="button" class="btn-secondario" id="indietro">Indietro</button>
     <button type="button" id="continua">Continua</button>
-    <span id="contatore">Passo 1 di 8</span>
+    <span id="contatore">Passo 1 di 7</span>
     <span class="spazio"></span>
     <span class="punti" id="punti" aria-hidden="true"></span>
   </div>
@@ -363,14 +325,14 @@
 
     /* ---------- Passo 3: tre lavori ---------- */
     var SITUAZIONI = [
-      { t: "Il disco del portatile viene cifrato.", l: "dati", s: "Grandi quantità di dati: lavoro della simmetrica (per esempio AES)." },
-      { t: "Il browser e il sito della banca stabiliscono una chiave segreta comune.", l: "chiave", s: "Accordarsi su una chiave senza incontrarsi: lavoro della chiave pubblica." },
-      { t: "Firmi digitalmente un contratto.", l: "firma", s: "La firma si fa con la chiave privata e chiunque la verifica con quella pubblica." },
-      { t: "Il telefono controlla che un aggiornamento arrivi davvero dal produttore.", l: "firma", s: "Il produttore firma l'aggiornamento; il telefono verifica la firma." },
-      { t: "Una VPN apre un collegamento sicuro con l'ufficio.", l: "chiave", s: "All'inizio le due parti si accordano sulla chiave con la chiave pubblica." },
-      { t: "Dopo l'accordo sulla chiave, un video viene inviato protetto.", l: "dati", s: "Una volta concordata la chiave, i dati viaggiano con la simmetrica, più veloce." }
+      { t: "Il disco del portatile viene cifrato.", l: "dati", s: "Tanti dati da proteggere: lavoro della simmetrica (per esempio AES)." },
+      { t: "Il browser e il sito della banca stabiliscono una chiave segreta comune.", l: "chiave", s: "Accordarsi su una chiave senza incontrarsi: lavoro della crittografia asimmetrica." },
+      { t: "Firmi digitalmente un contratto.", l: "firma", s: "Firmi con la tua chiave privata; chiunque può controllare la firma con la tua chiave pubblica." },
+      { t: "Il telefono riceve un aggiornamento: arriva davvero dal produttore?", l: "firma", s: "Il produttore firma l'aggiornamento; il telefono controlla la firma prima di installarlo." },
+      { t: "Una VPN apre un collegamento sicuro con l'ufficio.", l: "chiave", s: "All'inizio le due parti si accordano sulla chiave con la crittografia asimmetrica." },
+      { t: "Durante una videochiamata, audio e video viaggiano cifrati.", l: "dati", s: "Tanti dati da proteggere: lavoro della simmetrica, più veloce." }
     ];
-    var NOMI_LAVORO = { dati: "Cifrare i dati", chiave: "Accordarsi su una chiave", firma: "Firmare" };
+    var NOMI_LAVORO = { dati: "Proteggere i dati", chiave: "Accordarsi su una chiave", firma: "Firma digitale" };
     var sit = 0, risolta = false;
     function mostraSit() {
       risolta = false;
@@ -444,41 +406,17 @@
 
     /* ---------- Passo 6: dimensioni delle firme ---------- */
     var RSA_BYTE = 384, ML_BYTE = 2420;
-    var nfirme = document.getElementById("nfirme");
-    function aggiornaFirme() {
-      var n = +nfirme.value, max = ML_BYTE * 10;
-      document.getElementById("vfirme").textContent = n;
-      document.getElementById("barRsa").style.width = (RSA_BYTE * n / max * 100) + "%";
-      document.getElementById("barMl").style.width = (ML_BYTE * n / max * 100) + "%";
-      document.getElementById("valRsa").textContent = it(RSA_BYTE * n) + " byte";
-      document.getElementById("valMl").textContent = it(ML_BYTE * n) + " byte";
-      document.getElementById("rapporto").innerHTML = "<span>Con " + n + (n === 1 ? " firma" : " firme") + ", ML-DSA invia in più</span><b>" + it((ML_BYTE - RSA_BYTE) * n) + " byte</b>";
-    }
-    nfirme.addEventListener("input", aggiornaFirme);
-    aggiornaFirme();
-
-    /* ---------- Passo 7: si aggiorna o va sostituito ---------- */
-    var risolti = 0;
-    document.querySelectorAll(".disp").forEach(function (c) {
-      c.addEventListener("click", function (e) {
-        var b = e.target.closest("button");
-        if (!b || c.classList.contains("risolto")) return;
-        c.querySelectorAll("button").forEach(function (x) { x.classList.remove("sbagliata"); });
-        if (b.getAttribute("data-r") === c.getAttribute("data-ok")) {
-          c.classList.add("risolto");
-          c.querySelector(".spiega").textContent = "✓ " + b.textContent + ". " + c.querySelector(".spiega").textContent;
-          risolti++;
-          if (risolti === 4) {
-            document.getElementById("introDisp").hidden = true;
-            document.getElementById("boxDisp").hidden = false;
-          }
-        } else {
-          b.classList.add("sbagliata");
-        }
-      });
+    document.getElementById("barRsa").style.width = (RSA_BYTE / ML_BYTE * 100) + "%";
+    document.getElementById("barMl").style.width = "0%";
+    document.getElementById("passaPq").addEventListener("click", function () {
+      document.getElementById("barMl").style.width = "100%";
+      document.getElementById("valMl").textContent = it(ML_BYTE) + " byte";
+      var r = document.getElementById("rapporto");
+      r.innerHTML = "<span>La firma post-quantum occupa oltre 6 volte lo spazio: più dati da inviare in rete e da conservare.</span><b>× 6</b>";
+      this.hidden = true;
     });
 
-    /* ---------- Passo 8: quiz (il modulo si completa con 3 risposte giuste) ---------- */
+    /* ---------- Passo 7: quiz (il modulo si completa con 3 risposte giuste) ---------- */
     var giuste = {};
     var fbQuiz = document.getElementById("fbQuiz");
     function controllaQuiz() {

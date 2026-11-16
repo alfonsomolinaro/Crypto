@@ -23,7 +23,19 @@
   .azioni { display: flex; gap: 10px; flex-wrap: wrap; }
   .azioni button { height: 48px; font-size: 17px; padding: 0 18px; }
 
-  /* Passo 2: un caso alla volta */
+  /* Passo 2: software o hardware */
+  .tag { display: inline-block; font-size: 15px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; padding: 3px 10px; border-radius: 999px; background: var(--color-primary-100); color: var(--color-primary); white-space: nowrap; }
+  .tag.oro { background: var(--color-accent-100); color: var(--color-accent-text); }
+  .disp { padding: 16px 20px; gap: 8px; }
+  .disp-testa { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+  .disp p { font-size: 18px; line-height: 1.4; }
+  .disp .azioni button { height: 44px; font-size: 17px; background: #fff; color: var(--color-primary); box-shadow: inset 0 0 0 1.5px var(--color-border); }
+  .disp .azioni button.sbagliata { background: var(--color-error-100); color: var(--color-error); box-shadow: inset 0 0 0 2px var(--color-error); }
+  .disp .spiega { display: none; font-size: 18px; color: var(--color-success); }
+  .disp.risolto .spiega { display: block; }
+  .disp.risolto .azioni { display: none; }
+
+  /* Passo 3: un caso alla volta */
   .caso-testa { display: flex; align-items: center; gap: 14px; }
   .caso-testa .contatore-caso { font-size: 15px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--color-accent-text); }
   .caso-titolo { font-size: 26px; line-height: 1.25; font-weight: 700; color: var(--color-primary); max-width: none; }
@@ -39,7 +51,7 @@
   .avanzamento span { width: 28px; height: 6px; border-radius: 3px; background: var(--color-border); }
   .avanzamento span.fatto { background: var(--color-accent); }
 
-  /* Passo 3: cosa ti porti a casa */
+  /* Passo 4: cosa ti porti a casa */
   .punto { display: grid; grid-template-columns: 40px minmax(0, 1fr); gap: 14px; align-items: start; background: var(--color-bg); border: 1px solid var(--color-border); border-radius: 14px; padding: 12px 16px; }
   .punto .n { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; background: var(--color-accent-100); color: var(--color-accent-text); }
   .punto p { font-size: 18px; line-height: 1.45; color: var(--color-text); max-width: none; }
@@ -92,8 +104,36 @@
     <p class="fonte">Tutti i casi di questo modulo sono tratti da: NIST CSWP 39-upd1, <em>Considerations for Achieving Crypto Agility</em> (2025). Il documento è in «Risorse».</p>
   </section>
 
-  <!-- ================= PASSO 2 · Laboratorio: sette casi ================= -->
-  <section class="passo" id="sezCasiLab" aria-label="Laboratorio: sette casi" hidden>
+  <!-- ================= PASSO 2 · Software o hardware? ================= -->
+  <section class="passo" id="sezDisp" aria-label="Software o hardware?" hidden>
+    <p class="testo" id="introDisp" style="max-width: none;">Un algoritmo può stare nel <strong>software</strong> (programmi e app) o nell'<strong>hardware</strong> (un chip costruito per eseguirlo). Il software si cambia con un aggiornamento; un chip spesso no. Per ogni oggetto scegli:</p>
+    <div class="box-info" id="boxDisp" hidden><span><strong>Il consiglio del NIST:</strong> progettare i dispositivi pensando fin da subito alle transizioni future costa meno che sostituirli dopo.</span></div>
+    <div class="griglia-2" id="dispositivi">
+      <div class="card disp" data-ok="agg">
+        <div class="disp-testa"><h3>Browser, app e server</h3><span class="tag">Software</span></div>
+        <div class="azioni"><button type="button" data-r="agg">Si aggiorna</button><button type="button" data-r="sost">Va sostituito</button></div>
+        <p class="spiega">Nel software è più facile aggiungere nuovi algoritmi: arrivano con gli aggiornamenti.</p>
+      </div>
+      <div class="card disp" data-ok="sost">
+        <div class="disp-testa"><h3>SIM, smart card, chip TPM</h3><span class="tag oro">Hardware</span></div>
+        <div class="azioni"><button type="button" data-r="agg">Si aggiorna</button><button type="button" data-r="sost">Va sostituito</button></div>
+        <p class="spiega">Supportano pochi algoritmi fissi: di solito si sostituisce la carta, il chip o il dispositivo.</p>
+      </div>
+      <div class="card disp" data-ok="sost">
+        <div class="disp-testa"><h3>Chiave dell'avvio sicuro</h3><span class="tag oro">Hardware</span></div>
+        <div class="azioni"><button type="button" data-r="agg">Si aggiorna</button><button type="button" data-r="sost">Va sostituito</button></div>
+        <p class="spiega">All'accensione verifica una firma e non si aggiorna: va scelta perché resti sicura per tutta la vita del dispositivo.</p>
+      </div>
+      <div class="card disp" data-ok="agg">
+        <div class="disp-testa"><h3>Circuito riprogrammabile (FPGA)</h3><span class="tag oro">Hardware</span></div>
+        <div class="azioni"><button type="button" data-r="agg">Si aggiorna</button><button type="button" data-r="sost">Va sostituito</button></div>
+        <p class="spiega">È l'eccezione tra i chip: si può riconfigurare anche dopo l'installazione.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= PASSO 3 · Laboratorio: i dati già protetti ================= -->
+  <section class="passo" id="sezCasiLab" aria-label="Laboratorio: i dati già protetti" hidden>
     <div class="lab" aria-live="polite">
       <div class="caso-testa"><span class="contatore-caso" id="contCaso"></span><span class="avanzamento" id="avanzamento" aria-hidden="true"></span></div>
       <p class="caso-titolo" id="titoloCaso"></p>
@@ -105,7 +145,7 @@
     <p class="fonte">Ogni risposta riporta quello che dice il NIST CSWP 39-upd1.</p>
   </section>
 
-  <!-- ================= PASSO 3 · Cosa ti porti a casa ================= -->
+  <!-- ================= PASSO 4 · Cosa ti porti a casa ================= -->
   <section class="passo" id="sezCasa" aria-label="Cosa ti porti a casa" hidden>
     <p class="testo" style="max-width: none;">Quattro cose da ricordare, valide per chiunque usi un telefono o un computer.</p>
     <div class="punti-lista">
@@ -118,7 +158,7 @@
     <p class="fonte">Questi quattro punti applicano all'uso personale le indicazioni del NIST CSWP 39-upd1.</p>
   </section>
 
-  <!-- ================= PASSO 4 · Verifica ================= -->
+  <!-- ================= PASSO 5 · Verifica ================= -->
   <section class="passo" id="sezQuiz" aria-label="Verifica" hidden>
     <p class="testo">Rispondi correttamente alle tre domande per completare il modulo.</p>
     <div class="domanda" data-q="1">
@@ -151,7 +191,7 @@
   <div class="passi-nav">
     <button type="button" class="btn-secondario" id="indietro">Indietro</button>
     <button type="button" id="continua">Continua</button>
-    <span id="contatore">Passo 1 di 4</span>
+    <span id="contatore">Passo 1 di 5</span>
     <span class="spazio"></span>
     <span class="punti" id="punti" aria-hidden="true"></span>
   </div>
@@ -174,20 +214,29 @@
     document.getElementById("continua").addEventListener("click", function () { mostraPasso(attuale + 1); });
     document.getElementById("indietro").addEventListener("click", function () { mostraPasso(attuale - 1); });
 
-    /* ---------- Passo 2: i sette casi (tutti tratti dal NIST CSWP 39-upd1) ---------- */
+    /* ---------- Passo 2: software o hardware ---------- */
+    var risolti = 0;
+    document.querySelectorAll(".disp").forEach(function (c) {
+      c.addEventListener("click", function (e) {
+        var b = e.target.closest("button");
+        if (!b || c.classList.contains("risolto")) return;
+        c.querySelectorAll("button").forEach(function (x) { x.classList.remove("sbagliata"); });
+        if (b.getAttribute("data-r") === c.getAttribute("data-ok")) {
+          c.classList.add("risolto");
+          c.querySelector(".spiega").textContent = "✓ " + b.textContent + ". " + c.querySelector(".spiega").textContent;
+          risolti++;
+          if (risolti === 4) {
+            document.getElementById("introDisp").hidden = true;
+            document.getElementById("boxDisp").hidden = false;
+          }
+        } else {
+          b.classList.add("sbagliata");
+        }
+      });
+    });
+
+    /* ---------- Passo 3: i casi sui dati (tutti tratti dal NIST CSWP 39-upd1) ---------- */
     var CASI = [
-      { t: "Il browser e le app del telefono o del computer", q: "Esce un nuovo algoritmo. Cosa succede?",
-        o: ["Lo ricevono con un aggiornamento", "Vanno sostituiti", "Non possono usarlo"], ok: 0,
-        s: "Nel software è più facile aggiungere algoritmi: arrivano con gli aggiornamenti." },
-      { t: "La SIM, una smart card o una chiavetta USB di firma", q: "Il loro algoritmo viene ritirato. Cosa succede di solito?",
-        o: ["Si aggiornano da sole", "Si sostituisce la carta o il dispositivo", "Smettono di usare la crittografia"], ok: 1,
-        s: "Supportano un insieme limitato di algoritmi e la chiave privata non esce mai dal chip: di solito si sostituisce la carta o il dispositivo." },
-      { t: "Il chip di sicurezza del portatile o del telefono (TPM)", q: "Bisogna cambiare il suo algoritmo. Cosa succede?",
-        o: ["Si cambia con un clic", "Si sostituisce il chip in negozio", "Spesso si deve cambiare il dispositivo"], ok: 2,
-        s: "Questi chip sono fatti apposta per essere difficili da sostituire: cambiare algoritmo spesso vuol dire cambiare il dispositivo." },
-      { t: "L'avvio sicuro del computer", q: "All'accensione verifica una firma digitale. La sua chiave pubblica si può aggiornare?",
-        o: ["Sì, con ogni aggiornamento", "No: deve restare sicura per tutta la vita del dispositivo", "Non serve: non usa firme"], ok: 1,
-        s: "La chiave pubblica e il programma di verifica sono nel codice di avvio e non si aggiornano: vanno scelti pensando a tutta la vita del dispositivo." },
       { t: "Un tuo file cifrato con un algoritmo ritirato", q: "Cosa succede?",
         o: ["Non si può più aprire", "Si può ancora aprire, ma non si cifrano nuovi file con quell'algoritmo", "Si cancella da solo"], ok: 1,
         s: "Il NIST fa l'esempio di Triple DES: cifrare nuovi dati viene bloccato, ma decifrare i file già salvati può restare permesso. Serve un modo per gestire questi dati." },
@@ -232,7 +281,7 @@
     document.getElementById("prossimoCaso").addEventListener("click", function () { caso = (caso + 1) % CASI.length; mostraCaso(); });
     mostraCaso();
 
-    /* ---------- Passo 4: quiz (il modulo si completa con 3 risposte giuste) ---------- */
+    /* ---------- Passo 5: quiz (il modulo si completa con 3 risposte giuste) ---------- */
     var giuste = {};
     var fbQuiz = document.getElementById("fbQuiz");
     function controllaQuiz() {

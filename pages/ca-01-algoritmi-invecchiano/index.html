@@ -17,6 +17,7 @@
   .ic.oro { background: var(--color-accent-100); color: var(--color-accent-text); }
   .card .num { display: block; font-size: 15px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--color-accent-text); }
   .card-head { display: flex; align-items: center; gap: 14px; }
+  section.passo:first-of-type .griglia-3 { align-items: stretch; }   /* le tre card dell'introduzione hanno la stessa altezza */
   .tag { display: inline-block; font-size: 15px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; padding: 3px 10px; border-radius: 999px; background: var(--color-primary-100); color: var(--color-primary); white-space: nowrap; }
   .tag.oro { background: var(--color-accent-100); color: var(--color-accent-text); }
 
@@ -32,7 +33,7 @@
   .risultato.ko { background: var(--color-error-100); color: var(--color-error); }
 
   /* Passo 2: laboratorio dei bit */
-  .griglia-bit { display: grid; grid-template-columns: 430px minmax(0, 1fr); gap: 24px; align-items: start; }
+  .griglia-bit { display: grid; grid-template-columns: 460px minmax(0, 1fr); gap: 24px; align-items: start; }
   .griglia-bit .colonna { gap: 12px; }
   .griglia-bit .testo { font-size: 20px; }
   .regola { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
@@ -166,7 +167,7 @@
       <div class="card">
         <div class="card-head"><span class="ic oro"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>
         <span><span class="num">Questo modulo</span><h3>Da DES ad AES</h3></span></div>
-        <p>La crittografia simmetrica e la storia di DES, Triple DES e AES: il primo esempio con cui il NIST mostra che gli algoritmi invecchiano.</p>
+        <p>La crittografia simmetrica e la storia di DES, Triple DES e AES: tre algoritmi che, uno dopo l'altro, si sono dati il cambio.</p>
       </div>
     </div>
     <p class="fonte" style="max-width: none;">Riferimento: NIST CSWP 39-upd1, <em>Considerations for Achieving Crypto Agility</em> (2025). Il documento è in «Risorse».</p>
@@ -198,12 +199,13 @@
   <section class="passo" aria-label="Laboratorio dei bit" hidden>
     <div class="griglia-bit">
       <div class="colonna">
-        <p class="testo">Per un computer ogni lettera è una fila di <strong>8 bit</strong>. Anche la chiave è una fila di bit. Cifrare vuol dire mescolare i bit del messaggio con quelli della chiave.</p>
-        <div class="regola" aria-label="Regola di mescolamento">
+        <p class="testo">Lettere e chiave sono file di <strong>8 bit</strong>. Lo <strong>XOR</strong> confronta i bit nella stessa posizione:</p>
+        <div class="regola" aria-label="Regola XOR">
           <span><b>bit uguali</b> → 0</span><span><b>bit diversi</b> → 1</span>
         </div>
+        <p class="testo">Rifacendo lo XOR con <strong>la stessa chiave</strong> si torna al messaggio.</p>
         <div class="box-info"><span><strong>Prova:</strong> clicca i bit della chiave di Alice, poi dai a Bob una chiave sbagliata.</span></div>
-        <p class="fonte">Esempio semplificato (XOR). AES mescola i bit in molti cicli, ma anche lui usa la stessa chiave per cifrare e decifrare.</p>
+        <p class="fonte">Esempio semplificato: AES mescola i bit molte volte, ma usa anche lui la stessa chiave per cifrare e decifrare.</p>
       </div>
       <div class="lab" aria-live="polite">
         <div class="bit-riga">
@@ -242,7 +244,7 @@
 
   <!-- ================= PASSO 3 · DES, Triple DES e AES a confronto ================= -->
   <section class="passo" aria-label="DES, Triple DES e AES a confronto" hidden>
-    <p class="testo" style="max-width: none;">Tre algoritmi simmetrici, tre generazioni. Cambiano soprattutto la <strong>chiave</strong> (quanti bit ha il segreto) e il <strong>blocco</strong> (quanti bit di messaggio si cifrano in un colpo). <strong>Scegli un algoritmo.</strong></p>
+    <p class="testo" style="max-width: none;">Tre generazioni di algoritmi simmetrici. Cambiano la <strong>chiave</strong> (quanti bit ha il segreto) e il <strong>blocco</strong> (la lunghezza dei pezzi in cui si divide il messaggio per cifrarlo). <strong>Scegli un algoritmo.</strong></p>
     <div class="confronto">
       <div class="scelta-alg" id="sceltaAlg" role="group" aria-label="Scegli l'algoritmo da confrontare">
         <button type="button" data-a="0">DES<small>1977</small></button>
@@ -281,9 +283,9 @@
         </div>
         <span class="etichetta">Chi attacca?</span>
         <div class="preset tre" id="attaccante">
-          <button type="button" data-v="9">1 PC<small>1 miliardo/s</small></button>
-          <button type="button" data-v="12">1.000 PC<small>1.000 miliardi/s</small></button>
-          <button type="button" data-v="15">1 milione di PC<small>10¹⁵ chiavi/s</small></button>
+          <button type="button" data-v="9">1 PC di casa<small>1 miliardo/s</small></button>
+          <button type="button" data-v="12">1.000 PC in rete<small>1.000 miliardi/s</small></button>
+          <button type="button" data-v="15">Un data center<small>1 milione di PC</small></button>
         </div>
       </div>
       <div class="lab" aria-live="polite">
@@ -292,7 +294,7 @@
         <div class="risultato" id="vVerdetto"></div>
       </div>
     </div>
-    <p class="fonte" style="max-width: none;">Ipotesi didattica: ogni PC prova 1 miliardo di chiavi al secondo. I tempi servono solo a confrontare le lunghezze delle chiavi.</p>
+    <p class="fonte" style="max-width: none;">Nei calcoli immaginiamo un buon PC di casa, con scheda grafica, che prova un miliardo di chiavi al secondo: una stima per confrontare, non un dato reale.</p>
   </section>
 
   <!-- ================= PASSO 4 · La linea del tempo ================= -->
@@ -339,7 +341,7 @@
       </div>
       <div class="card caso">
         <span class="num">Browser · 2015</span><h3>RC4</h3>
-        <p class="sotto">Cifrario simmetrico, come DES e AES.</p>
+        <p class="sotto">Simmetrico «a flusso»: cifra un pezzetto alla volta, senza blocchi.</p>
         <p class="chiuso">Usato per anni per proteggere i siti web.</p>
         <div class="rivela">
           <p>Debole, ma i browser lo tengono a lungo per compatibilità, fino al divieto del <strong>2015</strong>.</p>
@@ -476,7 +478,7 @@
       { nome: "Triple DES · DES applicato tre volte",
         metafora: "La stessa serratura DES usata tre volte con chiavi diverse: un modo rapido per renderla più robusta riusando ciò che c'era già. Ma il blocco resta piccolo.",
         chiave: 112, chiaveTesto: "3 × 56 bit, sicurezza reale 112 bit", blocco: 64, bloccoTesto: "64 bit (8 lettere)",
-        vel: "Lenta: fa tre volte il lavoro di DES.", oggi: "Vietato dal NIST dal 2024." },
+        vel: "Più lenta di DES: per ogni blocco esegue DES tre volte.", oggi: "Vietato dal NIST dal 2024." },
       { nome: "AES · Advanced Encryption Standard",
         metafora: "Un algoritmo nuovo, progettato da zero: chiavi molto più lunghe e blocchi grandi il doppio.",
         chiave: 256, chiaveTesto: "128, 192 o 256 bit", blocco: 128, bloccoTesto: "128 bit (16 lettere)",
@@ -506,7 +508,7 @@
     var nbit = document.getElementById("nbit");
     // Ipotesi didattica: ogni PC prova 1 miliardo (10^9) di chiavi al secondo
     var logVelocita = 12;                  // log10 delle chiavi al secondo (default: 1.000 PC)
-    var NOMI_ATTACCANTE = { 9: "1 PC", 12: "1.000 PC", 15: "1 milione di PC" };
+    var NOMI_ATTACCANTE = { 9: "1 PC di casa", 12: "1.000 PC in rete", 15: "un data center" };
     var ETA_UNIVERSO = 1.38e10;            // anni
     function potenza10(log10) {
       var esp = Math.floor(log10), mant = Math.pow(10, log10 - esp);

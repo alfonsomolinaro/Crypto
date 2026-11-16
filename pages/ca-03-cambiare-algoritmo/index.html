@@ -17,6 +17,25 @@
   .ic.oro { background: var(--color-accent-100); color: var(--color-accent-text); }
   .card .num { display: block; font-size: 15px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--color-accent-text); }
   .card-head { display: flex; align-items: center; gap: 14px; }
+  section.passo:first-of-type .griglia-3, #sezSintesi .griglia-3 { align-items: stretch; }   /* card della stessa altezza */
+
+  /* Passo 2: il caso POODLE */
+  .etichetta-lab { font-size: 19px; font-weight: 600; color: var(--color-primary); }
+  .catena { display: grid; grid-template-columns: 190px minmax(0, 1fr) 170px minmax(0, 1fr) 190px; align-items: center; gap: 10px; }
+  .nodo { background: #fff; border: 1.5px solid var(--color-border); border-radius: 14px; padding: 12px 10px; display: flex; flex-direction: column; align-items: center; gap: 6px;
+    font-size: 18px; font-weight: 600; color: var(--color-primary); text-align: center; transition: border-color .3s, background .3s; }
+  .nodo svg { width: 32px; height: 32px; }
+  .nodo.attivo { border-color: var(--color-error); background: var(--color-error-100); color: var(--color-error); }
+  .filo { height: 6px; border-radius: 3px; background: var(--color-border); transition: background .4s; }
+  .filo.ok { background: var(--color-success); }
+  .filo.ko { background: var(--color-error); }
+  .filo.warn { background: var(--color-warning); }
+  .canale { text-align: center; font-size: 18px; font-weight: 600; color: var(--color-text-muted); min-height: 27px; }
+  .canale.ok { color: var(--color-success); }
+  .canale.ko { color: var(--color-error); }
+  .canale.warn { color: var(--color-warning); }
+  #azioniPoodle button:disabled { opacity: .45; cursor: default; }
+  @media (prefers-reduced-motion: reduce) { .filo, .nodo { transition: none; } }
   .tag { display: inline-block; font-size: 15px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; padding: 3px 10px; border-radius: 999px; background: var(--color-primary-100); color: var(--color-primary); white-space: nowrap; }
   .tag.ok { background: var(--color-success-100); color: var(--color-success); }
   .tag.ko { background: var(--color-error-100); color: var(--color-error); }
@@ -114,7 +133,30 @@
     <p class="fonte">Riferimento: NIST CSWP 39-upd1, <em>Considerations for Achieving Crypto Agility</em> (2025). Il documento è in «Risorse».</p>
   </section>
 
-  <!-- ================= PASSO 2 · Laboratorio: il collegamento ================= -->
+  <!-- ================= PASSO 2 · Cosa succede se uno resta indietro (caso POODLE) ================= -->
+  <section class="passo" aria-label="Cosa succede se uno resta indietro" hidden>
+    <p class="testo" style="max-width: none;">Se una parte resta indietro, si usa <strong>il vecchio algoritmo in comune</strong>: chi sa romperlo legge i dati. Caso reale: <strong>POODLE (2014)</strong>, una nota vulnerabilità di sicurezza.</p>
+    <div class="lab">
+      <div class="canale" id="canale" aria-live="polite"></div>
+      <div class="catena">
+        <div class="nodo" id="nBrowser"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M3 8h18M8 21h8"/></svg>Il tuo browser</div>
+        <div class="filo" id="filo1"></div>
+        <div class="nodo" id="nEva"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>Eva nel mezzo</div>
+        <div class="filo" id="filo2"></div>
+        <div class="nodo" id="nSito"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="7" rx="1.5"/><rect x="3" y="14" width="18" height="7" rx="1.5"/><path d="M7 6.5h.01M7 17.5h.01"/></svg>Il sito</div>
+      </div>
+      <div class="azioni" id="azioniPoodle">
+        <button type="button" data-f="1">1 · Collegamento moderno</button>
+        <button type="button" data-f="2" disabled>2 · Eva lo interrompe</button>
+        <button type="button" data-f="3" disabled>3 · Il browser ripiega</button>
+        <button type="button" data-f="4" disabled>4 · Eva sfrutta la falla</button>
+      </div>
+      <div class="risultato" id="esitoPoodle" aria-live="polite"></div>
+    </div>
+    <p class="fonte" style="max-width: none;">Esempio reale, non tratto dal documento NIST, che chiama questo rischio <em>attacco di downgrade</em>.</p>
+  </section>
+
+  <!-- ================= PASSO 3 · Laboratorio: il collegamento ================= -->
   <section class="passo" id="sezColl" aria-label="Laboratorio: il collegamento" hidden>
     <p class="testo" style="max-width: none;">Per <strong>scambiarsi la chiave</strong>, dispositivo e servizio scelgono <strong>il migliore algoritmo che hanno in comune</strong>. Attiva o disattiva gli algoritmi dei due lati e guarda cosa succede.</p>
     <div class="collegamento">
@@ -366,6 +408,42 @@
       fbQuiz.className = "feedback ok";
       fbQuiz.textContent = "✓ Modulo già completato.";
     });
+
+    /* ---------- Passo 2: il caso POODLE (esempio reale, non tratto dal NIST) ---------- */
+    var FASI_POODLE = [
+      { canale: "", c: "", f: ["", ""], eva: false, esito: "Premi il passaggio 1.", cls: "risultato" },
+      { canale: "TLS · protocollo moderno", c: "ok", f: ["ok", "ok"], eva: false,
+        esito: "Browser e sito provano a collegarsi con il protocollo moderno e sicuro.", cls: "risultato" },
+      { canale: "✗ collegamento interrotto", c: "ko", f: ["ok", "ko"], eva: true,
+        esito: "Eva, nel mezzo, fa fallire di proposito il collegamento.", cls: "risultato" },
+      { canale: "SSL 3.0 · protocollo del 1996", c: "warn", f: ["warn", "warn"], eva: false,
+        esito: "Per compatibilità il browser riprova con il vecchio SSL 3.0, ancora acceso sul sito.", cls: "risultato" },
+      { canale: "SSL 3.0 · Eva legge i dati", c: "ko", f: ["ko", "ko"], eva: true,
+        esito: "✗ Eva sfrutta una falla di SSL 3.0 e ruba i dati di accesso. Poi SSL 3.0 fu spento ovunque.", cls: "risultato ko" }
+    ];
+    var fasePoodle = 0;
+    function disegnaPoodle() {
+      var f = FASI_POODLE[fasePoodle];
+      var can = document.getElementById("canale");
+      can.textContent = f.canale; can.className = "canale " + f.c;
+      document.getElementById("filo1").className = "filo " + f.f[0];
+      document.getElementById("filo2").className = "filo " + f.f[1];
+      document.getElementById("nEva").classList.toggle("attivo", f.eva);
+      var e = document.getElementById("esitoPoodle");
+      e.className = f.cls; e.textContent = f.esito;
+      document.querySelectorAll("#azioniPoodle button").forEach(function (b) {
+        b.disabled = +b.getAttribute("data-f") !== fasePoodle + 1;
+      });
+    }
+    document.getElementById("azioniPoodle").addEventListener("click", function (e) {
+      var b = e.target.closest("button");
+      if (!b || b.disabled) return;
+      fasePoodle = +b.getAttribute("data-f");
+      disegnaPoodle();
+      var prossimo = document.querySelector('#azioniPoodle button[data-f="' + (fasePoodle + 1) + '"]');
+      if (prossimo) prossimo.focus();
+    });
+    disegnaPoodle();
 
     mostraPasso(0);
   </script>

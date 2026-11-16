@@ -5,8 +5,8 @@
    ========================================================================= */
 window.COURSE = {
   id: "crittografia-basi",              // chiave del salvataggio: cambiala per ogni corso
-  title: "Crypto agility: dalla simmetrica al post-quantum",
-  description: "Perché gli algoritmi crittografici invecchiano, cosa cambia con i computer quantistici e cosa significa per te. Basato sul documento NIST CSWP 39 sulla crypto agility.",
+  title: "Crypto agility: quando la crittografia deve cambiare",
+  description: "Perché gli algoritmi che proteggono i nostri dati invecchiano, cosa cambia con i computer quantistici e come ci si prepara. Basato sul documento NIST CSWP 39.",
   navigation: "vincolata",              // "vincolata" (ogni lezione sblocca la successiva) | "libera"
   // MODALITÀ SVILUPPO: tutte le lezioni sbloccate, badge DEV, pannello stati e "Azzera progressi".
   // Mettere false prima di consegnare il corso agli studenti.
