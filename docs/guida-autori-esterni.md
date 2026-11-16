@@ -32,6 +32,7 @@ Il kit contiene tutto il necessario, e nient'altro:
 ```
 kit-autori/
 ├─ LEGGIMI-PRIMA.md     ← questa guida
+├─ PROMPT-CLAUDE.md     ← le regole da dare a Claude se vuoi farti aiutare (vedi sotto)
 ├─ prova.html           ← PROVA della pagina: simula il Player e controlla il completamento
 ├─ pages/
 │  ├─ pagina.css        ← il foglio di stile del corso (LO USI, NON LO MODIFICHI)
@@ -40,10 +41,24 @@ kit-autori/
 │     └─ immagine-esempio.svg
 └─ player/              ← file tecnici del corso (NON TOCCARE)
    ├─ tokens.css · player-bridge.js
-   └─ fonts/
+   └─ fonts/            ← font Inter e la sua licenza (OFL.txt)
 ```
 
 Lavori **solo dentro `kit-autori/pages/`**.
+
+### Vuoi farti aiutare da Claude?
+
+Puoi far scrivere la pagina a Claude invece di modificare il modello a mano. Il file `PROMPT-CLAUDE.md` contiene tutte le regole del corso (misure, stile, completamento, accessibilità).
+
+| Dove lavori | Come fare |
+|---|---|
+| **Claude (claude.ai o app desktop)** | Crea un **Progetto** e nelle *conoscenze del progetto* carica `PROMPT-CLAUDE.md`, `pages/pagina.css` e `pages/_modello/index.html`. Poi in una chat del progetto scrivi «Crea una pagina di lezione secondo il prompt» e compila la parte finale del prompt, **«LA LEZIONE DA CREARE»** (titolo, contenuti, interazione, quando si completa). Salva il codice ricevuto come `pages/<la-tua-cartella>/index.html`, con le eventuali immagini nella stessa cartella. |
+| **Claude Code** (sul PC) | Apri Claude Code nella cartella `kit-autori` e scrivi: «Leggi `PROMPT-CLAUDE.md` e crea in `pages/` la cartella `03-simmetrica` con questa lezione: …», poi incolla i contenuti. Claude Code crea i file al posto giusto. |
+| **Altri assistenti** (ChatGPT ecc.) | Copia il riquadro del prompt da `PROMPT-CLAUDE.md`, compila la parte finale e incollalo nella chat. |
+
+Il blocco per `course.js` che Claude ti propone **non serve a te**: lo inserisce il responsabile del corso.
+
+> **Anche se la pagina l'ha scritta Claude, la prova con `prova.html` (§ 6) resta obbligatoria**: l'assistente può sbagliare misure o completamento. Se qualcosa non va, descrivi a Claude cosa vedi e chiedi di correggere.
 
 ## 2. Cosa puoi toccare e cosa no
 

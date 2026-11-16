@@ -12,4 +12,4 @@ Il percorso di ogni file si indica in `course.js`, per esempio:
 { type: "html", audio: "media/audio/p02.mp3", ... }
 ```
 
-Per la lezione 1 del corso di prova serve il file `media/video/intro.mp4`: finché non c'è, il Player mostra l'errore "Il video non è disponibile". Per provare il resto del corso nel frattempo, apri `index.html?dev=1` (tutte le lezioni sbloccate).
+Il video introduttivo del corso è `media/video/intro.mp4`. Se un file indicato in `course.js` manca, il Player mostra l'errore "Il video non è disponibile": per provare il resto del corso nel frattempo, apri `index.html?dev=1` (tutte le lezioni sbloccate).
