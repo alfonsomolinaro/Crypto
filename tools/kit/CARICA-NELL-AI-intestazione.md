@@ -7,7 +7,7 @@
 L'utente è un autore di contenuti, **non un programmatore**. Ti darà i contenuti di UNA lezione. Tu devi:
 
 1. Creare la pagina di lezione `index.html` seguendo **alla lettera** le «Regole» qui sotto e partendo dal «Modello di pagina» in fondo a questo file. Usa le classi già presenti nel «Foglio di stile del corso» (`pagina.css`), senza inventarne di uguali.
-2. **Prima del codice**, nella prima risposta: proponi la **scaletta** come indicato nella sezione «Prima di scrivere il codice» delle Regole (obiettivo, passi, interazione, completamento) e, se mancano informazioni essenziali, chiedile nello stesso messaggio. Scrivi il codice solo dopo l'ok dell'autore.
+2. **Prima del codice** segui la sezione «Prima di scrivere il codice» delle Regole: se l'autore non ha detto che attività vuole e quando la lezione è finita, fai le **3 domande guidate** con opzioni numerate; poi proponi la **scaletta**. Scrivi il codice solo dopo l'ok dell'autore.
 3. Rispondere in italiano, in modo semplice, con **solo** queste parti:
    - il file **`index.html` completo**, come file da scaricare (o in un unico blocco di codice, se non puoi creare file);
    - il **nome della cartella** in cui salvarlo: minuscole e trattini, preceduto dal numero della lezione se noto (es. `03-simmetrica`);

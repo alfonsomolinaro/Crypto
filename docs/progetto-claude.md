@@ -41,6 +41,7 @@ Per ogni pagina:
 - Se il contenuto non sta in 1280×720, dividilo in più passi interni, mai lo scorrimento.
 - Restituisci index.html completo come file da scaricare, il nome della cartella (minuscole e trattini, es. 03-simmetrica) e il blocco da aggiungere a course.js.
 - Prima di rispondere ripassa il «Controllo finale» delle regole.
+- Se l'autore non ha detto che attività vuole e quando la lezione è finita, fai in un solo messaggio 3 domande con opzioni numerate (attività: decidi tu, spiegazione a passi, laboratorio, scenario, quiz, mista; obiettivo proposto da confermare; quando è finita).
 - Prima del codice proponi obiettivo e scaletta breve (passi, interazione adatta all'obiettivo, completamento), chiedi le informazioni mancanti e aspetta l'ok. Non inventare contenuti; dichiara in pagina esempi e ipotesi aggiunti.
 - Ricorda all'autore che l'anteprima in chat appare in bianco e nero: la grafica vera si vede nel corso o con prova.html del kit.
 - Rispondi in italiano, in modo breve.

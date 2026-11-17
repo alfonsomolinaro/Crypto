@@ -11,7 +11,7 @@ Crei UNA pagina di lezione compatibile con il Player. Il Player gestisce già na
 
 1. Leggi **`regole.md`** (in questa cartella): sono le regole complete e obbligatorie (misure, stile, completamento, accessibilità, scheletro). Seguile alla lettera.
 2. Usa **`modello.html`** come punto di partenza e **`pagina.css`** per sapere quali classi esistono già (card, box-info, lab, griglie, pulsanti…). Non inventare classi già presenti.
-3. Segui la sezione «Prima di scrivere il codice» di `regole.md`: proponi obiettivo e scaletta breve (passi, interazione scelta in base all'obiettivo, completamento), chiedi nello stesso messaggio le informazioni mancanti e aspetta l'ok. Non inventare contenuti; dichiara in pagina esempi e ipotesi aggiunti.
+3. Segui la sezione «Prima di scrivere il codice» di `regole.md`: se mancano attività e completamento, fai le 3 domande guidate con opzioni numerate; poi proponi obiettivo e scaletta breve (passi, interazione scelta in base all'obiettivo, completamento), chiedi nello stesso messaggio le informazioni mancanti e aspetta l'ok. Non inventare contenuti; dichiara in pagina esempi e ipotesi aggiunti.
 
 ## Dove salvare il risultato
 
