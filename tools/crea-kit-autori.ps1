@@ -37,12 +37,26 @@ Crea-Zip $skill "pagina-lezione" (Join-Path $root "skill-pagina-lezione.zip")
 # ---------- 2. Kit per autori esterni ----------
 $kit = Join-Path $root "kit-autori"
 if (Test-Path $kit) { Remove-Item -Recurse -Force $kit }
-New-Item -ItemType Directory -Force (Join-Path $kit "pages\_modello"), (Join-Path $kit "player\fonts"), (Join-Path $kit ".claude\skills") | Out-Null
+New-Item -ItemType Directory -Force (Join-Path $kit "pages\_modello"), (Join-Path $kit "player\fonts"), (Join-Path $kit ".claude\skills"), (Join-Path $kit "approfondimenti") | Out-Null
 
-Copy-Item (Join-Path $root "docs\guida-autori-esterni.md") (Join-Path $kit "LEGGIMI-PRIMA.md")
-Copy-Item (Join-Path $root "docs\prompt-pagine-lezione.md") (Join-Path $kit "PROMPT-CLAUDE.md")
-Copy-Item (Join-Path $root "skill-pagina-lezione.zip")      (Join-Path $kit "skill-pagina-lezione.zip")
+# Guida breve (5 passi) in cima; la guida lunga va in approfondimenti/
+Copy-Item (Join-Path $root "tools\kit\LEGGIMI-PRIMA.md")    (Join-Path $kit "LEGGIMI-PRIMA.md")
+Copy-Item (Join-Path $root "docs\guida-autori-esterni.md") (Join-Path $kit "approfondimenti\GUIDA-COMPLETA.md")
+Copy-Item (Join-Path $root "skill-pagina-lezione.zip")      (Join-Path $kit "approfondimenti\skill-pagina-lezione.zip")
 Copy-Item $skill -Recurse                                   (Join-Path $kit ".claude\skills\pagina-lezione")
+
+# CARICA-NELL-AI.md: UN solo file da allegare in chat (istruzioni per l'AI + regole + pagina.css + modello)
+$utf8 = New-Object System.Text.UTF8Encoding $false
+$ai = New-Object System.Collections.Generic.List[string]
+$ai.AddRange([string[]](Get-Content (Join-Path $root "tools\kit\CARICA-NELL-AI-intestazione.md") -Encoding UTF8))
+$ai.AddRange([string[]]@("", "## Regole (obbligatorie)", "", '```text'))
+$ai.AddRange([string[]]$righe[($inizio + 1)..($fine - 1)])
+$ai.AddRange([string[]]@('```', "", "## Foglio di stile del corso (pages/pagina.css)", "", '```css'))
+$ai.AddRange([string[]](Get-Content (Join-Path $root "pages\pagina.css") -Encoding UTF8))
+$ai.AddRange([string[]]@('```', "", "## Modello di pagina (pages/_modello/index.html)", "", '```html'))
+$ai.AddRange([string[]](Get-Content (Join-Path $root "pages\_modello\index.html") -Encoding UTF8))
+$ai.Add('```')
+[System.IO.File]::WriteAllLines((Join-Path $kit "CARICA-NELL-AI.md"), $ai, $utf8)
 Copy-Item (Join-Path $root "tools\kit\prova.html")          (Join-Path $kit "prova.html")
 Copy-Item (Join-Path $root "pages\pagina.css")              (Join-Path $kit "pages\pagina.css")
 Copy-Item (Join-Path $root "pages\_modello\*")              (Join-Path $kit "pages\_modello")

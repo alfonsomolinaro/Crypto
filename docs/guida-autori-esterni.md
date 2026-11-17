@@ -31,11 +31,13 @@ Il kit contiene tutto il necessario, e nient'altro:
 
 ```
 kit-autori/
-├─ LEGGIMI-PRIMA.md     ← questa guida
-├─ PROMPT-CLAUDE.md     ← le regole da dare a Claude se vuoi farti aiutare (vedi sotto)
-├─ skill-pagina-lezione.zip ← la stessa cosa come «skill» da caricare su claude.ai
-├─ .claude/             ← la skill per Claude Code (non toccare)
+├─ LEGGIMI-PRIMA.md     ← la guida breve: 5 passi per creare la lezione con l'AI
+├─ CARICA-NELL-AI.md    ← l'unico file da allegare in chat all'AI (Claude, ChatGPT…)
 ├─ prova.html           ← PROVA della pagina: simula il Player e controlla il completamento
+├─ approfondimenti/
+│  ├─ GUIDA-COMPLETA.md ← questa guida (per lavorare a mano o per i dettagli)
+│  └─ skill-pagina-lezione.zip ← le stesse regole come «skill» per claude.ai (facoltativo)
+├─ .claude/             ← la skill per Claude Code (non toccare)
 ├─ pages/
 │  ├─ pagina.css        ← il foglio di stile del corso (LO USI, NON LO MODIFICHI)
 │  └─ _modello/         ← la pagina da copiare
@@ -50,14 +52,14 @@ Lavori **solo dentro `kit-autori/pages/`**.
 
 ### Vuoi farti aiutare da Claude?
 
-Puoi far scrivere la pagina a Claude invece di modificare il modello a mano. Il file `PROMPT-CLAUDE.md` contiene tutte le regole del corso (misure, stile, completamento, accessibilità).
+Questa è la guida completa, per chi modifica la pagina a mano. Il modo più semplice è far scrivere la pagina all'AI: **segui i 5 passi di `LEGGIMI-PRIMA.md`**. In breve: allega `CARICA-NELL-AI.md` in una chat (claude.ai, ChatGPT o altro), scrivi i contenuti della lezione, salva il file `index.html` che ricevi in `pages/<la-tua-cartella>/` e provalo con `prova.html`.
+
+Altre possibilità, facoltative:
 
 | Dove lavori | Come fare |
 |---|---|
-| **Claude Code** (sul PC), il più semplice | Apri Claude Code nella cartella `kit-autori` e scrivi: «Crea la pagina della lezione 3 nella cartella `03-simmetrica`: …», poi incolla i contenuti. Il kit contiene già la skill `pagina-lezione`: Claude Code segue da solo le regole e crea i file al posto giusto. |
-| **claude.ai o app Claude** (tutte le chat) | Una volta sola: *Impostazioni › Funzionalità › Skill › Carica skill* e scegli `skill-pagina-lezione.zip` (senza estrarlo). Poi in qualsiasi chat scrivi «Crea una pagina di lezione per il Player: …» con titolo, contenuti, interazione e quando la lezione si completa. Salva il file ricevuto come `pages/<la-tua-cartella>/index.html`, con le eventuali immagini nella stessa cartella. |
-| **claude.ai con un Progetto** | Crea un **Progetto**, carica nelle *conoscenze* `PROMPT-CLAUDE.md`, `pages/pagina.css` e `pages/_modello/index.html`, poi in una chat scrivi «Crea una pagina di lezione secondo il prompt» e compila la parte finale del prompt, **«LA LEZIONE DA CREARE»**. |
-| **Altri assistenti** (ChatGPT ecc.) | Copia il riquadro del prompt da `PROMPT-CLAUDE.md`, compila la parte finale e incollalo nella chat. |
+| **Claude Code** (sul PC) | Apri Claude Code nella cartella `kit-autori` e scrivi: «Crea la lezione 3 nella cartella `03-simmetrica`: …», poi i contenuti. La skill inclusa (`.claude/`) applica le regole e crea i file al posto giusto. |
+| **claude.ai, senza allegare ogni volta** | Una volta sola: *Impostazioni › Funzionalità › Skill › Carica skill* e scegli `approfondimenti/skill-pagina-lezione.zip` (senza estrarlo). Poi in qualsiasi chat basta scrivere «Crea una pagina di lezione per il Player: …». |
 
 Il blocco per `course.js` che Claude ti propone **non serve a te**: lo inserisce il responsabile del corso.
 

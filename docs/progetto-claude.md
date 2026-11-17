@@ -7,6 +7,7 @@ Tre modi, dal più semplice. Le regole sono sempre le stesse (`docs/prompt-pagin
 | **Claude Code** nella cartella del corso o del kit | la skill `.claude/skills/pagina-lezione/` | niente: Claude Code la trova da solo |
 | **claude.ai o app Claude** (tutte le chat) | `skill-pagina-lezione.zip` | caricarla nelle impostazioni (§ 1) |
 | **claude.ai o app Claude** (un Progetto dedicato) | le istruzioni qui sotto | creare il Progetto (§ 2) |
+| **Qualsiasi AI** (claude.ai, ChatGPT…), per chi ha **solo il kit autori** | `CARICA-NELL-AI.md` del kit | niente: lo si allega alla chat ogni volta (vedi `LEGGIMI-PRIMA.md` del kit) |
 
 Qualunque strada scegli, la pagina va sempre provata: misure 1280×720, completamento della lezione, nessun errore nella console (nel kit autori con `prova.html`).
 
@@ -20,7 +21,7 @@ Puoi anche richiamarla esplicitamente scrivendo `/pagina-lezione`.
 
 ## 1. Skill su claude.ai (vale in tutte le chat)
 
-1. Scarica `skill-pagina-lezione.zip` (nel repository o nel kit autori). **Non estrarlo.**
+1. Scarica `skill-pagina-lezione.zip` (nel repository, oppure nel kit autori in `approfondimenti/`). **Non estrarlo.**
 2. Su claude.ai: **Impostazioni › Funzionalità › Skill › Carica skill** e scegli lo zip. (Se la voce non c'è, attiva prima *Esecuzione di codice e creazione di file* nella stessa pagina.)
 3. Attiva la skill `pagina-lezione`.
 4. In qualsiasi chat scrivi: «Crea una pagina di lezione per il Player: …» e incolla titolo, contenuti, interazione e quando la lezione è completata. Claude restituisce `index.html` da scaricare e il blocco per `course.js`.
@@ -28,14 +29,14 @@ Puoi anche richiamarla esplicitamente scrivendo `/pagina-lezione`.
 ## 2. Progetto Claude dedicato
 
 1. Su claude.ai: **Progetti › Crea progetto**, per esempio «Pagine del Player».
-2. Nelle **conoscenze del progetto** carica: `docs/prompt-pagine-lezione.md`, `pages/pagina.css` e `pages/_modello/index.html`. (Nel kit autori: `PROMPT-CLAUDE.md`, `pages/pagina.css`, `pages/_modello/index.html`.)
+2. Nelle **conoscenze del progetto** carica: `docs/prompt-pagine-lezione.md`, `pages/pagina.css` e `pages/_modello/index.html`. (Nel kit autori basta un solo file, `CARICA-NELL-AI.md`, che li contiene già tutti e tre.)
 3. Nelle **istruzioni del progetto** incolla il testo seguente:
 
 ```text
 Sei un instructional designer e sviluppatore front-end. In questo progetto crei pagine di lezione per un Player e-learning HTML5 già esistente.
 
 Per ogni pagina:
-- Segui alla lettera le regole del file prompt-pagine-lezione.md (o PROMPT-CLAUDE.md): stage fisso 1280×720 senza scorrimento, ../pagina.css nel <head>, ../../player/player-bridge.js prima dello script, player.complete() solo quando lo studente ha finito (quiz: player.setStatus), stato ripristinato con l'evento player:init, nessuna risorsa da internet, testi ≥ 18 px, colori solo dalle variabili CSS, accessibilità WCAG 2.1 AA.
+- Segui alla lettera le regole del file prompt-pagine-lezione.md (o CARICA-NELL-AI.md): stage fisso 1280×720 senza scorrimento, ../pagina.css nel <head>, ../../player/player-bridge.js prima dello script, player.complete() solo quando lo studente ha finito (quiz: player.setStatus), stato ripristinato con l'evento player:init, nessuna risorsa da internet, testi ≥ 18 px, colori solo dalle variabili CSS, accessibilità WCAG 2.1 AA.
 - Parti dal file index.html del modello e usa le classi già presenti in pagina.css.
 - Se il contenuto non sta in 1280×720, dividilo in più passi interni, mai lo scorrimento.
 - Restituisci index.html completo come file da scaricare, il nome della cartella (minuscole e trattini, es. 03-simmetrica) e il blocco da aggiungere a course.js.

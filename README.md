@@ -17,6 +17,8 @@ Il Player funziona online (GitHub Pages) e offline, aprendo `index.html` con un 
 
 📘 **[Manuale d'uso del Player](docs/manuale-player.md)**: come si usa il corso e come si crea o modifica.
 
+❓ **[Domande frequenti](FAQ.md)**: risposte brevi con il file da aprire e cosa fare.
+
 ## Come aprire il corso
 
 - **Offline:** doppio clic su `index.html`.
@@ -38,7 +40,7 @@ Le regole per creare le pagine di lezione sono in **[`docs/prompt-pagine-lezione
 - **Claude Code:** il repository contiene la skill `.claude/skills/pagina-lezione/`. Basta aprire Claude Code nella cartella del corso e chiedere «crea la pagina della lezione N» con i contenuti (oppure `/pagina-lezione`).
 - **claude.ai, in tutte le chat:** carica `skill-pagina-lezione.zip` in *Impostazioni › Funzionalità › Skill*.
 - **claude.ai, con un Progetto:** istruzioni del progetto pronte da incollare e i 3 file da caricare.
-- **Autori esterni:** il kit (`kit-autori.zip`) contiene la skill, il suo zip e `PROMPT-CLAUDE.md`, con le istruzioni nella guida `LEGGIMI-PRIMA.md`.
+- **Autori esterni (solo il kit, senza il progetto):** in `kit-autori.zip` c'è `CARICA-NELL-AI.md`, un unico file da allegare in chat a qualsiasi AI. I 5 passi sono in `LEGGIMI-PRIMA.md`.
 
 Facoltativo: un file `CLAUDE.md` nella cartella del corso (non è nel repository, ognuno crea il proprio) per regole personali, per esempio «chiedi conferma prima di ogni push».
 
@@ -54,9 +56,9 @@ Qualunque assistente si usi, la pagina va sempre provata: misure 1280×720, comp
 | `pages/` | Pagine delle lezioni: `ca-01…ca-04` (moduli), `06-quiz` (verifica). Le altre cartelle sono lezioni di esempio non usate nel corso; `_modello/` è la pagina da copiare |
 | `media/`, `resources/` | Video, audio e file scaricabili (qui il documento NIST CSWP 39-upd1) |
 | `docs/manuale-player.md` | **Manuale d'uso del Player**: per chi segue il corso e per chi lo crea |
-| `kit-autori.zip` · `kit-autori/` | **Kit per autori esterni**: guida, prompt e skill per Claude, pagina modello, foglio di stile e `prova.html` per verificare il completamento. Si rigenera con `tools\crea-kit-autori.ps1` |
+| `kit-autori.zip` · `kit-autori/` | **Kit per autori esterni**: guida breve (`LEGGIMI-PRIMA.md`), file unico da dare all'AI (`CARICA-NELL-AI.md`), `prova.html` per verificare il completamento, pagina modello e foglio di stile; in `approfondimenti/` la guida completa e la skill. Si rigenera con `tools\crea-kit-autori.ps1` (testi brevi in `tools/kit/`) |
 | `docs/guida-autori-esterni.md` | Guida passo passo per creare una pagina di lezione (inclusa nel kit) |
-| `docs/prompt-pagine-lezione.md` | Prompt per far creare le pagine a un assistente AI (incluso nel kit come `PROMPT-CLAUDE.md`) |
+| `docs/prompt-pagine-lezione.md` | Prompt per far creare le pagine a un assistente AI (incluso nel kit dentro `CARICA-NELL-AI.md`) |
 | `docs/progetto-claude.md` | Come usare Claude già istruito: skill per Claude Code e claude.ai, istruzioni per un Progetto |
 | `.claude/skills/pagina-lezione/` · `skill-pagina-lezione.zip` | Skill «pagina-lezione» per Claude (generata in parte da `tools\crea-kit-autori.ps1`) |
 | `design/specifiche.md` | Specifiche per lo sviluppo: struttura, comportamenti, responsive, accessibilità, `course.js`, bridge |

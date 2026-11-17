@@ -6,6 +6,7 @@ Il manuale ha due parti:
 
 - **[Parte A — Per chi segue il corso](#parte-a--per-chi-segue-il-corso)**: come usare il Player.
 - **[Parte B — Per chi crea il corso](#parte-b--per-chi-crea-il-corso)**: come configurarlo, aggiungere lezioni e pubblicarlo.
+  - Cerchi una risposta veloce? Vedi le **[Domande frequenti](../FAQ.md)**.
   - Vuoi usare il Player per **un altro corso**? Vai a **[B10 — Creare un nuovo corso con lo stesso Player](#b10-creare-un-nuovo-corso-con-lo-stesso-player)**.
 
 ---
