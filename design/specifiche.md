@@ -9,6 +9,8 @@ Documento di consegna dal design allo sviluppo. Da leggere insieme a:
 
 Il codice dei prototipi sulla tela è un **riferimento**, non va copiato: la struttura vera va scritta seguendo questo documento.
 
+> **Nota sugli esempi.** Le lezioni citate in questo documento («Introduzione alla crittografia», «Cifrari classici», `pages/02-cifrari-classici`, «Quiz finale», «Conclusione», ecc.) sono **esempi della fase di progettazione** e **non fanno parte del corso attuale** «Crypto agility». Le lezioni effettive sono configurate in `course.js`.
+
 ---
 
 ## 1. Vincoli tecnici
