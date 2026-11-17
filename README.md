@@ -29,7 +29,7 @@ Il Player funziona online (GitHub Pages) e offline, aprendo `index.html` con un 
 2. Metti le pagine delle lezioni in `pages/` (ognuna include `player/player-bridge.js` e chiama `player.complete()`).
 3. Metti video e audio in `media/` (vedi `media/LEGGIMI.md`) e i PDF in `resources/`.
 
-La cartella `player/` resta identica per tutti i corsi.
+La cartella `player/` resta identica per tutti i corsi. **Procedura completa passo passo** (copia della cartella, distacco da GitHub, cosa togliere, `course.js` di partenza, prove): [manuale, capitolo B10](docs/manuale-player.md#b10-creare-un-nuovo-corso-con-lo-stesso-player).
 
 ## Lavorare con Claude
 

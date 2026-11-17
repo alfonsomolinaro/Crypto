@@ -6,6 +6,7 @@ Il manuale ha due parti:
 
 - **[Parte A — Per chi segue il corso](#parte-a--per-chi-segue-il-corso)**: come usare il Player.
 - **[Parte B — Per chi crea il corso](#parte-b--per-chi-crea-il-corso)**: come configurarlo, aggiungere lezioni e pubblicarlo.
+  - Vuoi usare il Player per **un altro corso**? Vai a **[B10 — Creare un nuovo corso con lo stesso Player](#b10-creare-un-nuovo-corso-con-lo-stesso-player)**.
 
 ---
 
@@ -402,10 +403,130 @@ e apri http://localhost:8123 (Ctrl+C nella finestra per fermarlo).
 
 Da quel momento **ogni push aggiorna il sito** in un paio di minuti. Se non vedi le modifiche, ricarica con **Ctrl+F5**. Lo stato della pubblicazione è nella scheda **Actions** del repository.
 
-## B10. Domande frequenti
+## B10. Creare un nuovo corso con lo stesso Player
+
+Il Player **non è legato al corso Crypto**: è un contenitore che mostra qualunque corso. Il corso Crypto è solo il primo contenuto che ci gira sopra. Per fare un corso nuovo **non serve programmare il Player**: si copia la cartella e si cambiano i contenuti.
+
+> **In una frase:** copia la cartella › staccala da GitHub › togli i contenuti Crypto › cambia `id` e `title` in `course.js` › crea le tue lezioni › prova con `?dev=1`.
+
+### Cosa resta e cosa cambia
+
+| ✅ **Resta uguale** (è il Player) | 🔄 **Cambia** (è il corso) |
+|---|---|
+| `index.html` | `course.js` |
+| `player/` (tutta la cartella) | le lezioni in `pages/` |
+| `pages/pagina.css` | i video e gli audio in `media/` |
+| `pages/_modello/` (la pagina da copiare) | i PDF in `resources/` |
+| `docs/`, `tools/`, `kit-autori/`, `.claude/` | |
+
+### Passo 1 — Fai una copia della cartella
+
+1. Apri Esplora file e vai in `Documenti`.
+2. Tasto destro sulla cartella **`crypto`** › **Copia**, poi tasto destro in uno spazio vuoto › **Incolla**.
+3. Rinomina la copia con il nome del nuovo corso, **minuscole e trattini**, per esempio `corso-sicurezza` (o `prova-player`, se vuoi solo fare esperimenti).
+
+D'ora in poi lavori **solo nella copia**: il corso Crypto non viene toccato.
+
+### Passo 2 — Stacca la copia da GitHub
+
+La copia contiene una cartella nascosta, **`.git`**, che la collega al repository del corso Crypto. Se la lasci, un commit dalla copia finirebbe nel corso Crypto.
+
+1. In Esplora file: **Visualizza › Mostra › Elementi nascosti** (così vedi le cartelle nascoste).
+2. Entra nella copia e **cancella la cartella `.git`**. Attenzione: nella **copia**, non nell'originale `crypto`!
+3. Cancella anche il file **`CLAUDE.md`**, se c'è: contiene le regole del corso Crypto (fonte NIST, personaggi Alice e Bob…), che per un altro corso non valgono. Se usi Claude Code, potrai scriverne uno nuovo con le regole del tuo corso.
+
+### Passo 3 — Togli i contenuti del corso Crypto
+
+| Cartella | Cosa fare |
+|---|---|
+| `pages/` | **Tieni** `pagina.css` e `_modello/`. Cancella tutte le altre cartelle (`ca-01…`, `04-asimmetrica`, ecc.). Se vuoi un esempio di quiz da cui partire, tieni anche `06-quiz` e modificalo. |
+| `media/video/` | Cancella `intro.mp4`. |
+| `media/audio/` | Cancella eventuali file MP3. |
+| `resources/` | Cancella il PDF del NIST. |
+| `kit-autori/`, `kit-autori.zip`, `skill-pagina-lezione.zip` | Puoi tenerli: non contengono nulla del corso Crypto. |
+
+Non toccare `index.html`, `player/` e `pages/pagina.css`.
+
+### Passo 4 — Imposta `course.js`
+
+Apri `course.js` con Visual Studio Code o Blocco note (tasto destro › *Apri con*). Questo è un esempio completo di partenza, con una sola lezione:
+
+```js
+window.COURSE = {
+  id: "corso-sicurezza",                 // ⚠️ NUOVO e diverso da ogni altro corso
+  title: "Sicurezza informatica di base",
+  description: "Breve frase che compare in copertina.",
+  navigation: "vincolata",               // oppure "libera": tutte le lezioni aperte
+  dev: false,                            // per le prove usa index.html?dev=1
+  theme: {},                             // per cambiare i colori (vedi B6)
+  resources: [],                         // PDF per tutto il corso (vedi B5)
+
+  lessons: [
+    {
+      id: "introduzione",
+      title: "Introduzione",
+      type: "html",
+      src: "pages/01-introduzione/index.html",
+      duration: "5 min",
+      complete: { on: "page" }
+    }
+  ]
+};
+```
+
+**Le tre cose da non dimenticare:**
+
+1. **`id` nuovo.** È il nome con cui il browser salva i progressi. Se due corsi hanno lo stesso `id`, i progressi si mescolano: lezioni che risultano già fatte, o bloccate senza motivo.
+2. **`title` nuovo.** È il titolo in copertina, nella barra in alto e nella scheda del browser.
+3. **`lessons` con le tue lezioni.** Ogni lezione è un blocco `{ … }`, separato dal successivo da una virgola. Tutti i campi sono spiegati in B3.
+
+Salva con **Ctrl+S**.
+
+### Passo 5 — Crea la prima lezione
+
+1. In `pages/` copia la cartella **`_modello`** e rinomina la copia come nel `src` del passo 4, per esempio `01-introduzione`.
+2. Apri `01-introduzione/index.html` e cambia i testi dove vedi ✏️ (dettagli in B4).
+3. Per altre lezioni ripeti: una cartella per lezione, un blocco in `lessons` per lezione.
+4. Per un **video**: metti il file in `media/video/` e aggiungi un blocco con `type: "video"` e `src: "media/video/nome.mp4"`.
+
+Con **Claude Code** puoi chiedere direttamente «crea la lezione 1 su …»: la skill `pagina-lezione`, inclusa nella copia, crea la cartella e aggiorna `course.js` seguendo le regole del Player (vedi `docs/progetto-claude.md`).
+
+### Passo 6 — Prova il corso
+
+1. Doppio clic su **`index.html`** della copia: compare la copertina con il **nuovo titolo**.
+2. Per vedere tutte le lezioni sbloccate, aggiungi **`?dev=1`** alla fine dell'indirizzo e premi Invio (vedi B7).
+3. Se una lezione non si apre o non si completa, premi **F12 › Console**: gli errori sono in rosso.
+4. Per ripartire da zero usa **Azzera progressi** nel pannello DEV.
+
+| Cosa vedi | Cosa controllare |
+|---|---|
+| Copertina con il titolo del vecchio corso | Hai salvato `course.js`? Ricarica con Ctrl+F5. |
+| Lezioni già «fatte» al primo avvio | L'`id` del corso è uguale a quello di un altro corso. |
+| «La lezione non si carica» o «Il video non è disponibile» | Il `src` della lezione non corrisponde al nome della cartella o del file (attenzione anche a maiuscole e minuscole). |
+| Pagina bianca o corso che non parte | Errore in `course.js`, di solito una virgola mancante tra due blocchi o una virgoletta non chiusa: guarda la Console (F12). |
+
+### Passo 7 (facoltativo) — Metti il nuovo corso su GitHub
+
+Serve solo se vuoi salvarlo online o pubblicarlo. Il nuovo corso avrà un **repository suo**, separato da quello del corso Crypto.
+
+1. Apri **GitHub Desktop** › **File › Add local repository** › scegli la cartella della copia.
+2. GitHub Desktop avvisa che non è un repository: clicca **create a repository** › **Create repository**.
+3. Clicca **Publish repository**, scegli il nome e lascia spuntato *Keep this code private* se vuoi tenerlo privato.
+4. Per metterlo online come sito, segui B9 (*GitHub Pages*).
+
+### Riepilogo
+
+- [ ] Copia della cartella con un nome nuovo
+- [ ] Cartella `.git` (e `CLAUDE.md`) cancellata **nella copia**
+- [ ] Contenuti Crypto tolti da `pages/`, `media/`, `resources/`
+- [ ] `id` e `title` nuovi in `course.js`
+- [ ] Almeno una lezione creata da `_modello` e collegata in `lessons`
+- [ ] Corso provato con `?dev=1` e senza (come studente), senza errori in Console
+
+## B11. Domande frequenti
 
 **Posso usare lo stesso Player per un altro corso?**
-Sì: copia l'intera cartella, cambia `id` e `title` in `course.js` e sostituisci `pages/`, `media/` e `resources/`.
+Sì, e non serve modificare il Player: segui la procedura passo passo in **B10**.
 
 **Una lezione resta bloccata anche se l'ho finita.**
 La pagina non chiama `player.complete()`, oppure la lezione ha `complete: { on: "page" }` ma la pagina non prevede un'azione che la completi. Controlla con la modalità sviluppo (pannello DEV) e la console (F12). Se invece la pagina non include `player-bridge.js`, dopo 8 secondi compare «La lezione non si carica».
