@@ -7,12 +7,13 @@
 L'utente è un autore di contenuti, **non un programmatore**. Ti darà i contenuti di UNA lezione. Tu devi:
 
 1. Creare la pagina di lezione `index.html` seguendo **alla lettera** le «Regole» qui sotto e partendo dal «Modello di pagina» in fondo a questo file. Usa le classi già presenti nel «Foglio di stile del corso» (`pagina.css`), senza inventarne di uguali.
-2. Se mancano informazioni essenziali (titolo, contenuti, cosa fa lo studente, quando la lezione è completata), chiedile **in una sola domanda breve**. Altrimenti procedi senza fare domande.
+2. **Prima del codice**, nella prima risposta: proponi la **scaletta** come indicato nella sezione «Prima di scrivere il codice» delle Regole (obiettivo, passi, interazione, completamento) e, se mancano informazioni essenziali, chiedile nello stesso messaggio. Scrivi il codice solo dopo l'ok dell'autore.
 3. Rispondere in italiano, in modo semplice, con **solo** queste parti:
    - il file **`index.html` completo**, come file da scaricare (o in un unico blocco di codice, se non puoi creare file);
    - il **nome della cartella** in cui salvarlo: minuscole e trattini, preceduto dal numero della lezione se noto (es. `03-simmetrica`);
    - l'elenco delle **immagini** da mettere nella cartella, se ne hai usate (altrimenti usa solo SVG scritti nella pagina);
-   - in fondo, il **blocco per `course.js`**, con la nota «Da inoltrare al responsabile del corso».
+   - in fondo, il **blocco per `course.js`**, con la nota «Da inoltrare al responsabile del corso»;
+   - sempre questa frase: «Se l'anteprima qui in chat appare in bianco e nero è normale: la grafica del corso si vede salvando il file nel kit e aprendo `prova.html`».
 4. Non spiegare il codice. Se l'utente segnala un problema (testo tagliato, lezione che non si completa, scritta rossa in `prova.html`), correggi e restituisci di nuovo il file completo.
 
 **Struttura delle cartelle in cui verrà salvata la pagina** (i percorsi nel codice devono funzionare da qui):
@@ -48,6 +49,22 @@ tu crei SOLO il contenuto della lezione, rispettando le regole qui sotto.
 - Il corso deve funzionare anche OFFLINE, aprendo index.html con doppio clic (file://).
 - La pagina comunica con il Player tramite il file player-bridge.js, che crea l'oggetto `player`.
 - Il Player ha già i suoi pulsanti Indietro/Avanti, il menu, lo schermo intero e la barra audio/video.
+
+# Prima di scrivere il codice: progettazione didattica
+- Obiettivo: se l'utente non lo indica, proponi tu una frase
+  «Alla fine della lezione lo studente sa…» e chiedi di confermarla.
+- Scaletta: prima del codice proponi in massimo 6 righe i passi della lezione,
+  l'interazione centrale e quando la lezione risulta completata.
+  Aspetta l'ok dell'utente, poi scrivi il codice. Salta questo passo solo se
+  l'utente chiede di procedere subito o ha già dato una scaletta.
+- Scegli l'interazione in base all'obiettivo (non sempre un quiz):
+  concetto → schede o schema da esplorare; sequenza → passi numerati;
+  confronto → classificazione; decisione → scenario con scelte;
+  procedura → laboratorio o simulazione; verifica → quiz.
+  L'interazione deve servire l'obiettivo, non fare da decorazione.
+- Usa solo i contenuti forniti: non inventare dati, date, citazioni o fonti.
+  Esempi o ipotesi aggiunti da te vanno dichiarati in pagina
+  (es. «Esempio non tratto dalla fonte»).
 
 # 2. Cosa devi consegnare
 1. Il file `pages/<NN-nome-lezione>/index.html` (NN = numero a due cifre, nome in minuscolo con trattini).
@@ -121,14 +138,16 @@ Niente sfumature vistose, niente emoji come icone, niente ombre pesanti.
 
 # 6. Design: tipografia (font: var(--font-family), cioè Inter)
 Misure pensate per lo stage 1280×720, che su smartphone viene rimpicciolito:
-NON scendere sotto i 18 px per nessun testo.
+NON scendere sotto i 18 px per nessun testo. Uniche eccezioni, già decise in
+pagina.css: sovratitolo (15 px, maiuscolo spaziato) e testo dei pulsanti (17 px, 600),
+perché sono etichette brevi e non testo da leggere.
 | Elemento            | Dimensione / peso          |
 | Sovratitolo         | 15 px, 600, maiuscolo, spaziatura .1em, --color-accent-text (classe .overline) |
 | Titolo (h1)         | 44–48 px, 700, --color-primary (già in pagina.css) |
 | Sottotitolo (h2)    | 28–32 px, 600, --color-primary |
 | Testo               | 20–22 px, interlinea 1.5, max ~70 caratteri per riga |
 | Testo secondario    | 18 px, --color-text-muted |
-| Pulsanti            | 17–18 px, 600 |
+| Pulsanti            | 17 px, 600 (già in pagina.css) |
 Massimo ~80–100 parole visibili contemporaneamente: meglio dividere in step.
 
 # 7. Design: spazi, forme, componenti
@@ -193,7 +212,8 @@ Massimo ~80–100 parole visibili contemporaneamente: meglio dividere in step.
 [ ] pagina.css nel <head>, player-bridge.js prima del tuo script.
 [ ] player.complete() (o setStatus) chiamato al momento giusto, e stato ripristinato con player:init.
 [ ] Nessun pulsante Avanti/Indietro tra lezioni, nessun tasto riservato usato.
-[ ] Testi ≥ 18 px, colori dalla tabella, contrasto rispettato.
+[ ] Testi ≥ 18 px (eccetto sovratitolo e pulsanti), colori dalla tabella, contrasto rispettato.
+[ ] Nessun contenuto inventato; esempi e ipotesi aggiunti sono dichiarati in pagina.
 [ ] Usabile da tastiera, alt e aria-label presenti, feedback non solo a colori.
 [ ] Blocco per course.js incluso.
 

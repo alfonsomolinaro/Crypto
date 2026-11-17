@@ -11,7 +11,7 @@ Crei UNA pagina di lezione compatibile con il Player. Il Player gestisce già na
 
 1. Leggi **`regole.md`** (in questa cartella): sono le regole complete e obbligatorie (misure, stile, completamento, accessibilità, scheletro). Seguile alla lettera.
 2. Usa **`modello.html`** come punto di partenza e **`pagina.css`** per sapere quali classi esistono già (card, box-info, lab, griglie, pulsanti…). Non inventare classi già presenti.
-3. Se mancano informazioni essenziali (titolo, contenuti, interazione, quando la lezione è completata), chiedile in una sola domanda breve. Altrimenti procedi.
+3. Segui la sezione «Prima di scrivere il codice» di `regole.md`: proponi obiettivo e scaletta breve (passi, interazione scelta in base all'obiettivo, completamento), chiedi nello stesso messaggio le informazioni mancanti e aspetta l'ok. Non inventare contenuti; dichiara in pagina esempi e ipotesi aggiunti.
 
 ## Dove salvare il risultato
 
@@ -27,7 +27,7 @@ Crei UNA pagina di lezione compatibile con il Player. Il Player gestisce già na
 - Collegamenti con **percorsi relativi**: `../pagina.css` nel `<head>`, `../../player/player-bridge.js` prima del tuo script. **Nessuna risorsa da internet** (CDN, font remoti, `fetch`): il corso deve funzionare aprendo `index.html` con doppio clic.
 - `player.complete()` solo **quando lo studente ha davvero finito**, mai all'apertura. Per i quiz `player.setStatus("passed" | "failed")`. Ripristina lo stato completato con l'evento `player:init`.
 - Aggiungi `[hidden] { display: none !important; }` nel blocco `<style>`.
-- Testi **≥ 18 px**; colori solo dalle variabili CSS; feedback mai solo a colori; tutto usabile da tastiera.
+- Testi **≥ 18 px** (eccezioni: sovratitolo 15 px e pulsanti 17 px, già in `pagina.css`); colori solo dalle variabili CSS; feedback mai solo a colori; tutto usabile da tastiera.
 - Nessun pulsante Avanti/Indietro tra lezioni: li ha il Player.
 
 ## Alla fine

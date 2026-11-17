@@ -24,7 +24,9 @@ Nello stesso messaggio scrivi, con parole tue:
 - **cosa deve fare lo studente** (es. «rispondere a 3 domande», «abbinare termini e definizioni»);
 - **quando la lezione è finita** (es. «quando risponde giusto a tutte le domande»).
 
-Invia. L'AI ti restituisce un file **`index.html`** e un **nome di cartella** (es. `03-simmetrica`).
+Invia. L'AI ti propone prima una **breve scaletta**: se va bene rispondi «ok», altrimenti scrivi cosa cambiare. Poi ti restituisce un file **`index.html`** e un **nome di cartella** (es. `03-simmetrica`).
+
+> **L'anteprima nella chat è in bianco e nero?** È normale: l'AI non ha la grafica del corso. I colori veri compaiono solo con il file salvato in `pages/` e aperto con `prova.html` (passi 3 e 4). Anche aprire `index.html` da solo, fuori dal kit, lo mostra senza colori.
 
 **3. Salva il file.**
 Dentro `pages/` crea una cartella con quel nome e mettici `index.html` (e le eventuali immagini).
