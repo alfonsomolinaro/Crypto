@@ -2,7 +2,7 @@
 
 Player e-learning HTML5 riutilizzabile, sviluppato da zero (HTML, CSS e JavaScript puri, senza dipendenze esterne).
 
-Il Player funziona online (GitHub Pages) e offline, aprendo `index.html` con un doppio clic. È predisposto per un futuro pacchetto SCORM 1.2.
+Il Player funziona online (GitHub Pages) e offline, aprendo `index.html` con un doppio clic. È disponibile anche come pacchetto SCORM 1.2 (`crypto-agility-scorm.zip`), provato su Moodle.
 
 **Corso attuale: «Crypto agility: quando la crittografia deve cambiare»**, per un pubblico non specialista, basato sul documento NIST CSWP 39-upd1 (in `resources/`). Struttura: video introduttivo, 4 moduli interattivi e verifica finale (8 domande, superata con 6 risposte giuste).
 
@@ -13,7 +13,7 @@ Il Player funziona online (GitHub Pages) e offline, aprendo `index.html` con un 
 - [x] Sviluppo del Player
 - [x] Contenuti del corso «Crypto agility»
 - [x] Kit per autori esterni
-- [ ] Pacchetto SCORM 1.2
+- [x] Pacchetto SCORM 1.2 (prototipo: invia l'esito, non il punteggio del quiz)
 
 📘 **[Manuale d'uso del Player](docs/manuale-player.md)**: come si usa il corso e come si crea o modifica.
 

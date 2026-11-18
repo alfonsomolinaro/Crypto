@@ -539,4 +539,4 @@ Ricarica con Ctrl+F5. Online, aspetta un paio di minuti dopo il push.
 Controlla maiuscole e minuscole nei nomi dei file: online `Foto.png` e `foto.png` sono file diversi. Controlla anche di non aver usato percorsi del tuo computer (`C:\…`).
 
 **Posso usare il corso in un LMS (Moodle, ecc.)?**
-Il Player è predisposto per SCORM 1.2 (`player/storage.js`), ma il pacchetto SCORM non è ancora stato realizzato.
+Sì. Nella cartella principale c'è `crypto-agility-scorm.zip`, un pacchetto SCORM 1.2 provato su Moodle: si carica come attività SCORM. Nel pacchetto il salvataggio (`storage.js`) usa la piattaforma: progressi, lezione in corso e stato del corso («superato» a fine percorso). Il `player/storage.js` di questo repository salva invece nel browser. Il pacchetto invia l'esito, non il punteggio del quiz: in Moodle imposta il metodo di valutazione su «Oggetti di apprendimento». Se modifichi il corso, il pacchetto va rigenerato.
