@@ -192,7 +192,7 @@ Esempio di stile personalizzato, dentro `<style>` nella tua pagina:
 - ❌ **Niente da internet:** nessun font, immagine, video o libreria presi da un indirizzo web. Il corso deve funzionare anche offline.
 - ❌ **Niente percorsi del computer:** mai `C:\Users\…`. Solo il nome del file nella tua cartella.
 - ❌ **Niente pulsanti Avanti/Indietro tra lezioni,** menu o schermo intero: li ha già il Player. I pulsanti «Continua/Indietro» del modello spostano solo tra i passi della tua pagina.
-- ❌ **Niente audio o video che partono da soli.** Per un video dentro la pagina, chiedi al responsabile del corso.
+- ❌ **Niente audio o video che partono da soli.** Un video dentro la pagina va in formato MP4 (sotto i 100 MB), nella stessa cartella di `index.html`, senza l'attributo `controls` e registrato con `player.registerMedia(...)`: così lo comanda la barra del Player. Un video che è una lezione a sé non richiede una pagina: mandalo al responsabile del corso, che lo aggiunge in `course.js`.
 - ✅ **Lascia le due righe ⛔** che collegano la pagina al corso: `pagina.css` in alto e `player-bridge.js` in basso.
 - ✅ **Salva sempre in UTF-8.** Visual Studio Code lo fa da solo. In Blocco note: *File › Salva con nome › Codifica: UTF-8*. Se vedi lettere strane al posto delle accentate (es. `Ã¨`), il file non è in UTF-8.
 

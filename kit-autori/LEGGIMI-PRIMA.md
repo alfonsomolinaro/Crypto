@@ -1,6 +1,6 @@
 # Kit per creare una lezione — inizia da qui
 
-Con questo kit crei **una lezione** per il corso, facendola scrivere a un'intelligenza artificiale (Claude, ChatGPT o un'altra). Non serve saper programmare.
+Con questo kit fai generare a un'intelligenza artificiale (Claude, ChatGPT o un'altra) la **pagina HTML di una lezione**, già pronta da inserire nel corso. Non serve saper programmare: l'inserimento nel corso lo fa il **responsabile del corso**.
 
 ## Cosa ti serve davvero
 
@@ -50,6 +50,21 @@ Se qualcosa non va (testo tagliato, scritta rossa, non si completa), **descrivil
 **5. Consegna.**
 Tasto destro sulla **tua cartella** (es. `03-simmetrica`) › *Invia a › Cartella compressa*. Manda lo zip al responsabile del corso indicando titolo, durata e quando la lezione è completata.
 Il blocco «course.js» che l'AI ti scrive in fondo copialo pure nel messaggio: serve al responsabile, non a te.
+
+## Cosa puoi mettere nella lezione
+
+- ✅ **Testi**, appunti, slide da cui l'AI ricava i contenuti.
+- ✅ **Immagini** PNG, JPG o SVG: mettile nella cartella della lezione e indica all'AI i nomi dei file. Oppure chiedi all'AI di disegnare schemi semplici.
+- ✅ **Attività**: spiegazioni a passi, laboratori, scenari con scelte, abbinamenti, quiz.
+- ✅ **Video** MP4 e **audio** MP3, sotto i 100 MB (vedi sotto).
+- ❌ **Niente da internet:** niente link a YouTube o ad altri siti, immagini o font presi da un indirizzo web. Il corso deve funzionare anche offline.
+
+## Vuoi un video?
+
+- **Video come lezione a sé** (es. un'introduzione): non serve l'AI né l'HTML. Manda il file MP4 al responsabile del corso, con titolo e posizione nel corso: lo aggiunge lui.
+- **Video dentro una pagina** (insieme a testo o attività): scrivilo all'AI, es. «nella lezione c'è il video `spiegazione.mp4`». Metti il file nella **stessa cartella** di `index.html`, prova con `prova.html` e consegna la cartella con il video dentro.
+
+In tutti e due i casi è il **responsabile del corso** a inserire la lezione nel Player.
 
 ---
 
